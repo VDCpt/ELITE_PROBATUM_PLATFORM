@@ -33,27 +33,29 @@
 <body>
     
     <!-- ================================================================
-         LOGIN OVERLAY - CENTRALIZADO
+         LOGIN OVERLAY - CENTRALIZADO E LIMPO
     ================================================================ -->
     <div id="loginOverlay" class="login-overlay">
         <div class="login-card">
-            <i class="fas fa-crown" style="font-size: 3rem; color: var(--elite-primary); margin-bottom: 16px;"></i>
-            <h2>ELITE PROBATUM</h2>
-            <div class="version">v2.0 · Metodologia Forense Avançada</div>
-            <div class="subtitle">Inteligência que vence causas</div>
+            <div class="login-logo">
+                <i class="fas fa-crown"></i>
+                <span>ELITE <span class="logo-highlight">PROBATUM</span></span>
+            </div>
+            <div class="version-badge">v2.0 · Metodologia Forense Avançada</div>
+            <p class="subtitle">Inteligência que vence causas</p>
             
             <div class="form-group">
                 <label>UTILIZADOR</label>
-                <input type="text" id="loginUser" placeholder="Utilizador" value="">
+                <input type="text" id="username" placeholder="admin" value="">
             </div>
             <div class="form-group">
                 <label>PALAVRA-PASSE</label>
-                <input type="password" id="loginPass" placeholder="Palavra-passe" value="">
+                <input type="password" id="password" placeholder="••••••••" value="">
             </div>
             
-            <div id="loginError" class="login-error" style="display: none; color: var(--elite-danger); margin-bottom: 16px;">Credenciais inválidas</div>
+            <div id="loginError" class="login-error" style="display: none;">Credenciais inválidas</div>
             
-            <button id="loginBtn" class="elite-btn primary full-width">
+            <button id="authBtn" class="elite-btn primary full-width">
                 <i class="fas fa-key"></i> AUTENTICAR
             </button>
             
@@ -61,9 +63,7 @@
                 <button id="requestAccessBtn" class="elite-btn secondary full-width request-access-btn">
                     <i class="fas fa-user-plus"></i> SOLICITAR ACESSO
                 </button>
-                <p style="margin-top: 12px; font-size: 0.65rem; color: var(--text-tertiary);">
-                    O pedido será enviado ao Master Hash Controller
-                </p>
+                <p class="access-hint">O pedido será enviado ao Master Hash Controller</p>
             </div>
             
             <div class="language-selector">
@@ -71,9 +71,9 @@
                 <button id="langEN" class="lang-btn">🇬🇧 ENGLISH</button>
             </div>
             
-            <p style="margin-top: 20px; font-size: 0.65rem; color: var(--text-tertiary);">
+            <div class="security-badge">
                 <i class="fas fa-shield-alt"></i> Ambiente seguro com encriptação AES-256
-            </p>
+            </div>
         </div>
     </div>
     
@@ -126,7 +126,7 @@
             <div class="sidebar-logo">
                 <i class="fas fa-crown"></i>
                 <span>ELITE<span class="elite-light">PROBATUM</span></span>
-                <span class="version-badge">v2.0</span>
+                <span class="version-tag">v2.0</span>
             </div>
             
             <nav class="sidebar-nav">
@@ -237,121 +237,186 @@
     <!-- SCRIPT PRINCIPAL -->
     <script src="js_core_app.js"></script>
     
-    <!-- SCRIPT DE INICIALIZAÇÃO -->
+    <!-- SCRIPT DE INTEGRAÇÃO FINAL -->
     <script>
         (function() {
-            // Credenciais válidas (simulação)
-            const VALID_CREDENTIALS = {
-                admin: { password: 'probatum', role: 'SUPER_USER', name: 'Dr. Administrador' }
-            };
-            
-            // Elementos
-            const loginOverlay = document.getElementById('loginOverlay');
-            const appContainer = document.getElementById('appContainer');
-            const loginBtn = document.getElementById('loginBtn');
-            const loginUser = document.getElementById('loginUser');
-            const loginPass = document.getElementById('loginPass');
-            const loginError = document.getElementById('loginError');
-            
-            // Função de autenticação
-            function authenticate() {
-                const username = loginUser.value.trim();
-                const password = loginPass.value.trim();
+            // Aguardar o carregamento completo do DOM e do script principal
+            document.addEventListener('DOMContentLoaded', function() {
+                console.log('[ELITE] DOM carregado, iniciando integração...');
                 
-                if (username === 'admin' && password === 'probatum') {
-                    // Autenticação bem-sucedida
-                    loginError.style.display = 'none';
-                    loginOverlay.style.display = 'none';
-                    appContainer.style.display = 'flex';
-                    
-                    // Atualizar dados do utilizador
-                    document.getElementById('userName').textContent = 'Dr. Administrador';
-                    document.getElementById('userRole').textContent = 'Super Utilizador · Acesso Total';
-                    
-                    // Atualizar métricas
-                    document.getElementById('headerActiveCases').textContent = '27';
-                    document.getElementById('headerDisputeValue').textContent = '€1.247.500';
-                    document.getElementById('headerSuccessRate').textContent = '68%';
-                    document.getElementById('casesBadge').textContent = '27';
-                    
-                    // Inicializar Dashboard
-                    if (window.EliteProbatum && typeof window.EliteProbatum.initDashboard === 'function') {
-                        window.EliteProbatum.initDashboard();
-                    } else {
-                        console.log('Dashboard inicializado manualmente');
-                        if (typeof renderDashboard === 'function') renderDashboard();
-                    }
-                    
-                    // Mostrar toast de boas-vindas
-                    if (window.EliteUtils && typeof window.EliteUtils.showToast === 'function') {
-                        window.EliteUtils.showToast('Ecossistema Estratégico Ativo', 'success');
-                    } else {
-                        alert('Bem-vindo à ELITE PROBATUM v2.0');
-                    }
-                    
-                    return true;
-                } else {
-                    loginError.style.display = 'block';
-                    loginError.textContent = 'Credenciais inválidas. Utilize admin / probatum';
-                    return false;
-                }
-            }
-            
-            // Evento de login
-            if (loginBtn) {
-                loginBtn.addEventListener('click', authenticate);
-            }
-            
-            // Evento de tecla Enter
-            if (loginUser && loginPass) {
-                const handleEnter = (e) => {
-                    if (e.key === 'Enter') authenticate();
+                // Elementos principais
+                const authBtn = document.getElementById('authBtn');
+                const loginOverlay = document.getElementById('loginOverlay');
+                const appContainer = document.getElementById('appContainer');
+                const loginError = document.getElementById('loginError');
+                const usernameInput = document.getElementById('username');
+                const passwordInput = document.getElementById('password');
+                
+                // Credenciais válidas
+                const VALID_CREDENTIALS = {
+                    admin: { password: 'probatum', role: 'SUPER_USER', name: 'Dr. Administrador' }
                 };
-                loginUser.addEventListener('keypress', handleEnter);
-                loginPass.addEventListener('keypress', handleEnter);
-            }
-            
-            // Botão de solicitar acesso
-            const requestBtn = document.getElementById('requestAccessBtn');
-            const accessModal = document.getElementById('accessRequestModal');
-            if (requestBtn && accessModal) {
-                requestBtn.addEventListener('click', () => {
-                    accessModal.style.display = 'flex';
-                });
-            }
-            
-            // Fechar modais
-            document.querySelectorAll('.modal-close').forEach(btn => {
-                btn.addEventListener('click', () => {
-                    const modal = btn.closest('.elite-modal');
-                    if (modal) modal.style.display = 'none';
-                });
-            });
-            
-            // Clique fora do modal
-            document.querySelectorAll('.elite-modal').forEach(modal => {
-                modal.addEventListener('click', (e) => {
-                    if (e.target === modal) modal.style.display = 'none';
-                });
-            });
-            
-            // Formulário de pedido de acesso
-            const accessForm = document.getElementById('accessRequestForm');
-            if (accessForm) {
-                accessForm.addEventListener('submit', (e) => {
-                    e.preventDefault();
-                    const name = document.getElementById('requestName')?.value || '';
-                    const email = document.getElementById('requestEmail')?.value || '';
+                
+                // Função de autenticação
+                function authenticate() {
+                    const username = usernameInput ? usernameInput.value.trim() : '';
+                    const password = passwordInput ? passwordInput.value.trim() : '';
                     
-                    if (name && email) {
-                        alert(`Pedido de acesso enviado para ${email}. O Master Hash Controller irá analisar.`);
-                        accessModal.style.display = 'none';
-                        accessForm.reset();
+                    console.log('[ELITE] Tentativa de autenticação:', username);
+                    
+                    if (username === 'admin' && password === 'probatum') {
+                        // Autenticação bem-sucedida
+                        if (loginError) loginError.style.display = 'none';
+                        
+                        // Animação de saída do login
+                        loginOverlay.style.transition = 'opacity 0.3s ease';
+                        loginOverlay.style.opacity = '0';
+                        
+                        setTimeout(() => {
+                            loginOverlay.style.display = 'none';
+                            appContainer.style.display = 'flex';
+                            appContainer.classList.add('visible');
+                            
+                            // Atualizar informações do utilizador
+                            const userNameSpan = document.getElementById('userName');
+                            const userRoleSpan = document.getElementById('userRole');
+                            if (userNameSpan) userNameSpan.textContent = 'Dr. Administrador';
+                            if (userRoleSpan) userRoleSpan.textContent = 'Super Utilizador · Acesso Total';
+                            
+                            // INICIALIZAR O MOTOR ELITE
+                            if (window.EliteProbatum && typeof window.EliteProbatum.initDashboard === 'function') {
+                                console.log('[ELITE] Inicializando dashboard via EliteProbatum...');
+                                window.EliteProbatum.initDashboard();
+                            } else if (typeof initDashboard === 'function') {
+                                console.log('[ELITE] Inicializando dashboard via função global...');
+                                initDashboard();
+                            } else {
+                                console.log('[ELITE] Dashboard não encontrado, usando fallback');
+                                // Fallback: renderizar dashboard básico
+                                const container = document.getElementById('viewContainer');
+                                if (container) {
+                                    container.innerHTML = `
+                                        <div class="dashboard-grid">
+                                            <div class="dashboard-card"><div class="card-header"><h3>Processos Ativos</h3><i class="fas fa-folder-open"></i></div><div class="card-value">27</div></div>
+                                            <div class="dashboard-card"><div class="card-header"><h3>Valor em Disputa</h3><i class="fas fa-euro-sign"></i></div><div class="card-value">€1.247.500</div></div>
+                                            <div class="dashboard-card"><div class="card-header"><h3>Taxa Sucesso</h3><i class="fas fa-chart-line"></i></div><div class="card-value">72%</div></div>
+                                        </div>
+                                    `;
+                                }
+                            }
+                            
+                            // Atualizar KPIs do Header
+                            const activeCasesSpan = document.getElementById('headerActiveCases');
+                            const disputeValueSpan = document.getElementById('headerDisputeValue');
+                            const successRateSpan = document.getElementById('headerSuccessRate');
+                            const casesBadge = document.getElementById('casesBadge');
+                            
+                            if (activeCasesSpan) activeCasesSpan.textContent = '27';
+                            if (disputeValueSpan) disputeValueSpan.textContent = '€1.247.500';
+                            if (successRateSpan) successRateSpan.textContent = '72%';
+                            if (casesBadge) casesBadge.textContent = '27';
+                            
+                            // Mostrar toast de boas-vindas
+                            if (window.EliteUtils && typeof window.EliteUtils.showToast === 'function') {
+                                window.EliteUtils.showToast('Bem-vindo à ELITE PROBATUM v2.0', 'success');
+                            } else {
+                                console.log('[ELITE] Ecossistema Estratégico Ativo');
+                            }
+                        }, 300);
+                        
+                        return true;
                     } else {
-                        alert('Por favor, preencha todos os campos obrigatórios.');
+                        // Credenciais inválidas
+                        if (loginError) {
+                            loginError.style.display = 'block';
+                            loginError.textContent = 'Credenciais inválidas. Utilize admin / probatum';
+                        }
+                        console.log('[ELITE] Falha na autenticação');
+                        return false;
                     }
+                }
+                
+                // Associar evento ao botão de autenticação
+                if (authBtn) {
+                    authBtn.addEventListener('click', authenticate);
+                    console.log('[ELITE] Evento de autenticação associado');
+                } else {
+                    console.error('[ELITE] Botão authBtn não encontrado!');
+                }
+                
+                // Permitir autenticação com tecla Enter
+                if (usernameInput && passwordInput) {
+                    const handleEnter = (e) => {
+                        if (e.key === 'Enter') authenticate();
+                    };
+                    usernameInput.addEventListener('keypress', handleEnter);
+                    passwordInput.addEventListener('keypress', handleEnter);
+                }
+                
+                // Botão de solicitar acesso
+                const requestBtn = document.getElementById('requestAccessBtn');
+                const accessModal = document.getElementById('accessRequestModal');
+                if (requestBtn && accessModal) {
+                    requestBtn.addEventListener('click', () => {
+                        loginOverlay.style.opacity = '0';
+                        setTimeout(() => {
+                            loginOverlay.style.display = 'none';
+                            accessModal.style.display = 'flex';
+                        }, 200);
+                    });
+                }
+                
+                // Fechar modais
+                document.querySelectorAll('.modal-close').forEach(btn => {
+                    btn.addEventListener('click', () => {
+                        const modal = btn.closest('.elite-modal');
+                        if (modal) modal.style.display = 'none';
+                    });
                 });
-            }
+                
+                // Clique fora do modal
+                document.querySelectorAll('.elite-modal').forEach(modal => {
+                    modal.addEventListener('click', (e) => {
+                        if (e.target === modal) modal.style.display = 'none';
+                    });
+                });
+                
+                // Formulário de pedido de acesso
+                const accessForm = document.getElementById('accessRequestForm');
+                if (accessForm) {
+                    accessForm.addEventListener('submit', (e) => {
+                        e.preventDefault();
+                        const name = document.getElementById('requestName')?.value || '';
+                        const email = document.getElementById('requestEmail')?.value || '';
+                        
+                        if (name && email) {
+                            alert(`Pedido de acesso enviado para ${email}. O Master Hash Controller irá analisar.`);
+                            accessModal.style.display = 'none';
+                            accessForm.reset();
+                            loginOverlay.style.display = 'flex';
+                            loginOverlay.style.opacity = '1';
+                        } else {
+                            alert('Por favor, preencha todos os campos obrigatórios.');
+                        }
+                    });
+                }
+                
+                // Botão de logout
+                const logoutBtn = document.getElementById('logoutBtn');
+                if (logoutBtn) {
+                    logoutBtn.addEventListener('click', () => {
+                        if (confirm('Tem certeza que deseja terminar sessão?')) {
+                            appContainer.style.display = 'none';
+                            loginOverlay.style.display = 'flex';
+                            loginOverlay.style.opacity = '1';
+                            if (usernameInput) usernameInput.value = '';
+                            if (passwordInput) passwordInput.value = '';
+                        }
+                    });
+                }
+                
+                console.log('[ELITE] Integração concluída. Aguardando autenticação.');
+            });
         })();
     </script>
 </body>

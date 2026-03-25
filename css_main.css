@@ -1,105 +1,30 @@
-/* ============================================================================
-   ELITE PROBATUM v2.0 — CSS PRINCIPAL
-   CORREÇÃO: Centralização Absoluta do Login
-   ============================================================================ */
-
-:root {
-    /* Cores Principais - NEON CYAN */
-    --elite-primary: #00E5FF;
-    --elite-primary-neon: #00FFFF;
-    --elite-primary-glow: rgba(0, 229, 255, 0.8);
-    --elite-primary-dark: #00B8D4;
-    --elite-secondary: #7C3AED;
-    --elite-secondary-neon: #9F7AEA;
-    --elite-success: #10B981;
-    --elite-success-neon: #34D399;
-    --elite-warning: #F59E0B;
-    --elite-danger: #EF4444;
-    --elite-danger-neon: #FF6B6B;
-    
-    /* Carbon Black - Fundo */
-    --bg-carbon: #0A0C12;
-    --bg-carbon-dark: #05070C;
-    --bg-carbon-card: #111318;
-    --bg-carbon-sidebar: #020408;
-    
-    /* Texto - Alto Contraste */
-    --text-primary: #FFFFFF;
-    --text-secondary: #E2E8F0;
-    --text-tertiary: #94A3B8;
-    
-    /* Bordas - Neon */
-    --border-neon: rgba(0, 229, 255, 0.4);
-    --border-neon-glow: rgba(0, 229, 255, 0.8);
-    
-    /* Layout - Botões maiores */
-    --btn-height-large: 56px;
-    --btn-padding-large: 18px 36px;
-    --btn-font-large: 1rem;
-    
-    --sidebar-width: 320px;
-    --header-height: 80px;
-}
-
-* {
-    margin: 0;
-    padding: 0;
-    box-sizing: border-box;
-}
-
-body {
-    font-family: 'Inter', sans-serif;
-    background: var(--bg-carbon);
-    color: var(--text-primary);
-    line-height: 1.5;
-    min-height: 100vh;
-    overflow-x: hidden;
-}
+/* Adicione ao final do css_main.css */
 
 /* ============================================================================
-   LOGIN OVERLAY - CENTRALIZAÇÃO ABSOLUTA
+   LOGIN CARD - ESTILOS COMPLEMENTARES
    ============================================================================ */
 
-.login-overlay {
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100vw;
-    height: 100vh;
-    background: var(--bg-carbon-dark);
-    display: flex !important;
-    justify-content: center;
-    align-items: center;
-    z-index: 9999;
-    padding: 20px;
-}
-
-.login-card {
-    width: 100%;
-    max-width: 440px;
-    background: var(--bg-carbon-card);
-    border: 1px solid var(--border-neon);
-    padding: 48px 40px;
-    border-radius: 28px;
-    box-shadow: 0 0 60px rgba(0, 229, 255, 0.2);
-    text-align: center;
-    animation: fadeInUp 0.5s cubic-bezier(0.4, 0, 0.2, 1);
-}
-
-.login-card h2 {
-    font-size: 1.8rem;
+.login-card .login-logo {
+    font-size: 2rem;
+    font-weight: 800;
     margin-bottom: 8px;
-    background: linear-gradient(135deg, var(--elite-primary), var(--elite-secondary));
-    -webkit-background-clip: text;
-    background-clip: text;
-    color: transparent;
+    font-family: 'JetBrains Mono', monospace;
 }
 
-.login-card .version {
-    color: var(--text-tertiary);
+.login-card .login-logo i {
+    color: var(--elite-primary);
+    margin-right: 8px;
+}
+
+.login-card .login-logo .logo-highlight {
+    color: var(--elite-primary);
+}
+
+.login-card .version-badge {
     font-size: 0.7rem;
-    margin-bottom: 24px;
-    font-family: 'JetBrains Mono', monospace;
+    color: var(--text-tertiary);
+    margin-bottom: 16px;
+    font-family: monospace;
 }
 
 .login-card .subtitle {
@@ -108,495 +33,62 @@ body {
     font-size: 0.9rem;
 }
 
-.login-card .form-group {
-    margin-bottom: 20px;
-    text-align: left;
-}
-
-.login-card .form-group label {
-    display: block;
-    font-size: 0.7rem;
-    text-transform: uppercase;
-    letter-spacing: 1px;
-    color: var(--text-tertiary);
-    margin-bottom: 8px;
-}
-
-.login-card input {
-    width: 100%;
-    padding: 14px 16px;
-    background: rgba(255, 255, 255, 0.05);
-    border: 1px solid var(--border-neon);
-    border-radius: 12px;
-    color: var(--text-primary);
-    font-size: 0.95rem;
-    transition: all 0.2s;
-}
-
-.login-card input:focus {
-    outline: none;
-    border-color: var(--elite-primary);
-    box-shadow: 0 0 0 3px rgba(0, 229, 255, 0.2);
-}
-
-.login-card .elite-btn {
-    margin-top: 8px;
-    width: 100%;
-    height: 52px;
-    font-size: 1rem;
-    font-weight: 700;
-}
-
-.login-card .request-access {
-    margin-top: 24px;
-    padding-top: 24px;
-    border-top: 1px solid var(--border-neon);
-}
-
-.login-card .request-access-btn {
-    background: transparent;
-    border: 1px solid var(--border-neon);
-    color: var(--text-secondary);
-}
-
-.login-card .request-access-btn:hover {
-    border-color: var(--elite-primary);
-    color: var(--elite-primary);
-    background: rgba(0, 229, 255, 0.1);
-}
-
-.login-card .language-selector {
-    margin-top: 24px;
-    display: flex;
-    justify-content: center;
-    gap: 12px;
-}
-
-.lang-btn {
-    background: rgba(255, 255, 255, 0.05);
-    border: 1px solid var(--border-neon);
-    color: var(--text-secondary);
-    padding: 8px 16px;
-    border-radius: 40px;
-    cursor: pointer;
-    font-size: 0.75rem;
-    transition: all 0.2s;
-}
-
-.lang-btn:hover,
-.lang-btn.active {
-    background: var(--elite-primary);
-    color: #000;
-    border-color: var(--elite-primary);
-}
-
-@keyframes fadeInUp {
-    from {
-        opacity: 0;
-        transform: translateY(30px);
-    }
-    to {
-        opacity: 1;
-        transform: translateY(0);
-    }
-}
-
-/* ============================================================================
-   BOTÕES - 40% MAIORES
-   ============================================================================ */
-
-.elite-btn {
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-    gap: 12px;
-    height: var(--btn-height-large);
-    padding: var(--btn-padding-large);
-    border-radius: 14px;
-    font-family: 'Inter', sans-serif;
-    font-size: var(--btn-font-large);
-    font-weight: 700;
-    letter-spacing: 0.5px;
-    cursor: pointer;
-    transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
-    border: none;
-    text-transform: uppercase;
-}
-
-.elite-btn.primary {
-    background: linear-gradient(135deg, var(--elite-primary), var(--elite-primary-dark));
-    color: #000000;
-    font-weight: 800;
-    box-shadow: 0 0 15px rgba(0, 229, 255, 0.5);
-}
-
-.elite-btn.primary:hover {
-    transform: translateY(-2px);
-    box-shadow: 0 0 30px rgba(0, 229, 255, 0.8);
-    background: linear-gradient(135deg, #33EBFF, #00CCFF);
-}
-
-.elite-btn.secondary {
-    background: transparent;
-    border: 2px solid var(--elite-primary);
-    color: var(--elite-primary);
-    font-weight: 700;
-}
-
-.elite-btn.secondary:hover {
-    background: rgba(0, 229, 255, 0.15);
-    border-color: var(--elite-primary-neon);
-    color: var(--elite-primary-neon);
-    box-shadow: 0 0 20px rgba(0, 229, 255, 0.3);
-}
-
-.elite-btn.danger {
-    background: linear-gradient(135deg, var(--elite-danger), #B91C1C);
-    color: #FFFFFF;
-}
-
-.elite-btn.danger:hover {
-    transform: translateY(-2px);
-    box-shadow: 0 0 25px rgba(239, 68, 68, 0.6);
-}
-
-.elite-btn.success {
-    background: linear-gradient(135deg, var(--elite-success), #059669);
-    color: #FFFFFF;
-}
-
-.elite-btn.small {
-    height: 44px;
-    padding: 0 20px;
-    font-size: 0.85rem;
-}
-
-.elite-btn.full-width {
-    width: 100%;
-}
-
-/* Botões de Ação do Header - Aumentados */
-.icon-btn {
-    background: rgba(255, 255, 255, 0.08);
-    border: 1px solid var(--border-neon);
-    color: var(--text-secondary);
-    width: 52px;
-    height: 52px;
-    border-radius: 14px;
-    cursor: pointer;
-    transition: all 0.2s ease;
-    font-size: 1.2rem;
-}
-
-.icon-btn:hover {
-    border-color: var(--elite-primary);
-    background: rgba(0, 229, 255, 0.2);
-    color: var(--elite-primary);
-    transform: scale(1.05);
-}
-
-/* ============================================================================
-   SIDEBAR E HEADER
-   ============================================================================ */
-
-.elite-sidebar {
-    width: var(--sidebar-width);
-    background: var(--bg-carbon-sidebar);
-    border-right: 1px solid var(--border-neon);
-    display: flex;
-    flex-direction: column;
-    position: fixed;
-    left: 0;
-    top: 0;
-    bottom: 0;
-    z-index: 100;
-    transition: transform var(--transition-normal);
-}
-
-.sidebar-logo {
-    padding: 28px 24px;
-    border-bottom: 1px solid var(--border-neon);
-    margin-bottom: 24px;
-    display: flex;
-    align-items: center;
-    gap: 12px;
-    font-size: 1.3rem;
-    font-weight: 800;
-    font-family: 'JetBrains Mono', monospace;
-}
-
-.sidebar-logo i {
-    color: var(--elite-primary);
-    font-size: 1.8rem;
-}
-
-.version-badge {
-    margin-left: auto;
-    font-size: 0.6rem;
-    color: var(--text-tertiary);
-    background: rgba(0, 229, 255, 0.1);
-    padding: 4px 8px;
-    border-radius: 20px;
-}
-
-.nav-item {
-    display: flex;
-    align-items: center;
-    gap: 14px;
-    padding: 14px 20px;
-    margin: 4px 12px;
-    color: var(--text-secondary);
-    text-decoration: none;
-    border-radius: 14px;
-    transition: all 0.2s ease;
-    font-size: 0.9rem;
-    font-weight: 500;
-}
-
-.nav-item i {
-    width: 24px;
-    font-size: 1.2rem;
-}
-
-.nav-item:hover {
-    background: rgba(0, 229, 255, 0.12);
-    color: var(--elite-primary);
-    transform: translateX(4px);
-}
-
-.nav-item.active {
-    background: linear-gradient(90deg, rgba(0, 229, 255, 0.2), transparent);
-    color: var(--elite-primary);
-    border-left: 3px solid var(--elite-primary);
-}
-
-.nav-badge {
-    margin-left: auto;
-    background: var(--elite-danger);
-    color: white;
+.login-card .access-hint {
     font-size: 0.65rem;
-    padding: 2px 8px;
-    border-radius: 20px;
-    font-weight: 700;
+    color: var(--text-tertiary);
+    margin-top: 12px;
 }
 
-.elite-header {
-    height: var(--header-height);
-    background: rgba(10, 12, 18, 0.95);
-    backdrop-filter: blur(12px);
-    border-bottom: 1px solid var(--border-neon);
+.login-card .security-badge {
+    margin-top: 24px;
+    font-size: 0.65rem;
+    color: var(--text-tertiary);
     display: flex;
     align-items: center;
-    justify-content: space-between;
-    padding: 0 32px;
-    position: sticky;
-    top: 0;
-    z-index: 90;
+    justify-content: center;
+    gap: 6px;
 }
 
-.header-left h1 {
-    font-size: 1.3rem;
-    font-weight: 600;
-    color: var(--elite-primary);
+.login-card .security-badge i {
+    color: var(--elite-success);
 }
 
-.header-stats {
-    display: flex;
-    gap: 32px;
-}
-
-.stat-item {
-    text-align: right;
-}
-
-.stat-label {
-    display: block;
-    font-size: 0.7rem;
-    color: var(--text-tertiary);
-    text-transform: uppercase;
-    letter-spacing: 0.5px;
-}
-
-.stat-value {
-    display: block;
-    font-size: 1.1rem;
-    font-weight: 700;
-    color: var(--elite-primary);
-}
-
-.view-container {
-    flex: 1;
-    padding: 28px;
-    overflow-y: auto;
-}
-
-/* ============================================================================
-   CARDS DASHBOARD
-   ============================================================================ */
-
-.dashboard-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-    gap: 24px;
-    margin-bottom: 28px;
-}
-
-.dashboard-card {
-    background: var(--bg-carbon-card);
-    border: 1px solid var(--border-neon);
-    border-radius: 24px;
-    padding: 24px;
-    transition: all 0.3s ease;
-}
-
-.dashboard-card:hover {
-    transform: translateY(-4px);
-    border-color: var(--elite-primary);
-    box-shadow: 0 0 30px rgba(0, 229, 255, 0.2);
-}
-
-.card-header {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    margin-bottom: 16px;
-}
-
-.card-header h3 {
-    font-size: 0.85rem;
-    color: var(--text-tertiary);
-    text-transform: uppercase;
-    letter-spacing: 1px;
-}
-
-.card-header i {
-    font-size: 1.4rem;
-    color: var(--elite-primary);
-}
-
-.card-value {
-    font-size: 2.5rem;
-    font-weight: 800;
-    font-family: 'JetBrains Mono', monospace;
-    color: var(--elite-primary);
-    text-shadow: 0 0 10px rgba(0, 229, 255, 0.5);
-    margin-bottom: 8px;
-}
-
-/* ============================================================================
-   GRÁFICOS DINÂMICOS
-   ============================================================================ */
-
-.charts-dashboard {
-    display: grid;
-    grid-template-columns: repeat(2, 1fr);
-    gap: 24px;
-    margin-bottom: 28px;
-}
-
-.chart-container {
-    background: var(--bg-carbon-card);
-    border: 1px solid var(--border-neon);
-    border-radius: 20px;
-    padding: 20px;
-}
-
-.chart-container h3 {
-    margin-bottom: 16px;
-    font-size: 0.9rem;
-    color: var(--text-secondary);
-}
-
-.chart-container canvas {
-    max-height: 280px;
-    width: 100%;
-}
-
-/* ============================================================================
-   ALERTAS CRÍTICOS (BURN-RATE)
-   ============================================================================ */
-
-.process-critical {
-    border-left: 4px solid var(--elite-danger);
+.login-error {
     background: rgba(239, 68, 68, 0.1);
-    animation: pulseRed 1.5s infinite;
-}
-
-.process-warning {
-    border-left: 4px solid var(--elite-warning);
-    background: rgba(245, 158, 11, 0.08);
-}
-
-@keyframes pulseRed {
-    0% { box-shadow: 0 0 0 0 rgba(239, 68, 68, 0.4); }
-    70% { box-shadow: 0 0 0 10px rgba(239, 68, 68, 0); }
-    100% { box-shadow: 0 0 0 0 rgba(239, 68, 68, 0); }
-}
-
-.burn-rate-badge {
-    display: inline-block;
-    padding: 6px 12px;
-    border-radius: 20px;
-    font-size: 0.7rem;
-    font-weight: 700;
-}
-
-.burn-rate-critical {
-    background: var(--elite-danger);
-    color: white;
-    animation: blink 1s infinite;
-}
-
-@keyframes blink {
-    0%, 100% { opacity: 1; }
-    50% { opacity: 0.6; }
+    border: 1px solid var(--elite-danger);
+    border-radius: 8px;
+    padding: 10px;
+    margin-bottom: 16px;
+    font-size: 0.8rem;
+    text-align: center;
 }
 
 /* ============================================================================
-   RESPONSIVIDADE
+   TOAST - CORREÇÃO
    ============================================================================ */
 
-@media (max-width: 1024px) {
-    .elite-sidebar {
-        transform: translateX(-100%);
-    }
-    
-    .elite-sidebar.open {
-        transform: translateX(0);
-    }
-    
-    .elite-main {
-        margin-left: 0;
-    }
-    
-    .menu-toggle {
-        display: block;
-    }
-    
-    .header-stats {
-        display: none;
-    }
-    
-    .charts-dashboard {
-        grid-template-columns: 1fr;
-    }
+.toast {
+    background: var(--bg-carbon-card);
+    border-left: 4px solid var(--elite-primary);
+    padding: 14px 20px;
+    border-radius: 12px;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    animation: slideInRight 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
 }
 
-@media (max-width: 768px) {
-    .view-container {
-        padding: 16px;
-    }
-    
-    .dashboard-grid {
-        grid-template-columns: 1fr;
-    }
-    
-    .login-card {
-        padding: 32px 24px;
-        margin: 16px;
-    }
-    
-    .login-card h2 {
-        font-size: 1.5rem;
-    }
+.toast.success { border-left-color: var(--elite-success); }
+.toast.warning { border-left-color: var(--elite-warning); }
+.toast.error { border-left-color: var(--elite-danger); }
+
+.toast i { font-size: 1.2rem; }
+.toast.success i { color: var(--elite-success); }
+.toast.warning i { color: var(--elite-warning); }
+.toast.error i { color: var(--elite-danger); }
+
+@keyframes slideInRight {
+    from { opacity: 0; transform: translateX(100%); }
+    to { opacity: 1; transform: translateX(0); }
 }
