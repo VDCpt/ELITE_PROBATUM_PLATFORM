@@ -1,8 +1,9 @@
 /**
  * ============================================================================
- * UNIFED-ELITE PLATFORM v1.0 — APLICAÇÃO PRINCIPAL
+ * ELITE PROBATUM v1.0 — APLICAÇÃO PRINCIPAL
  * ============================================================================
  * Orquestra todos os módulos, gerencia estado, navegação e eventos globais
+ * Versão atualizada para casos gerais de todas as áreas do direito
  * ============================================================================
  */
 
@@ -19,6 +20,7 @@
         clients: [],
         lawyers: [],
         notifications: [],
+        categories: ['civil', 'criminal', 'labor', 'commercial', 'administrative', 'tax', 'family', 'intellectual'],
         
         // Métricas
         metrics: {
@@ -39,7 +41,8 @@
         // UI
         currentView: 'dashboard',
         sidebarOpen: false,
-        isLoading: false
+        isLoading: false,
+        currentCategory: 'all'
     };
     
     // =========================================================================
@@ -111,94 +114,179 @@
         },
         
         log: (message, level = 'info') => {
-            const prefix = '[ELITE]';
+            const prefix = '[ELITE PROBATUM]';
             if (level === 'error') console.error(prefix, message);
             else if (level === 'warn') console.warn(prefix, message);
             else console.log(prefix, message);
+        },
+        
+        getCategoryName: (category) => {
+            const names = {
+                civil: 'Direito Civil',
+                criminal: 'Direito Penal',
+                labor: 'Direito do Trabalho',
+                commercial: 'Direito Comercial',
+                administrative: 'Direito Administrativo',
+                tax: 'Direito Fiscal',
+                family: 'Direito da Família',
+                intellectual: 'Propriedade Intelectual',
+                all: 'Todos os Casos'
+            };
+            return names[category] || category;
+        },
+        
+        getCategoryColor: (category) => {
+            const colors = {
+                civil: '#3B82F6',
+                criminal: '#EF4444',
+                labor: '#10B981',
+                commercial: '#F59E0B',
+                administrative: '#8B5CF6',
+                tax: '#00E5FF',
+                family: '#EC489A',
+                intellectual: '#14B8A6'
+            };
+            return colors[category] || '#64748B';
         }
     };
     
     // =========================================================================
-    // API CLIENT (Simulado)
+    // API CLIENT (Simulado com casos gerais)
     // =========================================================================
     
     const API = {
         async getCases() {
-            // Simular dados iniciais
+            // Simular dados iniciais para diversas áreas do direito
             return [
                 {
                     id: 'C001',
                     client: 'João Silva',
-                    platform: 'Bolt',
+                    category: 'civil',
+                    categoryName: 'Direito Civil',
                     value: 28450,
-                    discrepancy: 2184.95,
-                    percentage: 89.26,
+                    successProbability: 0.82,
                     status: 'active',
                     judge: 'Dr. António Costa',
                     court: 'Tribunal Judicial de Lisboa',
-                    probability: 0.82,
+                    description: 'Incumprimento contratual - prestação de serviços',
                     createdAt: '2024-09-15'
                 },
                 {
                     id: 'C002',
                     client: 'Maria Santos',
-                    platform: 'Uber',
+                    category: 'labor',
+                    categoryName: 'Direito do Trabalho',
                     value: 15720,
-                    discrepancy: 1200.00,
-                    percentage: 76.35,
+                    successProbability: 0.75,
                     status: 'active',
                     judge: 'Dra. Sofia Mendes',
                     court: 'Tribunal Judicial do Porto',
-                    probability: 0.75,
+                    description: 'Despedimento ilícito - trabalhador',
                     createdAt: '2024-10-01'
                 },
                 {
                     id: 'C003',
                     client: 'António Pereira',
-                    platform: 'Bolt',
+                    category: 'commercial',
+                    categoryName: 'Direito Comercial',
                     value: 32400,
-                    discrepancy: 2845.67,
-                    percentage: 92.45,
+                    successProbability: 0.88,
                     status: 'pending',
                     judge: 'Dr. Ricardo Alves',
                     court: 'Tribunal Judicial de Braga',
-                    probability: 0.88,
+                    description: 'Violação de acordo de acionistas',
                     createdAt: '2024-10-20'
+                },
+                {
+                    id: 'C004',
+                    client: 'Empresa XYZ',
+                    category: 'tax',
+                    categoryName: 'Direito Fiscal',
+                    value: 125000,
+                    successProbability: 0.68,
+                    status: 'active',
+                    judge: 'Dr. Pedro Martins',
+                    court: 'Tribunal Administrativo de Lisboa',
+                    description: 'Impugnação de liquidação de IVA',
+                    createdAt: '2024-08-10'
+                },
+                {
+                    id: 'C005',
+                    client: 'Ana Rodrigues',
+                    category: 'family',
+                    categoryName: 'Direito da Família',
+                    value: 8500,
+                    successProbability: 0.91,
+                    status: 'active',
+                    judge: 'Dra. Teresa Lopes',
+                    court: 'Tribunal de Família de Lisboa',
+                    description: 'Regulação do poder paternal',
+                    createdAt: '2024-09-25'
+                },
+                {
+                    id: 'C006',
+                    client: 'Carlos Mendes',
+                    category: 'criminal',
+                    categoryName: 'Direito Penal',
+                    value: 0,
+                    successProbability: 0.72,
+                    status: 'active',
+                    judge: 'Dr. João Costa',
+                    court: 'Tribunal Criminal de Lisboa',
+                    description: 'Recurso penal - recurso de condenação',
+                    createdAt: '2024-10-05'
+                },
+                {
+                    id: 'C007',
+                    client: 'Tech Solutions Lda',
+                    category: 'intellectual',
+                    categoryName: 'Propriedade Intelectual',
+                    value: 45200,
+                    successProbability: 0.79,
+                    status: 'active',
+                    judge: 'Dra. Isabel Ferreira',
+                    court: 'Tribunal da Propriedade Intelectual',
+                    description: 'Violação de patente de software',
+                    createdAt: '2024-09-18'
+                },
+                {
+                    id: 'C008',
+                    client: 'José Santos',
+                    category: 'administrative',
+                    categoryName: 'Direito Administrativo',
+                    value: 18900,
+                    successProbability: 0.64,
+                    status: 'pending',
+                    judge: 'Dr. Rui Silva',
+                    court: 'Tribunal Administrativo do Porto',
+                    description: 'Impugnação de ato administrativo',
+                    createdAt: '2024-10-12'
                 }
             ];
         },
         
         async getClients() {
             return [
-                { id: 'CL001', name: 'João Silva', nif: '123456789', cases: 1, totalValue: 28450 },
-                { id: 'CL002', name: 'Maria Santos', nif: '987654321', cases: 1, totalValue: 15720 },
-                { id: 'CL003', name: 'António Pereira', nif: '456789123', cases: 1, totalValue: 32400 }
+                { id: 'CL001', name: 'João Silva', nif: '123456789', category: 'civil', cases: 1, totalValue: 28450 },
+                { id: 'CL002', name: 'Maria Santos', nif: '987654321', category: 'labor', cases: 1, totalValue: 15720 },
+                { id: 'CL003', name: 'António Pereira', nif: '456789123', category: 'commercial', cases: 1, totalValue: 32400 },
+                { id: 'CL004', name: 'Empresa XYZ', nif: '502345678', category: 'tax', cases: 1, totalValue: 125000 },
+                { id: 'CL005', name: 'Ana Rodrigues', nif: '789123456', category: 'family', cases: 1, totalValue: 8500 },
+                { id: 'CL006', name: 'Carlos Mendes', nif: '321654987', category: 'criminal', cases: 1, totalValue: 0 },
+                { id: 'CL007', name: 'Tech Solutions Lda', nif: '512345678', category: 'intellectual', cases: 1, totalValue: 45200 },
+                { id: 'CL008', name: 'José Santos', nif: '654987321', category: 'administrative', cases: 1, totalValue: 18900 }
             ];
         },
         
         async getJudges() {
             return [
-                { name: 'Dr. António Costa', court: 'Lisboa', decisions: 45, favorableRate: 0.68, avgTime: 120 },
-                { name: 'Dra. Sofia Mendes', court: 'Porto', decisions: 38, favorableRate: 0.72, avgTime: 95 },
-                { name: 'Dr. Ricardo Alves', court: 'Braga', decisions: 52, favorableRate: 0.58, avgTime: 110 }
+                { name: 'Dr. António Costa', court: 'Lisboa', category: 'civil', decisions: 45, favorableRate: 0.68, avgTime: 120 },
+                { name: 'Dra. Sofia Mendes', court: 'Porto', category: 'labor', decisions: 38, favorableRate: 0.72, avgTime: 95 },
+                { name: 'Dr. Ricardo Alves', court: 'Braga', category: 'commercial', decisions: 52, favorableRate: 0.58, avgTime: 110 },
+                { name: 'Dr. Pedro Martins', court: 'Lisboa', category: 'tax', decisions: 32, favorableRate: 0.65, avgTime: 140 },
+                { name: 'Dra. Teresa Lopes', court: 'Lisboa', category: 'family', decisions: 28, favorableRate: 0.81, avgTime: 85 },
+                { name: 'Dr. João Costa', court: 'Lisboa', category: 'criminal', decisions: 56, favorableRate: 0.59, avgTime: 115 }
             ];
-        },
-        
-        async getPlatformIntel() {
-            return {
-                bolt: {
-                    settlementRate: 0.45,
-                    avgSettlementValue: 8500,
-                    commonDefenses: ['jurisdiction', 'technical_error', 'de_minimis'],
-                    weaknesses: ['regulatory_scrutiny', 'media_sensitive']
-                },
-                uber: {
-                    settlementRate: 0.38,
-                    avgSettlementValue: 7200,
-                    commonDefenses: ['jurisdiction', 'algorithm', 'terms_of_service'],
-                    weaknesses: ['class_action_risk', 'public_pressure']
-                }
-            };
         }
     };
     
@@ -231,10 +319,6 @@
                     container.innerHTML = await this.renderJudgesProfiles();
                     await this.initJudgesModule();
                     break;
-                case 'platforms':
-                    container.innerHTML = await this.renderPlatformsIntel();
-                    await this.initPlatformsModule();
-                    break;
                 case 'clients':
                     container.innerHTML = await this.renderClients();
                     await this.initClientsTable();
@@ -254,7 +338,6 @@
                 cases: 'Gestão de Casos',
                 litigation: 'Inteligência de Litígio',
                 judges: 'Perfil de Magistrados',
-                platforms: 'Inteligência de Plataformas',
                 clients: 'Clientes',
                 reports: 'Relatórios'
             };
@@ -265,7 +348,7 @@
             const cases = await API.getCases();
             const activeCases = cases.filter(c => c.status === 'active').length;
             const totalValue = cases.reduce((sum, c) => sum + c.value, 0);
-            const avgProbability = cases.reduce((sum, c) => sum + c.probability, 0) / cases.length;
+            const avgProbability = cases.reduce((sum, c) => sum + c.successProbability, 0) / cases.length;
             
             return `
                 <div class="dashboard-grid">
@@ -314,18 +397,20 @@
                     </div>
                 </div>
                 
-                <div class="chart-container">
-                    <h3>Evolução da Carteira (últimos 6 meses)</h3>
-                    <canvas id="portfolioChart" height="300"></canvas>
+                <div class="charts-dashboard">
+                    <div class="chart-container">
+                        <h3>Evolução da Carteira (últimos 6 meses)</h3>
+                        <canvas id="portfolioChart" height="250"></canvas>
+                    </div>
+                    
+                    <div class="chart-container">
+                        <h3>Distribuição por Área do Direito</h3>
+                        <canvas id="categoryChart" height="250"></canvas>
+                    </div>
                 </div>
                 
                 <div class="chart-container">
-                    <h3>Distribuição por Plataforma</h3>
-                    <canvas id="platformChart" height="300"></canvas>
-                </div>
-                
-                <div class="chart-container">
-                    <h3>Top 5 Alertas Estratégicos</h3>
+                    <h3>Top Alertas Estratégicos</h3>
                     <div id="alertsList" class="alerts-list"></div>
                 </div>
             `;
@@ -333,9 +418,10 @@
         
         async renderCases() {
             const cases = await API.getCases();
+            const categories = AppState.categories;
             
             return `
-                <div class="cases-header" style="display: flex; justify-content: space-between; margin-bottom: 20px;">
+                <div class="cases-header" style="display: flex; justify-content: space-between; margin-bottom: 20px; flex-wrap: wrap; gap: 16px;">
                     <div class="cases-actions">
                         <button id="newCaseBtn" class="elite-btn primary">
                             <i class="fas fa-plus"></i> Novo Caso
@@ -345,8 +431,15 @@
                         </button>
                     </div>
                     <div class="cases-search">
-                        <input type="text" id="searchCases" placeholder="Pesquisar casos..." class="search-input">
+                        <input type="text" id="searchCases" placeholder="Pesquisar casos..." class="search-input" style="width: 250px;">
                     </div>
+                </div>
+                
+                <div class="category-selector">
+                    <button class="category-btn active" data-category="all">Todos</button>
+                    ${categories.map(cat => `
+                        <button class="category-btn" data-category="${cat}">${EliteUtils.getCategoryName(cat)}</button>
+                    `).join('')}
                 </div>
                 
                 <table class="data-table">
@@ -354,9 +447,8 @@
                         <tr>
                             <th>Processo</th>
                             <th>Cliente</th>
-                            <th>Plataforma</th>
+                            <th>Área</th>
                             <th>Valor (€)</th>
-                            <th>Omissão</th>
                             <th>Prob. Sucesso</th>
                             <th>Status</th>
                             <th>Ações</th>
@@ -364,16 +456,15 @@
                     </thead>
                     <tbody id="casesTableBody">
                         ${cases.map(c => `
-                            <tr data-case-id="${c.id}">
-                                <td><strong>${c.id}</strong></td>
+                            <tr data-case-id="${c.id}" data-category="${c.category}">
+                                <td><strong>${c.id}</strong><br><small>${c.description.substring(0, 30)}...</small></td>
                                 <td>${c.client}</td>
-                                <td><span class="platform-badge">${c.platform}</span></td>
+                                <td><span class="case-badge ${c.category}" style="background: ${EliteUtils.getCategoryColor(c.category)}20; color: ${EliteUtils.getCategoryColor(c.category)}">${c.categoryName}</span></td>
                                 <td>${EliteUtils.formatCurrency(c.value)}</td>
-                                <td><span class="discrepancy-badge ${c.percentage > 80 ? 'critical' : 'high'}">${c.percentage.toFixed(1)}%</span></td>
                                 <td>
                                     <div class="progress-bar">
-                                        <div class="progress-fill" style="width: ${c.probability * 100}%"></div>
-                                        <span class="progress-text">${EliteUtils.formatPercentage(c.probability * 100)}</span>
+                                        <div class="progress-fill" style="width: ${c.successProbability * 100}%"></div>
+                                        <span class="progress-text">${EliteUtils.formatPercentage(c.successProbability * 100)}</span>
                                     </div>
                                 </td>
                                 <td><span class="status-badge status-${c.status}">${c.status === 'active' ? 'Ativo' : 'Pendente'}</span></td>
@@ -397,26 +488,31 @@
                 <div class="litigation-intelligence">
                     <div class="intelligence-header">
                         <h2>Análise Preditiva de Êxito</h2>
-                        <p>Insira os dados do caso para obter previsão detalhada</p>
+                        <p>Insira os dados do caso para obter previsão detalhada em qualquer área do direito</p>
                     </div>
                     
                     <div class="intelligence-form">
                         <div class="form-row">
                             <div class="form-group">
-                                <label>Plataforma</label>
-                                <select id="predictPlatform">
-                                    <option value="bolt">Bolt</option>
-                                    <option value="uber">Uber</option>
-                                    <option value="freenow">Free Now</option>
+                                <label>Área do Direito</label>
+                                <select id="predictCategory">
+                                    <option value="civil">Direito Civil</option>
+                                    <option value="criminal">Direito Penal</option>
+                                    <option value="labor">Direito do Trabalho</option>
+                                    <option value="commercial">Direito Comercial</option>
+                                    <option value="administrative">Direito Administrativo</option>
+                                    <option value="tax">Direito Fiscal</option>
+                                    <option value="family">Direito da Família</option>
+                                    <option value="intellectual">Propriedade Intelectual</option>
                                 </select>
                             </div>
                             <div class="form-group">
                                 <label>Valor da Causa (€)</label>
-                                <input type="number" id="predictValue" placeholder="Ex: 28450">
+                                <input type="number" id="predictValue" placeholder="Ex: 50000">
                             </div>
                             <div class="form-group">
-                                <label>Percentagem de Omissão (%)</label>
-                                <input type="number" id="predictPercentage" placeholder="Ex: 89.26" step="0.01">
+                                <label>Probabilidade Estimada (%)</label>
+                                <input type="number" id="predictProbability" placeholder="Ex: 75" step="1">
                             </div>
                         </div>
                         <div class="form-row">
@@ -427,6 +523,7 @@
                                     <option value="porto">Porto</option>
                                     <option value="braga">Braga</option>
                                     <option value="coimbra">Coimbra</option>
+                                    <option value="faro">Faro</option>
                                 </select>
                             </div>
                             <div class="form-group">
@@ -434,10 +531,11 @@
                                 <input type="text" id="predictJudge" placeholder="Nome do juiz">
                             </div>
                             <div class="form-group">
-                                <label>Notificação prévia da AT?</label>
-                                <select id="predictATNotification">
-                                    <option value="false">Não</option>
-                                    <option value="true">Sim</option>
+                                <label>Complexidade do Caso</label>
+                                <select id="predictComplexity">
+                                    <option value="low">Baixa</option>
+                                    <option value="medium" selected>Média</option>
+                                    <option value="high">Alta</option>
                                 </select>
                             </div>
                         </div>
@@ -448,11 +546,6 @@
                     
                     <div id="predictionResult" class="prediction-result" style="display: none;">
                         <!-- Resultados da previsão serão inseridos aqui -->
-                    </div>
-                    
-                    <div class="similar-cases">
-                        <h3>Casos Similares (Base de Dados)</h3>
-                        <div id="similarCasesList" class="similar-cases-list"></div>
                     </div>
                 </div>
             `;
@@ -474,7 +567,7 @@
                                 <i class="fas fa-gavel"></i>
                                 <div>
                                     <h3>${j.name}</h3>
-                                    <p>${j.court}</p>
+                                    <p>${j.court} · ${EliteUtils.getCategoryName(j.category)}</p>
                                 </div>
                             </div>
                             <div class="judge-stats">
@@ -502,7 +595,7 @@
                     `).join('')}
                 </div>
                 
-                <div class="judge-trends">
+                <div class="chart-container">
                     <h3>Tendências por Tribunal</h3>
                     <canvas id="courtTrendsChart" height="300"></canvas>
                 </div>
@@ -511,87 +604,19 @@
         
         getRecommendedStrategy(judge) {
             if (judge.favorableRate > 0.7) {
-                return "Estratégia ofensiva. Argumentos técnicos fortes têm boa aceitação. Foco em prova documental.";
+                return "Estratégia ofensiva. Argumentos técnicos fortes têm boa aceitação. Foco em prova documental e jurisprudência consolidada.";
             } else if (judge.favorableRate > 0.55) {
-                return "Estratégia equilibrada. Preparar para contraditório robusto. Valorizar acordos.";
+                return "Estratégia equilibrada. Preparar para contraditório robusto. Valorizar acordos e soluções consensuais.";
             } else {
-                return "Estratégia defensiva. Considerar arbitragem ou mudança de foro. Fortalecer provas.";
+                return "Estratégia defensiva. Considerar arbitragem ou mudança de foro. Fortalecer provas e explorar precedentes favoráveis.";
             }
-        },
-        
-        async renderPlatformsIntel() {
-            const intel = await API.getPlatformIntel();
-            
-            return `
-                <div class="platforms-header">
-                    <h2>Inteligência de Plataformas</h2>
-                    <p>Análise estratégica de comportamento de cada plataforma</p>
-                </div>
-                
-                <div class="platforms-grid">
-                    ${Object.entries(intel).map(([name, data]) => `
-                        <div class="platform-card ${name}">
-                            <div class="platform-header">
-                                <i class="fas fa-building"></i>
-                                <h3>${name.toUpperCase()}</h3>
-                            </div>
-                            <div class="platform-stats">
-                                <div class="stat">
-                                    <span>Taxa de Acordo</span>
-                                    <strong>${EliteUtils.formatPercentage(data.settlementRate * 100)}</strong>
-                                </div>
-                                <div class="stat">
-                                    <span>Valor Médio Acordo</span>
-                                    <strong>${EliteUtils.formatCurrency(data.avgSettlementValue)}</strong>
-                                </div>
-                            </div>
-                            <div class="platform-defenses">
-                                <strong>Defesas comuns:</strong>
-                                <ul>
-                                    ${data.commonDefenses.map(d => `<li>${this.translateDefense(d)}</li>`).join('')}
-                                </ul>
-                            </div>
-                            <div class="platform-weaknesses">
-                                <strong>Pontos fracos:</strong>
-                                <ul>
-                                    ${data.weaknesses.map(w => `<li>${this.translateWeakness(w)}</li>`).join('')}
-                                </ul>
-                            </div>
-                            <button class="elite-btn small negotiate-strategy" data-platform="${name}">
-                                <i class="fas fa-handshake"></i> Estratégia Negocial
-                            </button>
-                        </div>
-                    `).join('')}
-                </div>
-            `;
-        },
-        
-        translateDefense(defense) {
-            const map = {
-                jurisdiction: 'Questão de jurisdição (sede estrangeira)',
-                technical_error: 'Erro técnico no processamento',
-                de_minimis: 'Valor inferior a 15.000€',
-                algorithm: 'Algoritmo de cálculo proprietário',
-                terms_of_service: 'Termos e Condições aceites pelo utilizador'
-            };
-            return map[defense] || defense;
-        },
-        
-        translateWeakness(weakness) {
-            const map = {
-                regulatory_scrutiny: 'Sob escrutínio da ASAE/AT',
-                media_sensitive: 'Sensível a cobertura mediática',
-                class_action_risk: 'Risco de ação coletiva',
-                public_pressure: 'Pressão pública sobre o modelo de negócio'
-            };
-            return map[weakness] || weakness;
         },
         
         async renderClients() {
             const clients = await API.getClients();
             
             return `
-                <div class="clients-header">
+                <div class="clients-header" style="display: flex; justify-content: space-between; margin-bottom: 20px;">
                     <h2>Clientes</h2>
                     <button id="newClientBtn" class="elite-btn primary">
                         <i class="fas fa-user-plus"></i> Novo Cliente
@@ -603,33 +628,32 @@
                         <tr>
                             <th>Cliente</th>
                             <th>NIF</th>
+                            <th>Área Principal</th>
                             <th>Casos</th>
                             <th>Valor Total (€)</th>
-                            <th>Portal</th>
                             <th>Ações</th>
                         </tr>
                     </thead>
                     <tbody>
                         ${clients.map(c => `
-                            <tr>
+                             <tr>
                                 <td><strong>${c.name}</strong></td>
                                 <td>${c.nif}</td>
+                                <td><span class="case-badge ${c.category}" style="background: ${EliteUtils.getCategoryColor(c.category)}20; color: ${EliteUtils.getCategoryColor(c.category)}">${EliteUtils.getCategoryName(c.category)}</span></td>
                                 <td>${c.cases}</td>
                                 <td>${EliteUtils.formatCurrency(c.totalValue)}</td>
                                 <td>
-                                    <button class="elite-btn small access-portal" data-client="${c.id}">
-                                        <i class="fas fa-external-link-alt"></i> Aceder
-                                    </button>
-                                </td>
-                                <td>
-                                    <button class="action-btn view-client" data-id="${c.id}">
+                                    <button class="action-btn view-client" data-id="${c.id}" title="Ver detalhes">
                                         <i class="fas fa-eye"></i>
                                     </button>
+                                    <button class="action-btn access-portal" data-client="${c.id}" title="Portal do Cliente">
+                                        <i class="fas fa-external-link-alt"></i>
+                                    </button>
                                 </td>
-                            </tr>
+                             </tr>
                         `).join('')}
                     </tbody>
-                </table>
+                 </table>
             `;
         },
         
@@ -644,8 +668,8 @@
                     <div class="report-card">
                         <i class="fas fa-chart-line"></i>
                         <h3>Relatório de Performance</h3>
-                        <p>Análise de métricas da carteira, taxas de sucesso e ROI</p>
-                        <button class="elite-btn small" onclick="UNIFEDElite.generatePerformanceReport()">
+                        <p>Análise de métricas da carteira, taxas de sucesso e ROI por área do direito</p>
+                        <button class="elite-btn small" onclick="ELITE_PROBATUM.generatePerformanceReport()">
                             <i class="fas fa-download"></i> Gerar
                         </button>
                     </div>
@@ -653,17 +677,8 @@
                     <div class="report-card">
                         <i class="fas fa-gavel"></i>
                         <h3>Análise de Magistrados</h3>
-                        <p>Perfil detalhado de juízes e tendências por tribunal</p>
-                        <button class="elite-btn small" onclick="UNIFEDElite.generateJudgesReport()">
-                            <i class="fas fa-download"></i> Gerar
-                        </button>
-                    </div>
-                    
-                    <div class="report-card">
-                        <i class="fas fa-building"></i>
-                        <h3>Inteligência de Plataformas</h3>
-                        <p>Estratégias de defesa e padrões de acordo</p>
-                        <button class="elite-btn small" onclick="UNIFEDElite.generatePlatformsReport()">
+                        <p>Perfil detalhado de juízes e tendências por tribunal e área</p>
+                        <button class="elite-btn small" onclick="ELITE_PROBATUM.generateJudgesReport()">
                             <i class="fas fa-download"></i> Gerar
                         </button>
                     </div>
@@ -672,7 +687,16 @@
                         <i class="fas fa-chart-pie"></i>
                         <h3>Projeção Financeira</h3>
                         <p>Previsão de receitas e cash flow para 12 meses</p>
-                        <button class="elite-btn small" onclick="UNIFEDElite.generateFinancialForecast()">
+                        <button class="elite-btn small" onclick="ELITE_PROBATUM.generateFinancialForecast()">
+                            <i class="fas fa-download"></i> Gerar
+                        </button>
+                    </div>
+                    
+                    <div class="report-card">
+                        <i class="fas fa-balance-scale"></i>
+                        <h3>Análise por Área</h3>
+                        <p>Performance detalhada por ramo do direito</p>
+                        <button class="elite-btn small" onclick="ELITE_PROBATUM.generateCategoryReport()">
                             <i class="fas fa-download"></i> Gerar
                         </button>
                     </div>
@@ -682,35 +706,13 @@
                     <h3>Relatórios Agendados</h3>
                     <table class="data-table">
                         <thead>
-                            <tr>
-                                <th>Relatório</th>
-                                <th>Frequência</th>
-                                <th>Próxima Execução</th>
-                                <th>Destinatários</th>
-                                <th>Ações</th>
-                            </tr>
+                            <tr><th>Relatório</th><th>Frequência</th><th>Próxima Execução</th><th>Destinatários</th><th>Ações</th></tr>
                         </thead>
                         <tbody>
-                            <tr>
-                                <td>Dashboard Executivo</td>
-                                <td>Semanal</td>
-                                <td>Segunda-feira, 09:00</td>
-                                <td>Sócios (5)</td>
-                                <td>
-                                    <button class="action-btn"><i class="fas fa-edit"></i></button>
-                                    <button class="action-btn"><i class="fas fa-trash"></i></button>
-                                </td>
-                            </tr>
-                            <tr>
-                                <td>Inteligência de Mercado</td>
-                                <td>Mensal</td>
-                                <td>1 de cada mês, 10:00</td>
-                                <td>Equipa de Litígio (12)</td>
-                                <td>
-                                    <button class="action-btn"><i class="fas fa-edit"></i></button>
-                                    <button class="action-btn"><i class="fas fa-trash"></i></button>
-                                </td>
-                            </tr>
+                            <tr><td>Dashboard Executivo</td><td>Semanal</td><td>Segunda-feira, 09:00</td><td>Sócios (5)</td>
+                            <td><button class="action-btn"><i class="fas fa-edit"></i></button><button class="action-btn"><i class="fas fa-trash"></i></button></td></tr>
+                            <tr><td>Análise por Área</td><td>Mensal</td><td>1 de cada mês, 10:00</td><td>Equipa de Litígio (12)</td>
+                            <td><button class="action-btn"><i class="fas fa-edit"></i></button><button class="action-btn"><i class="fas fa-trash"></i></button></td></tr>
                         </tbody>
                     </table>
                     <button class="elite-btn secondary" id="scheduleReportBtn">
@@ -721,60 +723,82 @@
         },
         
         async initDashboardComponents() {
-            // Inicializar gráficos
-            if (typeof Chart !== 'undefined') {
-                // Gráfico de portfólio
-                const portfolioCtx = document.getElementById('portfolioChart');
-                if (portfolioCtx) {
-                    new Chart(portfolioCtx, {
-                        type: 'line',
-                        data: {
-                            labels: ['Abr', 'Mai', 'Jun', 'Jul', 'Ago', 'Set'],
-                            datasets: [{
-                                label: 'Valor em Disputa (€)',
-                                data: [125000, 142000, 158000, 187000, 215000, 248000],
-                                borderColor: '#00E5FF',
-                                backgroundColor: 'rgba(0, 229, 255, 0.1)',
-                                tension: 0.4,
-                                fill: true
-                            }]
+            const cases = await API.getCases();
+            
+            // Gráfico de portfólio - tamanho reduzido
+            const portfolioCtx = document.getElementById('portfolioChart');
+            if (portfolioCtx && typeof Chart !== 'undefined') {
+                new Chart(portfolioCtx, {
+                    type: 'line',
+                    data: {
+                        labels: ['Abr', 'Mai', 'Jun', 'Jul', 'Ago', 'Set'],
+                        datasets: [{
+                            label: 'Valor em Disputa (€)',
+                            data: [125000, 142000, 158000, 187000, 215000, 248000],
+                            borderColor: '#00E5FF',
+                            backgroundColor: 'rgba(0, 229, 255, 0.1)',
+                            tension: 0.4,
+                            fill: true,
+                            pointRadius: 3,
+                            pointHoverRadius: 6
+                        }]
+                    },
+                    options: {
+                        responsive: true,
+                        maintainAspectRatio: true,
+                        plugins: {
+                            legend: { labels: { color: '#94A3B8', font: { size: 10 } } },
+                            tooltip: { mode: 'index', intersect: false }
                         },
-                        options: {
-                            responsive: true,
-                            maintainAspectRatio: false,
-                            plugins: {
-                                legend: { labels: { color: '#94A3B8' } }
-                            },
-                            scales: {
-                                y: { ticks: { color: '#94A3B8' }, grid: { color: 'rgba(255,255,255,0.05)' } },
-                                x: { ticks: { color: '#94A3B8' }, grid: { color: 'rgba(255,255,255,0.05)' } }
-                            }
+                        scales: {
+                            y: { ticks: { color: '#94A3B8', font: { size: 10 } }, grid: { color: 'rgba(255,255,255,0.05)' } },
+                            x: { ticks: { color: '#94A3B8', font: { size: 10 } }, grid: { color: 'rgba(255,255,255,0.05)' } }
                         }
-                    });
-                }
+                    }
+                });
+            }
+            
+            // Gráfico de categorias (substituindo plataformas)
+            const categoryCtx = document.getElementById('categoryChart');
+            if (categoryCtx && typeof Chart !== 'undefined') {
+                const categoryCount = {};
+                cases.forEach(c => {
+                    categoryCount[c.categoryName] = (categoryCount[c.categoryName] || 0) + 1;
+                });
                 
-                // Gráfico de plataformas
-                const platformCtx = document.getElementById('platformChart');
-                if (platformCtx) {
-                    new Chart(platformCtx, {
-                        type: 'doughnut',
-                        data: {
-                            labels: ['Bolt', 'Uber', 'Free Now', 'Outras'],
-                            datasets: [{
-                                data: [65, 25, 7, 3],
-                                backgroundColor: ['#00E5FF', '#3B82F6', '#8B5CF6', '#64748B'],
-                                borderWidth: 0
-                            }]
-                        },
-                        options: {
-                            responsive: true,
-                            maintainAspectRatio: false,
-                            plugins: {
-                                legend: { labels: { color: '#94A3B8' } }
-                            }
+                const categoryColors = {
+                    'Direito Civil': '#3B82F6',
+                    'Direito Penal': '#EF4444',
+                    'Direito do Trabalho': '#10B981',
+                    'Direito Comercial': '#F59E0B',
+                    'Direito Administrativo': '#8B5CF6',
+                    'Direito Fiscal': '#00E5FF',
+                    'Direito da Família': '#EC489A',
+                    'Propriedade Intelectual': '#14B8A6'
+                };
+                
+                new Chart(categoryCtx, {
+                    type: 'doughnut',
+                    data: {
+                        labels: Object.keys(categoryCount),
+                        datasets: [{
+                            data: Object.values(categoryCount),
+                            backgroundColor: Object.keys(categoryCount).map(c => categoryColors[c] || '#64748B'),
+                            borderWidth: 0
+                        }]
+                    },
+                    options: {
+                        responsive: true,
+                        maintainAspectRatio: true,
+                        plugins: {
+                            legend: { 
+                                position: 'right',
+                                labels: { color: '#94A3B8', font: { size: 10 }, boxWidth: 10 }
+                            },
+                            tooltip: { callbacks: { label: (ctx) => `${ctx.label}: ${ctx.raw} casos` } }
                         }
-                    });
-                }
+                    }
+                });
             }
             
             // Carregar alertas
@@ -784,24 +808,25 @@
                     <div class="alert-item critical">
                         <i class="fas fa-exclamation-triangle"></i>
                         <div>
-                            <strong>Novo padrão de omissão detetado na Bolt</strong>
-                            <p>Percentagem de omissão em setembro subiu 23% vs média histórica</p>
-                            <small>Fonte: Community Forensic Network</small>
+                            <strong>Nova jurisprudência do Supremo Tribunal de Justiça</strong>
+                            <p>Acórdão relevante em matéria de responsabilidade civil</p>
+                            <small>Fonte: DGSI - 15.10.2024</small>
                         </div>
                     </div>
                     <div class="alert-item warning">
                         <i class="fas fa-gavel"></i>
                         <div>
-                            <strong>Decisão favorável no STA</strong>
-                            <p>Acórdão reforça tese de inversão do ónus da prova</p>
-                            <small>Proc. 01080/17.3BELRS · 27.09.2023</small>
+                            <strong>Mudança na composição do Tribunal da Relação</strong>
+                            <p>Novos desembargadores nomeados - atualizar perfis</p>
+                            <small>Fonte: CSM - 14.10.2024</small>
                         </div>
                     </div>
                     <div class="alert-item info">
                         <i class="fas fa-chart-line"></i>
                         <div>
-                            <strong>Projeção de receita atualizada</strong>
-                            <p>Carteira atual: €248.000 | Projeção 12m: €1.2M</p>
+                            <strong>Crescimento na área do Direito Fiscal</strong>
+                            <p>Aumento de 23% nos casos de impugnação tributária</p>
+                            <small>Análise de Mercado - Outubro 2024</small>
                         </div>
                     </div>
                 `;
@@ -809,7 +834,6 @@
         },
         
         async initCasesTable() {
-            // Adicionar event listeners para botões de ação
             document.querySelectorAll('.view-case').forEach(btn => {
                 btn.addEventListener('click', () => {
                     const caseId = btn.dataset.id;
@@ -831,6 +855,27 @@
             document.getElementById('searchCases')?.addEventListener('input', (e) => {
                 this.filterCases(e.target.value);
             });
+            
+            // Category filters
+            document.querySelectorAll('.category-btn').forEach(btn => {
+                btn.addEventListener('click', () => {
+                    document.querySelectorAll('.category-btn').forEach(b => b.classList.remove('active'));
+                    btn.classList.add('active');
+                    const category = btn.dataset.category;
+                    this.filterCasesByCategory(category);
+                });
+            });
+        },
+        
+        filterCasesByCategory(category) {
+            const rows = document.querySelectorAll('#casesTableBody tr');
+            rows.forEach(row => {
+                if (category === 'all' || row.dataset.category === category) {
+                    row.style.display = '';
+                } else {
+                    row.style.display = 'none';
+                }
+            });
         },
         
         async initLitigationModule() {
@@ -840,24 +885,23 @@
         },
         
         async runPrediction() {
-            const platform = document.getElementById('predictPlatform')?.value;
+            const category = document.getElementById('predictCategory')?.value;
             const value = parseFloat(document.getElementById('predictValue')?.value);
-            const percentage = parseFloat(document.getElementById('predictPercentage')?.value);
+            const userProbability = parseFloat(document.getElementById('predictProbability')?.value);
             const court = document.getElementById('predictCourt')?.value;
             const judge = document.getElementById('predictJudge')?.value;
-            const hasATNotification = document.getElementById('predictATNotification')?.value === 'true';
+            const complexity = document.getElementById('predictComplexity')?.value;
             
-            if (!value || !percentage) {
-                EliteUtils.showToast('Preencha todos os campos obrigatórios', 'warning');
+            if (!value) {
+                EliteUtils.showToast('Preencha o valor da causa', 'warning');
                 return;
             }
             
             EliteUtils.showToast('A processar previsão...', 'info');
             
-            // Simular previsão (em produção, chamaria o módulo de IA)
             setTimeout(() => {
-                const probability = this.calculateProbability(platform, value, percentage, court, hasATNotification);
-                const expectedSettlement = value * (platform === 'bolt' ? 0.45 : 0.38);
+                const probability = userProbability ? userProbability / 100 : this.calculateProbability(category, value, complexity);
+                const expectedSettlement = this.calculateExpectedSettlement(value, probability);
                 const recommendedFee = this.calculateRecommendedFee(value, probability);
                 
                 const resultDiv = document.getElementById('predictionResult');
@@ -875,37 +919,40 @@
                         
                         <div class="prediction-details">
                             <div class="detail-row">
-                                <span>Probabilidade de êxito em julgamento:</span>
+                                <span>Área do Direito:</span>
+                                <strong>${EliteUtils.getCategoryName(category)}</strong>
+                            </div>
+                            <div class="detail-row">
+                                <span>Probabilidade de êxito:</span>
                                 <strong class="${probability > 0.7 ? 'positive' : probability > 0.4 ? 'neutral' : 'negative'}">
                                     ${EliteUtils.formatPercentage(probability * 100)}
                                 </strong>
                             </div>
                             <div class="detail-row">
-                                <span>Valor estimado de acordo:</span>
+                                <span>Valor estimado de êxito:</span>
                                 <strong>${EliteUtils.formatCurrency(expectedSettlement)}</strong>
                             </div>
                             <div class="detail-row">
                                 <span>Honorários recomendados:</span>
                                 <strong>${EliteUtils.formatCurrency(recommendedFee)}</strong>
-                                <small>(${recommendedFee / value * 100}% da causa)</small>
                             </div>
                             <div class="detail-row">
                                 <span>Duração estimada do processo:</span>
-                                <strong>${this.estimateDuration(court)}</strong>
+                                <strong>${this.estimateDuration(court, complexity)}</strong>
                             </div>
                         </div>
                         
                         <div class="prediction-recommendation">
                             <h4>Estratégia Recomendada</h4>
-                            <p>${this.getRecommendation(probability, value, expectedSettlement)}</p>
+                            <p>${this.getGeneralRecommendation(probability, value, expectedSettlement, category)}</p>
                         </div>
                         
                         <div class="prediction-actions">
-                            <button class="elite-btn primary" onclick="UNIFEDElite.generatePetition()">
+                            <button class="elite-btn primary" onclick="ELITE_PROBATUM.generatePetition()">
                                 <i class="fas fa-file-alt"></i> Gerar Minuta de Petição
                             </button>
-                            <button class="elite-btn secondary" onclick="UNIFEDElite.simulateDefense()">
-                                <i class="fas fa-shield-alt"></i> Simular Defesa da Plataforma
+                            <button class="elite-btn secondary" onclick="ELITE_PROBATUM.simulateDefense()">
+                                <i class="fas fa-shield-alt"></i> Simular Defesa
                             </button>
                         </div>
                     `;
@@ -913,85 +960,71 @@
             }, 1000);
         },
         
-        calculateProbability(platform, value, percentage, court, hasATNotification) {
-            // Algoritmo simplificado de previsão
-            let prob = 0.5;
+        calculateProbability(category, value, complexity) {
+            let prob = 0.55;
             
-            // Fator plataforma
-            if (platform === 'bolt') prob += 0.05;
-            else if (platform === 'uber') prob += 0.02;
+            const categoryFactors = {
+                civil: 0.05,
+                criminal: -0.02,
+                labor: 0.08,
+                commercial: 0.03,
+                administrative: 0.02,
+                tax: 0.04,
+                family: 0.10,
+                intellectual: 0.06
+            };
+            prob += categoryFactors[category] || 0;
             
-            // Fator percentagem de omissão
-            if (percentage > 80) prob += 0.15;
-            else if (percentage > 60) prob += 0.1;
-            else if (percentage > 40) prob += 0.05;
+            if (value > 100000) prob += 0.05;
+            else if (value > 50000) prob += 0.03;
+            else if (value > 10000) prob += 0.02;
             
-            // Fator valor
-            if (value > 50000) prob += 0.05;
-            else if (value > 15000) prob += 0.03;
+            if (complexity === 'low') prob += 0.08;
+            else if (complexity === 'high') prob -= 0.05;
             
-            // Fator tribunal
-            if (court === 'lisboa') prob += 0.02;
-            else if (court === 'porto') prob += 0.05;
-            
-            // Fator notificação AT
-            if (hasATNotification) prob -= 0.1;
-            
-            return Math.min(Math.max(prob, 0.2), 0.95);
+            return Math.min(Math.max(prob, 0.25), 0.92);
+        },
+        
+        calculateExpectedSettlement(value, probability) {
+            return value * (0.4 + probability * 0.3);
         },
         
         calculateRecommendedFee(value, probability) {
-            // Modelo de honorários baseado no risco e valor
-            const baseFee = value * 0.15; // 15% base
-            const riskAdjustment = (1 - probability) * value * 0.1; // Prémio de risco
-            return Math.min(baseFee + riskAdjustment, value * 0.4);
+            const baseFee = value * 0.15;
+            const riskAdjustment = (1 - probability) * value * 0.1;
+            return Math.min(baseFee + riskAdjustment, value * 0.35);
         },
         
-        estimateDuration(court) {
-            const durations = {
-                lisboa: '8-12 meses',
-                porto: '6-10 meses',
-                braga: '10-14 meses',
-                coimbra: '12-16 meses'
+        estimateDuration(court, complexity) {
+            const baseDurations = {
+                lisboa: 12,
+                porto: 10,
+                braga: 14,
+                coimbra: 16,
+                faro: 13
             };
-            return durations[court] || '8-12 meses';
+            let months = baseDurations[court] || 12;
+            if (complexity === 'high') months += 6;
+            if (complexity === 'low') months -= 3;
+            return `${Math.max(months, 6)}-${months + 6} meses`;
         },
         
-        getRecommendation(probability, value, expectedSettlement) {
+        getGeneralRecommendation(probability, value, expectedSettlement, category) {
             if (probability > 0.75) {
                 return `Recomenda-se ação judicial imediata. A alta probabilidade de êxito (${EliteUtils.formatPercentage(probability * 100)}) 
-                        justifica litígio até julgamento. O valor estimado de acordo (${EliteUtils.formatCurrency(expectedSettlement)}) 
-                        pode ser utilizado como baseline para negociação, mas a expectativa de sucesso em tribunal é superior.`;
+                        justifica litígio até julgamento. O valor estimado de êxito (${EliteUtils.formatCurrency(expectedSettlement)}) 
+                        é superior à média para casos de ${EliteUtils.getCategoryName(category)}.`;
             } else if (probability > 0.55) {
                 return `Estratégia equilibrada: notificação extrajudicial com prazo para acordo. 
                         Se não houver resposta favorável em 15 dias, avançar com ação judicial. 
-                        O valor estimado de acordo (${EliteUtils.formatCurrency(expectedSettlement)}) é razoável, 
-                        mas existe margem para melhorar em julgamento (${EliteUtils.formatPercentage(probability * 100)}).`;
+                        O valor estimado (${EliteUtils.formatCurrency(expectedSettlement)}) é razoável para este tipo de caso.`;
             } else {
                 return `Recomenda-se negociação de acordo. A probabilidade de êxito (${EliteUtils.formatPercentage(probability * 100)}) 
-                        sugere que litígio pode não ser a melhor opção. O valor estimado de acordo (${EliteUtils.formatCurrency(expectedSettlement)}) 
-                        é uma base realista. Considere também arbitragem como alternativa mais rápida.`;
+                        sugere que litígio pode não ser a melhor opção. Considere também arbitragem ou mediação como alternativas.`;
             }
         },
         
-        showCasePrediction(caseId) {
-            EliteUtils.showToast(`A analisar caso ${caseId}...`, 'info');
-        },
-        
-        showNewCaseModal() {
-            EliteUtils.showToast('Funcionalidade de novo caso em desenvolvimento', 'info');
-        },
-        
-        filterCases(searchTerm) {
-            const rows = document.querySelectorAll('#casesTableBody tr');
-            rows.forEach(row => {
-                const text = row.textContent.toLowerCase();
-                row.style.display = text.includes(searchTerm.toLowerCase()) ? '' : 'none';
-            });
-        },
-        
         async initJudgesModule() {
-            // Inicializar gráfico de tendências
             const ctx = document.getElementById('courtTrendsChart');
             if (ctx && typeof Chart !== 'undefined') {
                 new Chart(ctx, {
@@ -1027,26 +1060,12 @@
                 });
             }
             
-            // Adicionar eventos para cards de juízes
             document.querySelectorAll('.view-judge-detail').forEach(btn => {
                 btn.addEventListener('click', () => {
                     const judge = btn.dataset.judge;
                     EliteUtils.showToast(`Análise detalhada do ${judge}`, 'info');
                 });
             });
-        },
-        
-        async initPlatformsModule() {
-            document.querySelectorAll('.negotiate-strategy').forEach(btn => {
-                btn.addEventListener('click', () => {
-                    const platform = btn.dataset.platform;
-                    this.showNegotiationStrategy(platform);
-                });
-            });
-        },
-        
-        showNegotiationStrategy(platform) {
-            EliteUtils.showToast(`A gerar estratégia negocial para ${platform}...`, 'info');
         },
         
         async initClientsTable() {
@@ -1068,6 +1087,22 @@
             });
         },
         
+        showCasePrediction(caseId) {
+            EliteUtils.showToast(`A analisar caso ${caseId}...`, 'info');
+        },
+        
+        showNewCaseModal() {
+            EliteUtils.showToast('Funcionalidade de novo caso em desenvolvimento', 'info');
+        },
+        
+        filterCases(searchTerm) {
+            const rows = document.querySelectorAll('#casesTableBody tr');
+            rows.forEach(row => {
+                const text = row.textContent.toLowerCase();
+                row.style.display = text.includes(searchTerm.toLowerCase()) ? '' : 'none';
+            });
+        },
+        
         generatePerformanceReport() {
             EliteUtils.showToast('A gerar relatório de performance...', 'info');
             setTimeout(() => {
@@ -1079,12 +1114,12 @@
             EliteUtils.showToast('A gerar análise de magistrados...', 'info');
         },
         
-        generatePlatformsReport() {
-            EliteUtils.showToast('A gerar inteligência de plataformas...', 'info');
-        },
-        
         generateFinancialForecast() {
             EliteUtils.showToast('A gerar projeção financeira...', 'info');
+        },
+        
+        generateCategoryReport() {
+            EliteUtils.showToast('A gerar análise por área do direito...', 'info');
         }
     };
     
@@ -1093,14 +1128,13 @@
     // =========================================================================
     
     async function init() {
-        EliteUtils.log('Inicializando UNIFED-ELITE Platform v1.0...');
+        EliteUtils.log('Inicializando ELITE PROBATUM v1.0...');
         
         // Aguardar splash screen
         const splash = document.getElementById('splashScreen');
         const enterBtn = document.getElementById('enterPlatformBtn');
         
         if (splash && enterBtn) {
-            // Simular carregamento
             setTimeout(() => {
                 enterBtn.style.display = 'inline-flex';
                 const loaderText = document.querySelector('.loader-text');
@@ -1127,7 +1161,7 @@
         AppState.clients = await API.getClients();
         AppState.metrics.activeCases = AppState.cases.filter(c => c.status === 'active').length;
         AppState.metrics.totalDisputeValue = AppState.cases.reduce((sum, c) => sum + c.value, 0);
-        AppState.metrics.successRate = AppState.cases.reduce((sum, c) => sum + c.probability, 0) / AppState.cases.length * 100;
+        AppState.metrics.successRate = AppState.cases.reduce((sum, c) => sum + c.successProbability, 0) / AppState.cases.length * 100;
         
         // Atualizar badges do header
         document.getElementById('headerActiveCases').textContent = AppState.metrics.activeCases;
@@ -1148,7 +1182,7 @@
         // Renderizar view inicial
         await Views.render('dashboard');
         
-        EliteUtils.log('✅ UNIFED-ELITE Platform inicializada com sucesso!', 'success');
+        EliteUtils.log('✅ ELITE PROBATUM inicializada com sucesso!', 'success');
     }
     
     function setupNavigation() {
@@ -1158,21 +1192,17 @@
                 e.preventDefault();
                 const view = item.dataset.view;
                 
-                // Atualizar classe ativa
                 navItems.forEach(nav => nav.classList.remove('active'));
                 item.classList.add('active');
                 
-                // Renderizar view
                 await Views.render(view);
                 
-                // Fechar sidebar em mobile
                 if (window.innerWidth <= 1024) {
                     document.querySelector('.elite-sidebar').classList.remove('open');
                 }
             });
         });
         
-        // Mobile menu toggle
         const menuToggle = document.getElementById('mobileMenuToggle');
         const sidebar = document.querySelector('.elite-sidebar');
         if (menuToggle && sidebar) {
@@ -1183,7 +1213,6 @@
     }
     
     function setupModals() {
-        // Notificações
         const notifBtn = document.getElementById('notificationsBtn');
         const notifModal = document.getElementById('notificationsModal');
         if (notifBtn && notifModal) {
@@ -1192,7 +1221,6 @@
             });
         }
         
-        // Settings
         const settingsBtn = document.getElementById('settingsBtn');
         const settingsModal = document.getElementById('settingsModal');
         if (settingsBtn && settingsModal) {
@@ -1201,14 +1229,12 @@
             });
         }
         
-        // Close modals
         document.querySelectorAll('.modal-close').forEach(closeBtn => {
             closeBtn.addEventListener('click', () => {
                 closeBtn.closest('.elite-modal').style.display = 'none';
             });
         });
         
-        // Click outside
         document.querySelectorAll('.elite-modal').forEach(modal => {
             modal.addEventListener('click', (e) => {
                 if (e.target === modal) {
@@ -1219,47 +1245,41 @@
     }
     
     function setupGlobalEvents() {
-        // Logout
         const logoutBtn = document.getElementById('logoutBtn');
         if (logoutBtn) {
             logoutBtn.addEventListener('click', () => {
                 if (confirm('Tem certeza que deseja sair?')) {
                     EliteUtils.showToast('Sessão encerrada', 'info');
-                    // Recarregar para splash screen
                     location.reload();
                 }
             });
         }
         
-        // Teclas de atalho
         document.addEventListener('keydown', (e) => {
-            // Ctrl + D -> Dashboard
             if (e.ctrlKey && e.key === 'd') {
                 e.preventDefault();
-                document.querySelector('.nav-item[data-view="dashboard"]').click();
+                document.querySelector('.nav-item[data-view="dashboard"]')?.click();
             }
-            // Ctrl + C -> Casos
             if (e.ctrlKey && e.key === 'c') {
                 e.preventDefault();
-                document.querySelector('.nav-item[data-view="cases"]').click();
+                document.querySelector('.nav-item[data-view="cases"]')?.click();
             }
-            // Ctrl + L -> Litígio
             if (e.ctrlKey && e.key === 'l') {
                 e.preventDefault();
-                document.querySelector('.nav-item[data-view="litigation"]').click();
+                document.querySelector('.nav-item[data-view="litigation"]')?.click();
             }
         });
     }
     
     // Expor globalmente
-    window.UNIFEDElite = {
+    window.ELITE_PROBATUM = {
         ...EliteUtils,
         AppState,
         Views,
         generatePerformanceReport: () => Views.generatePerformanceReport(),
         generateJudgesReport: () => Views.generateJudgesReport(),
-        generatePlatformsReport: () => Views.generatePlatformsReport(),
         generateFinancialForecast: () => Views.generateFinancialForecast(),
+        generateCategoryReport: () => Views.generateCategoryReport(),
         generatePetition: () => EliteUtils.showToast('Gerando minuta de petição...', 'info'),
         simulateDefense: () => EliteUtils.showToast('Simulação de defesa em desenvolvimento', 'info')
     };
