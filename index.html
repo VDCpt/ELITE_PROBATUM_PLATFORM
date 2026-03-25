@@ -3,11 +3,11 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
-    <meta name="description" content="ELITE PROBATUM v1.0 — Inteligência Forense e Estratégica para Escritórios de Elite">
+    <meta name="description" content="ELITE PROBATUM v1.0 — Metodologia de Inteligência Forense e Estratégica para Escritórios de Elite">
     <meta name="author" content="ELITE PROBATUM">
     <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline' https://cdn.jsdelivr.net https://cdnjs.cloudflare.com https://fonts.googleapis.com; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src 'self' https://fonts.gstatic.com; connect-src 'self'; img-src 'self' data:; frame-ancestors 'none'; base-uri 'self'; form-action 'self';">
     <meta name="referrer" content="strict-origin-when-cross-origin">
-    <title>ELITE PROBATUM | Plataforma de Inteligência Forense</title>
+    <title>ELITE PROBATUM | Metodologia de Inteligência Forense</title>
     
     <!-- Favicon -->
     <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>⚖️</text></svg>">
@@ -25,6 +25,7 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.29.4/moment.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/crypto-js/4.1.1/crypto-js.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.5.25/jspdf.plugin.autotable.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/pouchdb@8.0.1/dist/pouchdb.min.js"></script>
@@ -41,14 +42,14 @@
                 <span id="splashTitle">ELITE</span>
                 <span class="elite-badge" id="splashBadge">PROBATUM</span>
             </div>
-            <div class="elite-version" id="splashVersion">v1.0 · Secure Edition</div>
-            <div class="elite-tagline" id="splashTagline">Inteligência que vence casos</div>
+            <div class="elite-version" id="splashVersion">v1.0 · Metodologia Forense Avançada</div>
+            <div class="elite-tagline" id="splashTagline">Inteligência que vence causas</div>
             <div class="elite-loader">
                 <div class="loader-bar"></div>
                 <div class="loader-text" id="loaderText">Carregando ecossistema estratégico...</div>
             </div>
             <button id="enterPlatformBtn" class="elite-enter-btn" style="display: none;">
-                <i class="fas fa-arrow-right"></i> <span id="enterBtnText">ENTRAR NA PLATAFORMA</span>
+                <i class="fas fa-arrow-right"></i> <span id="enterBtnText">ACEDER À METODOLOGIA</span>
             </button>
         </div>
         <div class="elite-laser-h"></div>
@@ -56,34 +57,44 @@
     </div>
     
     <!-- ================================================================
-         MODAL DE LOGIN PERSISTENTE COM FIDO2 SIMULATION
+         MODAL DE LOGIN PERSISTENTE COM SOLICITAÇÃO DE ACESSO
     ================================================================ -->
     <div id="loginOverlay" class="login-overlay" style="display: none;">
         <div class="login-modal">
             <i class="fas fa-shield-hooded" style="font-size: 3rem; color: var(--elite-primary); margin-bottom: 16px;"></i>
             <h2 id="loginTitle">ELITE PROBATUM</h2>
-            <p id="loginSubtitle">Autenticação necessária para aceder à plataforma</p>
+            <p id="loginSubtitle">Autenticação necessária para aceder à metodologia</p>
             <div class="form-group">
-                <input type="text" id="loginUser" placeholder="Utilizador / User" autocomplete="off">
+                <input type="text" id="loginUser" placeholder="Utilizador" autocomplete="off">
             </div>
             <div class="form-group">
-                <input type="password" id="loginPass" placeholder="Palavra-passe / Password">
+                <input type="password" id="loginPass" placeholder="Palavra-passe">
             </div>
             <div class="form-group" id="yubikeyGroup" style="display: none;">
                 <button id="yubikeyBtn" class="elite-btn secondary full-width">
                     <i class="fas fa-usb"></i> <span id="yubikeyText">Autenticar com YubiKey</span>
                 </button>
             </div>
-            <div id="loginError" class="login-error">Credenciais inválidas / Invalid credentials</div>
+            <div id="loginError" class="login-error">Credenciais inválidas</div>
             <button id="loginBtn" class="elite-btn primary full-width">
                 <i class="fas fa-key"></i> <span id="loginBtnText">Autenticar</span>
             </button>
-            <div class="language-selector" style="margin-top: 20px; text-align: center;">
+            
+            <div class="request-access">
+                <button id="requestAccessBtn" class="elite-btn secondary full-width request-access-btn">
+                    <i class="fas fa-user-plus"></i> <span id="requestAccessText">Solicitar Acesso / Novo Registo</span>
+                </button>
+                <p style="margin-top: 12px; font-size: 0.65rem; color: var(--text-tertiary);" id="requestAccessHint">
+                    O pedido será enviado ao Administrador de Segurança (Master Hash Controller)
+                </p>
+            </div>
+            
+            <div class="language-selector" style="margin-top: 20px;">
                 <button id="langPT" class="lang-btn active">🇵🇹 PT</button>
                 <button id="langEN" class="lang-btn">🇬🇧 EN</button>
             </div>
             <p style="margin-top: 16px; font-size: 0.7rem; color: var(--text-tertiary);" id="loginHint">
-                <i class="fas fa-info-circle"></i> Credenciais: admin / probatum
+                <i class="fas fa-info-circle"></i> Credenciais de demonstração: admin / probatum
             </p>
         </div>
     </div>
@@ -103,13 +114,21 @@
             <nav class="sidebar-nav">
                 <a href="#" class="nav-item active" data-view="dashboard">
                     <i class="fas fa-chart-pie"></i>
-                    <span id="navDashboard">Dashboard</span>
+                    <span id="navDashboard">Painel de Controlo</span>
                     <span class="nav-badge" id="dashboardBadge"></span>
                 </a>
                 <a href="#" class="nav-item" data-view="cases">
                     <i class="fas fa-folder-open"></i>
-                    <span id="navCases">Casos</span>
+                    <span id="navCases">Processos</span>
                     <span class="nav-badge" id="casesBadge">0</span>
+                </a>
+                <a href="#" class="nav-item" data-view="insolvency">
+                    <i class="fas fa-chart-line"></i>
+                    <span id="navInsolvency">Insolvências (CIRE)</span>
+                </a>
+                <a href="#" class="nav-item" data-view="labor">
+                    <i class="fas fa-briefcase"></i>
+                    <span id="navLabor">Contencioso Laboral</span>
                 </a>
                 <a href="#" class="nav-item" data-view="litigation">
                     <i class="fas fa-brain"></i>
@@ -131,6 +150,10 @@
                     <i class="fas fa-users"></i>
                     <span id="navClients">Clientes</span>
                     <span class="nav-badge" id="clientsBadge"></span>
+                </a>
+                <a href="#" class="nav-item" data-view="activitylog">
+                    <i class="fas fa-history"></i>
+                    <span id="navActivityLog">Registos de Atividade (RGPD)</span>
                 </a>
                 <a href="#" class="nav-item" data-view="reports">
                     <i class="fas fa-file-alt"></i>
@@ -166,12 +189,12 @@
                     <button id="mobileMenuToggle" class="menu-toggle">
                         <i class="fas fa-bars"></i>
                     </button>
-                    <h1 id="pageTitle">Dashboard Estratégico</h1>
+                    <h1 id="pageTitle">Painel de Controlo Estratégico</h1>
                 </div>
                 <div class="header-right">
                     <div class="header-stats">
                         <div class="stat-item">
-                            <span class="stat-label" id="statActiveCases">Casos Ativos</span>
+                            <span class="stat-label" id="statActiveCases">Processos Ativos</span>
                             <span class="stat-value" id="headerActiveCases">0</span>
                         </div>
                         <div class="stat-item">
@@ -187,7 +210,7 @@
                         <button id="langToggle" class="icon-btn" title="PT/EN">
                             <i class="fas fa-language"></i>
                         </button>
-                        <button id="integrityCheckBtn" class="icon-btn" title="Integrity Check">
+                        <button id="integrityCheckBtn" class="icon-btn" title="Verificação de Integridade">
                             <i class="fas fa-shield-hooded"></i>
                         </button>
                         <button id="exportReportBtn" class="icon-btn" title="Exportar Relatório">
@@ -281,14 +304,159 @@
         </div>
     </div>
     
-    <!-- Modal de Detalhes do Caso -->
+    <!-- Modal de Detalhes do Processo -->
     <div id="caseDetailModal" class="elite-modal" style="display: none;">
         <div class="modal-content">
             <div class="modal-header">
-                <h3><i class="fas fa-folder-open"></i> <span id="caseDetailTitle">Detalhes do Caso</span></h3>
+                <h3><i class="fas fa-folder-open"></i> <span id="caseDetailTitle">Detalhes do Processo</span></h3>
                 <button class="modal-close">&times;</button>
             </div>
             <div class="modal-body" id="caseDetailBody"></div>
+        </div>
+    </div>
+    
+    <!-- Modal de Novo Processo (Insolvência/Laboral) -->
+    <div id="newCaseModal" class="elite-modal" style="display: none;">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3><i class="fas fa-plus-circle"></i> <span id="newCaseTitle">Novo Processo</span></h3>
+                <button class="modal-close">&times;</button>
+            </div>
+            <div class="modal-body">
+                <form id="newCaseForm">
+                    <div class="form-group">
+                        <label id="caseTypeLabel">Tipo de Processo *</label>
+                        <select id="caseType" required>
+                            <option value="general">Geral</option>
+                            <option value="insolvency">Insolvência (CIRE)</option>
+                            <option value="labor">Contencioso Laboral</option>
+                        </select>
+                    </div>
+                    
+                    <!-- Campos Gerais -->
+                    <div class="form-group">
+                        <label id="clientLabel">Cliente *</label>
+                        <input type="text" id="caseClient" required>
+                    </div>
+                    <div class="form-group">
+                        <label id="valueLabel">Valor da Causa (€)</label>
+                        <input type="number" id="caseValue">
+                    </div>
+                    <div class="form-group">
+                        <label id="courtLabel">Tribunal</label>
+                        <select id="caseCourt">
+                            <option value="lisboa">Lisboa</option>
+                            <option value="porto">Porto</option>
+                            <option value="braga">Braga</option>
+                            <option value="coimbra">Coimbra</option>
+                            <option value="faro">Faro</option>
+                        </select>
+                    </div>
+                    
+                    <!-- Campos Específicos - Insolvência -->
+                    <div id="insolvencyFields" class="form-section" style="display: none;">
+                        <h4><i class="fas fa-chart-line"></i> Dados de Insolvência (CIRE)</h4>
+                        <div class="form-row-special">
+                            <div class="form-group">
+                                <label>NIF / NIPC *</label>
+                                <input type="text" id="insolvencyNif" placeholder="NIF da Entidade">
+                            </div>
+                            <div class="form-group">
+                                <label>Tipo de Insolvência</label>
+                                <select id="insolvencyType">
+                                    <option value="culposa">Culposa</option>
+                                    <option value="fortuita">Fortuita</option>
+                                    <option value="pending">Em Análise</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="form-row-special">
+                            <div class="form-group">
+                                <label>Ativo (€)</label>
+                                <input type="number" id="insolvencyAssets" placeholder="Valor do Ativo">
+                            </div>
+                            <div class="form-group">
+                                <label>Passivo (€)</label>
+                                <input type="number" id="insolvencyLiabilities" placeholder="Valor do Passivo">
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label>Lista de Credores (separados por vírgula)</label>
+                            <textarea id="insolvencyCreditors" rows="3" placeholder="Credor 1, Credor 2, Credor 3..."></textarea>
+                        </div>
+                        <div class="form-group">
+                            <label>Processo CIRE (Exoneração do Passivo Restante)</label>
+                            <select id="insolvencyExoneration">
+                                <option value="false">Não</option>
+                                <option value="true">Sim - Exoneração do Passivo Restante</option>
+                            </select>
+                        </div>
+                    </div>
+                    
+                    <!-- Campos Específicos - Contencioso Laboral -->
+                    <div id="laborFields" class="form-section" style="display: none;">
+                        <h4><i class="fas fa-briefcase"></i> Dados de Contencioso Laboral</h4>
+                        <div class="form-row-special">
+                            <div class="form-group">
+                                <label>Data de Despedimento</label>
+                                <input type="date" id="laborDismissalDate">
+                            </div>
+                            <div class="form-group">
+                                <label>Tipo de Contrato</label>
+                                <select id="laborContractType">
+                                    <option value="sem_termo">Sem Termo</option>
+                                    <option value="termo_certo">Termo Certo</option>
+                                    <option value="termo_incerto">Termo Incerto</option>
+                                    <option value="trabalho_temporario">Trabalho Temporário</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="form-row-special">
+                            <div class="form-group">
+                                <label>Antiguidade (anos)</label>
+                                <input type="number" id="laborSeniority" step="0.5" placeholder="Anos de serviço">
+                            </div>
+                            <div class="form-group">
+                                <label>Tipo de Despedimento</label>
+                                <select id="laborDismissalType">
+                                    <option value="ilícito">Ilícito</option>
+                                    <option value="licito">Lícito</option>
+                                    <option value="por_falta">Por Facto Imputável ao Trabalhador</option>
+                                    <option value="coletivo">Despedimento Coletivo</option>
+                                    <option value="extincao">Extinção do Posto de Trabalho</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="form-row-special">
+                            <div class="form-group">
+                                <label>Indemnização Calculada (€)</label>
+                                <input type="number" id="laborCalcIndemnity" placeholder="Valor calculado">
+                            </div>
+                            <div class="form-group">
+                                <label>Indemnização Peticionada (€)</label>
+                                <input type="number" id="laborClaimIndemnity" placeholder="Valor peticionado">
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label>Motivo da Impugnação</label>
+                            <textarea id="laborGrounds" rows="2" placeholder="Motivos da impugnação do despedimento..."></textarea>
+                        </div>
+                        <div class="form-group">
+                            <label>Recursos Interpostos</label>
+                            <select id="laborAppeals">
+                                <option value="nenhum">Nenhum</option>
+                                <option value="recurso_ordinario">Recurso Ordinário</option>
+                                <option value="recurso_revista">Recurso de Revista</option>
+                                <option value="reclamação">Reclamação para a Conferência</option>
+                            </select>
+                        </div>
+                    </div>
+                    
+                    <button type="submit" class="elite-btn primary full-width">
+                        <i class="fas fa-save"></i> <span id="createCaseBtnText">Criar Processo</span>
+                    </button>
+                </form>
+            </div>
         </div>
     </div>
     
@@ -306,7 +474,7 @@
                         <input type="text" id="clientName" required>
                     </div>
                     <div class="form-group">
-                        <label id="clientNifLabel">NIF / VATIN *</label>
+                        <label id="clientNifLabel">NIF / NIPC *</label>
                         <input type="text" id="clientNif" required>
                     </div>
                     <div class="form-group">
@@ -330,6 +498,7 @@
                             <option value="criminal">Direito Penal</option>
                             <option value="labor">Direito do Trabalho</option>
                             <option value="commercial">Direito Comercial</option>
+                            <option value="insolvency">Insolvência (CIRE)</option>
                             <option value="tax">Direito Fiscal</option>
                         </select>
                     </div>
@@ -365,7 +534,7 @@
     <div id="integrityModal" class="elite-modal" style="display: none;">
         <div class="modal-content">
             <div class="modal-header">
-                <h3><i class="fas fa-shield-hooded"></i> <span id="integrityTitle">Integrity Check - Cadeia de Custódia</span></h3>
+                <h3><i class="fas fa-shield-hooded"></i> <span id="integrityTitle">Verificação de Integridade - Cadeia de Custódia</span></h3>
                 <button class="modal-close">&times;</button>
             </div>
             <div class="modal-body" id="integrityBody">
@@ -384,9 +553,49 @@
             <div class="modal-body" id="canaryBody">
                 <div class="canary-warning">
                     <i class="fas fa-exclamation-triangle" style="font-size: 3rem; color: var(--elite-danger);"></i>
-                    <p id="canaryMessage">Ficheiro armadilha detetado! O sistema entrou em lockdown automático.</p>
+                    <p id="canaryMessage">Ficheiro armadilha detetado! A metodologia entrou em bloqueio automático.</p>
                     <p id="canaryInstruction">Contacte imediatamente o administrador de segurança.</p>
                 </div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Modal de Pedido de Acesso -->
+    <div id="accessRequestModal" class="elite-modal" style="display: none;">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3><i class="fas fa-user-plus"></i> <span id="accessRequestTitle">Solicitar Acesso</span></h3>
+                <button class="modal-close">&times;</button>
+            </div>
+            <div class="modal-body">
+                <form id="accessRequestForm">
+                    <div class="form-group">
+                        <label id="requestNameLabel">Nome Completo *</label>
+                        <input type="text" id="requestName" required>
+                    </div>
+                    <div class="form-group">
+                        <label id="requestEmailLabel">E-mail Institucional *</label>
+                        <input type="email" id="requestEmail" required>
+                    </div>
+                    <div class="form-group">
+                        <label id="requestNifLabel">NIF / NIPC *</label>
+                        <input type="text" id="requestNif" required>
+                    </div>
+                    <div class="form-group">
+                        <label id="requestRoleLabel">Cargo / Função</label>
+                        <input type="text" id="requestRole" placeholder="Ex: Sócio, Advogado, Estagiário">
+                    </div>
+                    <div class="form-group">
+                        <label id="requestReasonLabel">Justificação de Acesso</label>
+                        <textarea id="requestReason" rows="3" placeholder="Motivo pelo qual necessita de aceder à metodologia..."></textarea>
+                    </div>
+                    <button type="submit" class="elite-btn primary full-width">
+                        <i class="fas fa-paper-plane"></i> <span id="submitRequestText">Enviar Pedido ao Administrador</span>
+                    </button>
+                    <p style="margin-top: 12px; font-size: 0.7rem; color: var(--text-tertiary); text-align: center;">
+                        <i class="fas fa-shield-alt"></i> O pedido será analisado pelo Master Hash Controller
+                    </p>
+                </form>
             </div>
         </div>
     </div>
