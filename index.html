@@ -2,12 +2,12 @@
 <html lang="pt-PT">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
-    <meta name="description" content="ELITE PROBATUM v2.0 — Metodologia de Inteligência Forense e Estratégica">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no, viewport-fit=cover">
+    <meta name="description" content="ELITE PROBATUM v2.0 — Unidade de Comando Forense Digital">
     <meta name="author" content="ELITE PROBATUM">
     <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline' https://cdn.jsdelivr.net https://cdnjs.cloudflare.com https://fonts.googleapis.com; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com https://cdnjs.cloudflare.com; font-src 'self' https://fonts.gstatic.com https://cdnjs.cloudflare.com data:; connect-src 'self' https://cdn.jsdelivr.net https://cdnjs.cloudflare.com https://fonts.googleapis.com; img-src 'self' data: blob:; base-uri 'self'; form-action 'self';">
     <meta name="referrer" content="strict-origin-when-cross-origin">
-    <title>ELITE PROBATUM v2.0 | Metodologia de Inteligência Forense</title>
+    <title>ELITE PROBATUM | Unidade de Comando Forense Digital</title>
     
     <!-- Favicon -->
     <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>⚖️</text></svg>">
@@ -33,16 +33,16 @@
 <body>
     
     <!-- ================================================================
-         LOGIN OVERLAY - CENTRALIZADO E LIMPO
+         GATEKEEPER SECURE - LOGIN TÁTICO
     ================================================================ -->
-    <div id="loginOverlay" class="login-overlay">
+    <div id="loginOverlay" class="gatekeeper-secure">
         <div class="login-card">
             <div class="login-logo">
                 <i class="fas fa-crown"></i>
                 <span>ELITE <span class="logo-highlight">PROBATUM</span></span>
             </div>
-            <div class="version-badge">v2.0 · Metodologia Forense Avançada</div>
-            <p class="subtitle">Inteligência que vence causas</p>
+            <div class="version-badge">v2.0 · UNIDADE DE COMANDO FORENSE</div>
+            <p class="subtitle">Acesso restrito a pessoal autorizado</p>
             
             <div class="form-group">
                 <label>UTILIZADOR</label>
@@ -53,7 +53,7 @@
                 <input type="password" id="password" placeholder="••••••••" value="">
             </div>
             
-            <div id="loginError" class="login-error" style="display: none;">Credenciais inválidas</div>
+            <div id="loginError" class="login-error" style="display: none;">ACESSO NEGADO — Credenciais inválidas</div>
             
             <button id="authBtn" class="elite-btn primary full-width">
                 <i class="fas fa-key"></i> AUTENTICAR
@@ -72,7 +72,7 @@
             </div>
             
             <div class="security-badge">
-                <i class="fas fa-shield-alt"></i> Ambiente seguro com encriptação AES-256
+                <i class="fas fa-shield-alt"></i> ENCRIPTADO AES-256 · CANAL SEGURO
             </div>
         </div>
     </div>
@@ -117,11 +117,11 @@
     </div>
     
     <!-- ================================================================
-         MAIN APP CONTAINER
+         MAIN APP CONTAINER - TERMINAL DE OPERAÇÕES
     ================================================================ -->
     <div id="appContainer" class="elite-app" style="display: none;">
         
-        <!-- SIDEBAR -->
+        <!-- SIDEBAR TÁTICA -->
         <aside class="elite-sidebar">
             <div class="sidebar-logo">
                 <i class="fas fa-crown"></i>
@@ -130,18 +130,55 @@
             </div>
             
             <nav class="sidebar-nav">
-                <a href="#" class="nav-item active" data-view="dashboard"><i class="fas fa-chart-pie"></i><span>Painel de Controlo</span></a>
-                <a href="#" class="nav-item" data-view="cases"><i class="fas fa-folder-open"></i><span>Processos</span><span class="nav-badge" id="casesBadge">0</span></a>
-                <a href="#" class="nav-item" data-view="insolvency"><i class="fas fa-chart-line"></i><span>Insolvências (CIRE)</span></a>
-                <a href="#" class="nav-item" data-view="labor"><i class="fas fa-briefcase"></i><span>Contencioso Laboral</span></a>
-                <a href="#" class="nav-item" data-view="litigation"><i class="fas fa-brain"></i><span>Inteligência de Litígio</span></a>
-                <a href="#" class="nav-item" data-view="questionnaire"><i class="fas fa-question-circle"></i><span>Questionários Estratégicos</span></a>
-                <a href="#" class="nav-item" data-view="evidence"><i class="fas fa-link"></i><span>Cadeia de Custódia</span></a>
-                <a href="#" class="nav-item" data-view="adversary"><i class="fas fa-users"></i><span>Análise de Oposição</span></a>
-                <a href="#" class="nav-item" data-view="simulator"><i class="fas fa-flask"></i><span>Simulador de Contra-Perícia</span></a>
-                <a href="#" class="nav-item" data-view="activitylog"><i class="fas fa-history"></i><span>Registos RGPD</span></a>
-                <a href="#" class="nav-item" data-view="reports"><i class="fas fa-file-alt"></i><span>Relatórios</span></a>
-                <a href="#" class="nav-item" data-view="admin"><i class="fas fa-skull"></i><span>Administração</span></a>
+                <a href="#" class="nav-item active" data-view="dashboard">
+                    <i class="fas fa-chart-pie"></i>
+                    <span>PAINEL DE COMANDO</span>
+                </a>
+                <a href="#" class="nav-item" data-view="cases">
+                    <i class="fas fa-folder-open"></i>
+                    <span>PROCESSOS</span>
+                    <span class="nav-badge" id="casesBadge">0</span>
+                </a>
+                <a href="#" class="nav-item" data-view="insolvency">
+                    <i class="fas fa-chart-line"></i>
+                    <span>INSOLVÊNCIAS (CIRE)</span>
+                </a>
+                <a href="#" class="nav-item" data-view="labor">
+                    <i class="fas fa-briefcase"></i>
+                    <span>CONTENCIOSO LABORAL</span>
+                </a>
+                <a href="#" class="nav-item" data-view="litigation">
+                    <i class="fas fa-brain"></i>
+                    <span>INTELIGÊNCIA DE LITÍGIO</span>
+                </a>
+                <a href="#" class="nav-item" data-view="questionnaire">
+                    <i class="fas fa-question-circle"></i>
+                    <span>QUESTIONÁRIOS ESTRATÉGICOS</span>
+                </a>
+                <a href="#" class="nav-item" data-view="evidence">
+                    <i class="fas fa-link"></i>
+                    <span>CADEIA DE CUSTÓDIA</span>
+                </a>
+                <a href="#" class="nav-item" data-view="adversary">
+                    <i class="fas fa-users"></i>
+                    <span>ANÁLISE DE OPOSIÇÃO</span>
+                </a>
+                <a href="#" class="nav-item" data-view="simulator">
+                    <i class="fas fa-flask"></i>
+                    <span>SIMULADOR DE CONTRA-PERÍCIA</span>
+                </a>
+                <a href="#" class="nav-item" data-view="activitylog">
+                    <i class="fas fa-history"></i>
+                    <span>REGISTOS RGPD</span>
+                </a>
+                <a href="#" class="nav-item" data-view="reports">
+                    <i class="fas fa-file-alt"></i>
+                    <span>RELATÓRIOS</span>
+                </a>
+                <a href="#" class="nav-item" data-view="admin">
+                    <i class="fas fa-skull"></i>
+                    <span>ADMINISTRAÇÃO</span>
+                </a>
             </nav>
             
             <div class="sidebar-footer">
@@ -152,37 +189,49 @@
                         <small id="userRole">Super Utilizador</small>
                     </div>
                 </div>
-                <button class="logout-btn" id="logoutBtn"><i class="fas fa-sign-out-alt"></i></button>
+                <button class="logout-btn" id="logoutBtn">
+                    <i class="fas fa-sign-out-alt"></i>
+                </button>
             </div>
         </aside>
         
-        <!-- MAIN CONTENT -->
+        <!-- MAIN CONTENT - CONSOLE DE COMANDO -->
         <main class="elite-main">
             <header class="elite-header">
                 <div class="header-left">
-                    <button id="mobileMenuToggle" class="menu-toggle"><i class="fas fa-bars"></i></button>
-                    <h1 id="pageTitle">Painel de Controlo Estratégico</h1>
+                    <button id="mobileMenuToggle" class="menu-toggle">
+                        <i class="fas fa-bars"></i>
+                    </button>
+                    <h1 id="pageTitle">PAINEL DE COMANDO ESTRATÉGICO</h1>
                 </div>
                 <div class="header-right">
                     <div class="header-stats">
                         <div class="stat-item">
-                            <span class="stat-label">Processos Ativos</span>
+                            <span class="stat-label">PROCESSOS ATIVOS</span>
                             <span class="stat-value" id="headerActiveCases">0</span>
                         </div>
                         <div class="stat-item">
-                            <span class="stat-label">Valor em Disputa</span>
+                            <span class="stat-label">VALOR EM DISPUTA</span>
                             <span class="stat-value" id="headerDisputeValue">€0</span>
                         </div>
                         <div class="stat-item">
-                            <span class="stat-label">Taxa Sucesso</span>
+                            <span class="stat-label">TAXA SUCESSO</span>
                             <span class="stat-value" id="headerSuccessRate">0%</span>
                         </div>
                     </div>
                     <div class="header-actions">
-                        <button id="langToggle" class="icon-btn" title="PT/EN"><i class="fas fa-language"></i></button>
-                        <button id="integrityCheckBtn" class="icon-btn" title="Verificação de Integridade"><i class="fas fa-shield-hooded"></i></button>
-                        <button id="exportReportBtn" class="icon-btn" title="Exportar Relatório"><i class="fas fa-file-pdf"></i></button>
-                        <button id="settingsBtn" class="icon-btn"><i class="fas fa-cog"></i></button>
+                        <button id="langToggle" class="icon-btn" title="PT/EN">
+                            <i class="fas fa-language"></i>
+                        </button>
+                        <button id="integrityCheckBtn" class="icon-btn" title="Verificação de Integridade">
+                            <i class="fas fa-shield-hooded"></i>
+                        </button>
+                        <button id="exportReportBtn" class="icon-btn" title="Exportar Relatório">
+                            <i class="fas fa-file-pdf"></i>
+                        </button>
+                        <button id="settingsBtn" class="icon-btn">
+                            <i class="fas fa-cog"></i>
+                        </button>
                     </div>
                 </div>
             </header>
@@ -195,20 +244,35 @@
     ================================================================ -->
     <div id="caseDetailModal" class="elite-modal" style="display: none;">
         <div class="modal-content">
-            <div class="modal-header"><h3>Detalhes do Processo</h3><button class="modal-close">&times;</button></div>
+            <div class="modal-header">
+                <h3><i class="fas fa-folder-open"></i> DETALHES DO PROCESSO</h3>
+                <button class="modal-close">&times;</button>
+            </div>
             <div class="modal-body" id="caseDetailBody"></div>
         </div>
     </div>
     
     <div id="newClientModal" class="elite-modal" style="display: none;">
         <div class="modal-content">
-            <div class="modal-header"><h3>Novo Cliente</h3><button class="modal-close">&times;</button></div>
+            <div class="modal-header">
+                <h3><i class="fas fa-user-plus"></i> NOVO CLIENTE</h3>
+                <button class="modal-close">&times;</button>
+            </div>
             <div class="modal-body">
                 <form id="newClientForm">
-                    <div class="form-group"><label>Nome do Cliente *</label><input type="text" id="clientName" required></div>
-                    <div class="form-group"><label>NIF / NIPC *</label><input type="text" id="clientNif" required></div>
-                    <div class="form-group"><label>Valor da Causa (€) *</label><input type="number" id="clientCaseValue" required></div>
-                    <button type="submit" class="elite-btn primary full-width">Criar Cliente</button>
+                    <div class="form-group">
+                        <label>Nome do Cliente *</label>
+                        <input type="text" id="clientName" required>
+                    </div>
+                    <div class="form-group">
+                        <label>NIF / NIPC *</label>
+                        <input type="text" id="clientNif" required>
+                    </div>
+                    <div class="form-group">
+                        <label>Valor da Causa (€) *</label>
+                        <input type="number" id="clientCaseValue" required>
+                    </div>
+                    <button type="submit" class="elite-btn primary full-width">CRIAR CLIENTE</button>
                 </form>
             </div>
         </div>
@@ -216,10 +280,13 @@
     
     <div id="notesModal" class="elite-modal" style="display: none;">
         <div class="modal-content">
-            <div class="modal-header"><h3>Notas Estratégicas</h3><button class="modal-close">&times;</button></div>
+            <div class="modal-header">
+                <h3><i class="fas fa-pen"></i> NOTAS ESTRATÉGICAS</h3>
+                <button class="modal-close">&times;</button>
+            </div>
             <div class="modal-body">
                 <textarea id="strategicNote" rows="4" placeholder="Escreva uma nota estratégica... (com hash SHA-256)"></textarea>
-                <button id="saveNoteBtn" class="elite-btn primary full-width">Guardar Nota</button>
+                <button id="saveNoteBtn" class="elite-btn primary full-width">GUARDAR NOTA</button>
                 <div id="notesList" style="margin-top: 20px;"></div>
             </div>
         </div>
@@ -227,7 +294,10 @@
     
     <div id="integrityModal" class="elite-modal" style="display: none;">
         <div class="modal-content">
-            <div class="modal-header"><h3>Verificação de Integridade</h3><button class="modal-close">&times;</button></div>
+            <div class="modal-header">
+                <h3><i class="fas fa-shield-hooded"></i> VERIFICAÇÃO DE INTEGRIDADE</h3>
+                <button class="modal-close">&times;</button>
+            </div>
             <div class="modal-body" id="integrityBody"></div>
         </div>
     </div>
@@ -240,11 +310,9 @@
     <!-- SCRIPT DE INTEGRAÇÃO FINAL -->
     <script>
         (function() {
-            // Aguardar o carregamento completo do DOM
             document.addEventListener('DOMContentLoaded', function() {
-                console.log('[ELITE PROBATUM] DOM carregado, iniciando integração...');
+                console.log('[ELITE PROBATUM] Unidade de Comando Forense Digital — Inicializando');
                 
-                // Elementos principais
                 const authBtn = document.getElementById('authBtn');
                 const loginOverlay = document.getElementById('loginOverlay');
                 const appContainer = document.getElementById('appContainer');
@@ -252,23 +320,15 @@
                 const usernameInput = document.getElementById('username');
                 const passwordInput = document.getElementById('password');
                 
-                // Credenciais válidas
-                const VALID_CREDENTIALS = {
-                    admin: { password: 'probatum', role: 'SUPER_USER', name: 'Dr. Administrador' }
-                };
-                
-                // Função de autenticação
                 function authenticate() {
                     const username = usernameInput ? usernameInput.value.trim() : '';
                     const password = passwordInput ? passwordInput.value.trim() : '';
                     
-                    console.log('[ELITE PROBATUM] Tentativa de autenticação:', username);
+                    console.log('[ELITE PROBATUM] Autenticação solicitada:', username);
                     
                     if (username === 'admin' && password === 'probatum') {
-                        // Autenticação bem-sucedida
                         if (loginError) loginError.style.display = 'none';
                         
-                        // Animação de saída do login
                         loginOverlay.style.transition = 'opacity 0.3s ease';
                         loginOverlay.style.opacity = '0';
                         
@@ -277,34 +337,22 @@
                             appContainer.style.display = 'flex';
                             appContainer.classList.add('visible');
                             
-                            // Atualizar informações do utilizador
                             const userNameSpan = document.getElementById('userName');
                             const userRoleSpan = document.getElementById('userRole');
                             if (userNameSpan) userNameSpan.textContent = 'Dr. Administrador';
                             if (userRoleSpan) userRoleSpan.textContent = 'Super Utilizador · Acesso Total';
                             
-                            // INICIALIZAR O MOTOR ELITE
                             if (window.EliteProbatum && typeof window.EliteProbatum.initDashboard === 'function') {
-                                console.log('[ELITE PROBATUM] Inicializando dashboard via EliteProbatum...');
+                                console.log('[ELITE PROBATUM] Inicializando Dashboard Tático...');
                                 window.EliteProbatum.initDashboard();
-                            } else if (typeof renderDashboard === 'function') {
-                                console.log('[ELITE PROBATUM] Inicializando dashboard via função global...');
-                                renderDashboard();
-                            } else {
-                                console.log('[ELITE PROBATUM] Dashboard não encontrado, usando fallback');
-                                const container = document.getElementById('viewContainer');
-                                if (container) {
-                                    container.innerHTML = `
-                                        <div class="dashboard-grid">
-                                            <div class="dashboard-card"><div class="card-header"><h3>Processos Ativos</h3><i class="fas fa-folder-open"></i></div><div class="card-value">27</div></div>
-                                            <div class="dashboard-card"><div class="card-header"><h3>Valor em Disputa</h3><i class="fas fa-euro-sign"></i></div><div class="card-value">€1.247.500</div></div>
-                                            <div class="dashboard-card"><div class="card-header"><h3>Taxa Sucesso</h3><i class="fas fa-chart-line"></i></div><div class="card-value">72%</div></div>
-                                        </div>
-                                    `;
+                                
+                                if (typeof window.EliteProbatum.injectTacticalAlerts === 'function') {
+                                    setTimeout(() => {
+                                        window.EliteProbatum.injectTacticalAlerts();
+                                    }, 500);
                                 }
                             }
                             
-                            // Atualizar KPIs do Header
                             const activeCasesSpan = document.getElementById('headerActiveCases');
                             const disputeValueSpan = document.getElementById('headerDisputeValue');
                             const successRateSpan = document.getElementById('headerSuccessRate');
@@ -315,36 +363,29 @@
                             if (successRateSpan) successRateSpan.textContent = '72%';
                             if (casesBadge) casesBadge.textContent = '27';
                             
-                            // Mostrar toast de boas-vindas
                             if (window.EliteUtils && typeof window.EliteUtils.showToast === 'function') {
-                                window.EliteUtils.showToast('Bem-vindo à ELITE PROBATUM v2.0', 'success');
-                            } else {
-                                console.log('[ELITE PROBATUM] Ecossistema Estratégico Ativo');
-                                alert('Bem-vindo à ELITE PROBATUM v2.0\n\n27 processos estratégicos carregados\n9 áreas do direito representadas');
+                                window.EliteUtils.showToast('Unidade de Comando Ativa | 27 Processos Carregados', 'success');
                             }
                         }, 300);
                         
                         return true;
                     } else {
-                        // Credenciais inválidas
                         if (loginError) {
                             loginError.style.display = 'block';
-                            loginError.textContent = 'Credenciais inválidas. Utilize admin / probatum';
+                            loginError.textContent = 'ACESSO NEGADO — Credenciais inválidas. Utilize admin / probatum';
                         }
                         console.log('[ELITE PROBATUM] Falha na autenticação');
                         return false;
                     }
                 }
                 
-                // Associar evento ao botão de autenticação
                 if (authBtn) {
                     authBtn.addEventListener('click', authenticate);
-                    console.log('[ELITE PROBATUM] Evento de autenticação associado ao botão #authBtn');
+                    console.log('[ELITE PROBATUM] Evento de autenticação associado');
                 } else {
                     console.error('[ELITE PROBATUM] Botão authBtn não encontrado!');
                 }
                 
-                // Permitir autenticação com tecla Enter
                 if (usernameInput && passwordInput) {
                     const handleEnter = (e) => {
                         if (e.key === 'Enter') authenticate();
@@ -353,7 +394,6 @@
                     passwordInput.addEventListener('keypress', handleEnter);
                 }
                 
-                // Botão de solicitar acesso
                 const requestBtn = document.getElementById('requestAccessBtn');
                 const accessModal = document.getElementById('accessRequestModal');
                 if (requestBtn && accessModal) {
@@ -367,7 +407,6 @@
                     });
                 }
                 
-                // Fechar modais
                 document.querySelectorAll('.modal-close').forEach(btn => {
                     btn.addEventListener('click', () => {
                         const modal = btn.closest('.elite-modal');
@@ -375,14 +414,12 @@
                     });
                 });
                 
-                // Clique fora do modal
                 document.querySelectorAll('.elite-modal').forEach(modal => {
                     modal.addEventListener('click', (e) => {
                         if (e.target === modal) modal.style.display = 'none';
                     });
                 });
                 
-                // Formulário de pedido de acesso
                 const accessForm = document.getElementById('accessRequestForm');
                 if (accessForm) {
                     accessForm.addEventListener('submit', (e) => {
@@ -391,22 +428,21 @@
                         const email = document.getElementById('requestEmail')?.value || '';
                         
                         if (name && email) {
-                            alert(`Pedido de acesso enviado para ${email}.\n\nO Master Hash Controller irá analisar e entrar em contacto.`);
+                            alert(`[COMANDO] Pedido de acesso enviado para ${email}.\n\nO Master Hash Controller irá analisar.`);
                             accessModal.style.display = 'none';
                             accessForm.reset();
                             loginOverlay.style.display = 'flex';
                             loginOverlay.style.opacity = '1';
                         } else {
-                            alert('Por favor, preencha todos os campos obrigatórios.');
+                            alert('[COMANDO] Preencha todos os campos obrigatórios.');
                         }
                     });
                 }
                 
-                // Botão de logout
                 const logoutBtn = document.getElementById('logoutBtn');
                 if (logoutBtn) {
                     logoutBtn.addEventListener('click', () => {
-                        if (confirm('Tem certeza que deseja terminar sessão?')) {
+                        if (confirm('[COMANDO] Terminar sessão?')) {
                             appContainer.style.display = 'none';
                             loginOverlay.style.display = 'flex';
                             loginOverlay.style.opacity = '1';
@@ -416,7 +452,7 @@
                     });
                 }
                 
-                console.log('[ELITE PROBATUM] Integração concluída. Aguardando autenticação.');
+                console.log('[ELITE PROBATUM] Unidade de Comando pronta. Aguardando autenticação.');
             });
         })();
     </script>
