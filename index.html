@@ -3,19 +3,11 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
-    <meta name="description" content="ELITE PROBATUM v1.0 — Metodologia de Inteligência Forense e Estratégica para Escritórios de Elite">
+    <meta name="description" content="ELITE PROBATUM v2.0 — Metodologia de Inteligência Forense e Estratégica para Escritórios de Elite">
     <meta name="author" content="ELITE PROBATUM">
-    <!-- CSP OTIMIZADA - Permite recursos necessários para a demo mantendo segurança -->
-    <meta http-equiv="Content-Security-Policy" content="default-src 'self'; 
-        script-src 'self' 'unsafe-inline' https://cdn.jsdelivr.net https://cdnjs.cloudflare.com https://fonts.googleapis.com; 
-        style-src 'self' 'unsafe-inline' https://fonts.googleapis.com https://cdnjs.cloudflare.com; 
-        font-src 'self' https://fonts.gstatic.com https://cdnjs.cloudflare.com data:; 
-        connect-src 'self' https://cdn.jsdelivr.net https://cdnjs.cloudflare.com https://fonts.googleapis.com; 
-        img-src 'self' data: blob:; 
-        base-uri 'self'; 
-        form-action 'self';">
+    <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline' https://cdn.jsdelivr.net https://cdnjs.cloudflare.com https://fonts.googleapis.com; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com https://cdnjs.cloudflare.com; font-src 'self' https://fonts.gstatic.com https://cdnjs.cloudflare.com data:; connect-src 'self' https://cdn.jsdelivr.net https://cdnjs.cloudflare.com https://fonts.googleapis.com; img-src 'self' data: blob:; base-uri 'self'; form-action 'self';">
     <meta name="referrer" content="strict-origin-when-cross-origin">
-    <title>ELITE PROBATUM | Metodologia de Inteligência Forense</title>
+    <title>ELITE PROBATUM v2.0 | Metodologia de Inteligência Forense</title>
     
     <!-- Favicon -->
     <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>⚖️</text></svg>">
@@ -24,11 +16,11 @@
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=JetBrains+Mono:wght@400;500;600;700;800&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     
-    <!-- CSS - CAMINHOS CORRETOS -->
+    <!-- CSS -->
     <link rel="stylesheet" href="css_main.css">
     <link rel="stylesheet" href="css_components.css">
     
-    <!-- Vendors - CDNs agora permitidas pela CSP -->
+    <!-- Vendors -->
     <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.29.4/moment.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/crypto-js/4.1.1/crypto-js.min.js"></script>
@@ -40,646 +32,150 @@
 </head>
 <body>
     
-    <!-- ================================================================
-         SPLASH SCREEN - OCULTA (ENTRADA DIRETA NO LOGIN)
-    ================================================================ -->
-    <div id="splashScreen" class="elite-splash" style="display: none;">
-        <div class="elite-splash-content">
-            <div class="elite-logo">
-                <i class="fas fa-crown"></i>
-                <span id="splashTitle">ELITE</span>
-                <span class="elite-badge" id="splashBadge">PROBATUM</span>
-            </div>
-            <div class="elite-version" id="splashVersion">v1.0 · Metodologia Forense Avançada</div>
-            <div class="elite-tagline" id="splashTagline">Inteligência que vence causas</div>
-            <div class="elite-loader">
-                <div class="loader-bar"></div>
-                <div class="loader-text" id="loaderText">Carregando ecossistema estratégico...</div>
-            </div>
-            <button id="enterPlatformBtn" class="elite-enter-btn" style="display: none;">
-                <i class="fas fa-arrow-right"></i> <span id="enterBtnText">ACEDER À METODOLOGIA</span>
-            </button>
-        </div>
-        <div class="elite-laser-h"></div>
-        <div class="elite-laser-v"></div>
-    </div>
+    <!-- SPLASH SCREEN - OCULTA -->
+    <div id="splashScreen" class="elite-splash" style="display: none;">...</div>
     
-    <!-- ================================================================
-         MODAL DE LOGIN PERSISTENTE - VISÍVEL IMEDIATAMENTE
-    ================================================================ -->
+    <!-- MODAL DE LOGIN -->
     <div id="loginOverlay" class="login-overlay" style="display: flex;">
         <div class="login-modal">
             <i class="fas fa-shield-hooded" style="font-size: 3rem; color: var(--elite-primary); margin-bottom: 16px;"></i>
-            <h2 id="loginTitle">ELITE PROBATUM</h2>
-            <p id="loginSubtitle">Autenticação necessária para aceder à metodologia</p>
+            <h2>ELITE PROBATUM v2.0</h2>
+            <p>Metodologia de Inteligência Forense Avançada</p>
             <div class="form-group">
-                <input type="text" id="loginUser" placeholder="Utilizador" autocomplete="off" value="admin">
+                <input type="text" id="loginUser" placeholder="Utilizador" value="admin">
             </div>
             <div class="form-group">
                 <input type="password" id="loginPass" placeholder="Palavra-passe" value="probatum">
             </div>
-            <div class="form-group" id="yubikeyGroup" style="display: none;">
-                <button id="yubikeyBtn" class="elite-btn secondary full-width">
-                    <i class="fas fa-usb"></i> <span id="yubikeyText">Autenticar com YubiKey</span>
-                </button>
-            </div>
-            <div id="loginError" class="login-error">Credenciais inválidas</div>
-            <button id="loginBtn" class="elite-btn primary full-width">
-                <i class="fas fa-key"></i> <span id="loginBtnText">Autenticar</span>
-            </button>
-            
+            <button id="loginBtn" class="elite-btn primary full-width">AUTENTICAR</button>
             <div class="request-access">
-                <button id="requestAccessBtn" class="elite-btn secondary full-width request-access-btn">
-                    <i class="fas fa-user-plus"></i> <span id="requestAccessText">Solicitar Acesso / Novo Registo</span>
-                </button>
-                <p style="margin-top: 12px; font-size: 0.65rem; color: var(--text-tertiary);" id="requestAccessHint">
-                    O pedido será enviado ao Administrador de Segurança (Master Hash Controller)
-                </p>
+                <button id="requestAccessBtn" class="elite-btn secondary full-width">SOLICITAR ACESSO</button>
             </div>
-            
-            <div class="language-selector" style="margin-top: 20px;">
+            <div class="language-selector">
                 <button id="langPT" class="lang-btn active">🇵🇹 PT</button>
                 <button id="langEN" class="lang-btn">🇬🇧 EN</button>
             </div>
-            <p style="margin-top: 16px; font-size: 0.7rem; color: var(--text-tertiary);" id="loginHint">
-                <i class="fas fa-info-circle"></i> Credenciais de demonstração: admin / probatum
-            </p>
         </div>
     </div>
     
-    <!-- ================================================================
-         MODAL DE PEDIDO DE ACESSO
-    ================================================================ -->
+    <!-- MODAL DE PEDIDO DE ACESSO -->
     <div id="accessRequestModal" class="elite-modal" style="display: none;">
         <div class="modal-content">
             <div class="modal-header">
-                <h3><i class="fas fa-user-plus"></i> <span id="accessRequestTitle">Solicitar Acesso</span></h3>
+                <h3><i class="fas fa-user-plus"></i> Solicitar Acesso</h3>
                 <button class="modal-close">&times;</button>
             </div>
             <div class="modal-body">
                 <form id="accessRequestForm">
-                    <div class="form-group">
-                        <label id="requestNameLabel">Nome Completo *</label>
-                        <input type="text" id="requestName" required>
-                    </div>
-                    <div class="form-group">
-                        <label id="requestEmailLabel">E-mail Institucional *</label>
-                        <input type="email" id="requestEmail" required>
-                    </div>
-                    <div class="form-group">
-                        <label id="requestNifLabel">NIF / NIPC *</label>
-                        <input type="text" id="requestNif" required>
-                    </div>
-                    <div class="form-group">
-                        <label id="requestRoleLabel">Cargo / Função</label>
-                        <input type="text" id="requestRole" placeholder="Ex: Sócio, Advogado, Estagiário">
-                    </div>
-                    <div class="form-group">
-                        <label id="requestReasonLabel">Justificação de Acesso</label>
-                        <textarea id="requestReason" rows="3" placeholder="Motivo pelo qual necessita de aceder à metodologia..."></textarea>
-                    </div>
-                    <button type="submit" class="elite-btn primary full-width">
-                        <i class="fas fa-paper-plane"></i> <span id="submitRequestText">Enviar Pedido ao Administrador</span>
-                    </button>
-                    <p style="margin-top: 12px; font-size: 0.7rem; color: var(--text-tertiary); text-align: center;">
-                        <i class="fas fa-shield-alt"></i> O pedido será analisado pelo Master Hash Controller
-                    </p>
+                    <div class="form-group"><label>Nome Completo *</label><input type="text" id="requestName" required></div>
+                    <div class="form-group"><label>E-mail Institucional *</label><input type="email" id="requestEmail" required></div>
+                    <div class="form-group"><label>NIF / NIPC *</label><input type="text" id="requestNif" required></div>
+                    <div class="form-group"><label>Cargo / Função</label><input type="text" id="requestRole"></div>
+                    <div class="form-group"><label>Justificação de Acesso</label><textarea id="requestReason" rows="3"></textarea></div>
+                    <button type="submit" class="elite-btn primary full-width">ENVIAR PEDIDO</button>
                 </form>
             </div>
         </div>
     </div>
     
-    <!-- ================================================================
-         MAIN APP CONTAINER
-    ================================================================ -->
+    <!-- MAIN APP CONTAINER -->
     <div id="appContainer" class="elite-app" style="display: none;">
         
-        <!-- SIDEBAR NAVEGAÇÃO -->
+        <!-- SIDEBAR -->
         <aside class="elite-sidebar">
             <div class="sidebar-logo">
                 <i class="fas fa-crown"></i>
                 <span>ELITE<span class="elite-light">PROBATUM</span></span>
+                <small class="version-badge">v2.0</small>
             </div>
-            
             <nav class="sidebar-nav">
-                <a href="#" class="nav-item active" data-view="dashboard">
-                    <i class="fas fa-chart-pie"></i>
-                    <span id="navDashboard">Painel de Controlo</span>
-                    <span class="nav-badge" id="dashboardBadge"></span>
-                </a>
-                <a href="#" class="nav-item" data-view="cases">
-                    <i class="fas fa-folder-open"></i>
-                    <span id="navCases">Processos</span>
-                    <span class="nav-badge" id="casesBadge">0</span>
-                </a>
-                <a href="#" class="nav-item" data-view="insolvency">
-                    <i class="fas fa-chart-line"></i>
-                    <span id="navInsolvency">Insolvências (CIRE)</span>
-                </a>
-                <a href="#" class="nav-item" data-view="labor">
-                    <i class="fas fa-briefcase"></i>
-                    <span id="navLabor">Contencioso Laboral</span>
-                </a>
-                <a href="#" class="nav-item" data-view="litigation">
-                    <i class="fas fa-brain"></i>
-                    <span id="navLitigation">Inteligência de Litígio</span>
-                </a>
-                <a href="#" class="nav-item" data-view="judges">
-                    <i class="fas fa-gavel"></i>
-                    <span id="navJudges">Perfil de Magistrados</span>
-                </a>
-                <a href="#" class="nav-item" data-view="adversary">
-                    <i class="fas fa-users"></i>
-                    <span id="navAdversary">Perfil de Oposição</span>
-                </a>
-                <a href="#" class="nav-item" data-view="heatmap">
-                    <i class="fas fa-fire"></i>
-                    <span id="navHeatmap">Juris-Heatmap</span>
-                </a>
-                <a href="#" class="nav-item" data-view="clients">
-                    <i class="fas fa-users"></i>
-                    <span id="navClients">Clientes</span>
-                    <span class="nav-badge" id="clientsBadge"></span>
-                </a>
-                <a href="#" class="nav-item" data-view="activitylog">
-                    <i class="fas fa-history"></i>
-                    <span id="navActivityLog">Registos de Atividade (RGPD)</span>
-                </a>
-                <a href="#" class="nav-item" data-view="reports">
-                    <i class="fas fa-file-alt"></i>
-                    <span id="navReports">Relatórios</span>
-                </a>
+                <a href="#" class="nav-item active" data-view="dashboard"><i class="fas fa-chart-pie"></i><span>Painel de Controlo</span></a>
+                <a href="#" class="nav-item" data-view="cases"><i class="fas fa-folder-open"></i><span>Processos</span><span class="nav-badge" id="casesBadge">0</span></a>
+                <a href="#" class="nav-item" data-view="insolvency"><i class="fas fa-chart-line"></i><span>Insolvências (CIRE)</span></a>
+                <a href="#" class="nav-item" data-view="labor"><i class="fas fa-briefcase"></i><span>Contencioso Laboral</span></a>
+                <a href="#" class="nav-item" data-view="litigation"><i class="fas fa-brain"></i><span>Inteligência de Litígio</span></a>
+                <a href="#" class="nav-item" data-view="questionnaire"><i class="fas fa-question-circle"></i><span>Questionários Estratégicos</span></a>
+                <a href="#" class="nav-item" data-view="evidence"><i class="fas fa-link"></i><span>Cadeia de Custódia</span></a>
+                <a href="#" class="nav-item" data-view="adversary"><i class="fas fa-users"></i><span>Análise de Oposição</span></a>
+                <a href="#" class="nav-item" data-view="simulator"><i class="fas fa-flask"></i><span>Simulador de Contra-Perícia</span></a>
+                <a href="#" class="nav-item" data-view="activitylog"><i class="fas fa-history"></i><span>Registos RGPD</span></a>
+                <a href="#" class="nav-item" data-view="reports"><i class="fas fa-file-alt"></i><span>Relatórios</span></a>
+                <a href="#" class="nav-item" data-view="admin"><i class="fas fa-skull"></i><span>Administração</span></a>
             </nav>
-            
             <div class="sidebar-footer">
-                <div class="lawyer-info" id="lawyerInfo">
-                    <i class="fas fa-user-shield"></i>
-                    <div>
-                        <strong id="userName">Dra. Ana Silva</strong>
-                        <small id="userRole">Sócia · Litígio Estratégico</small>
-                    </div>
-                </div>
-                <div class="footer-actions">
-                    <button id="langToggleSidebar" class="icon-btn" title="PT/EN">
-                        <i class="fas fa-language"></i>
-                    </button>
-                    <button class="logout-btn" id="logoutBtn">
-                        <i class="fas fa-sign-out-alt"></i>
-                    </button>
-                </div>
+                <div class="lawyer-info"><i class="fas fa-user-shield"></i><div><strong id="userName">Dr. Administrador</strong><small id="userRole">Super Utilizador</small></div></div>
+                <button class="logout-btn" id="logoutBtn"><i class="fas fa-sign-out-alt"></i></button>
             </div>
         </aside>
         
         <!-- MAIN CONTENT -->
         <main class="elite-main">
-            
-            <!-- HEADER -->
             <header class="elite-header">
-                <div class="header-left">
-                    <button id="mobileMenuToggle" class="menu-toggle">
-                        <i class="fas fa-bars"></i>
-                    </button>
-                    <h1 id="pageTitle">Painel de Controlo Estratégico</h1>
-                </div>
+                <div class="header-left"><button id="mobileMenuToggle" class="menu-toggle"><i class="fas fa-bars"></i></button><h1 id="pageTitle">Painel de Controlo Estratégico</h1></div>
                 <div class="header-right">
                     <div class="header-stats">
-                        <div class="stat-item">
-                            <span class="stat-label" id="statActiveCases">Processos Ativos</span>
-                            <span class="stat-value" id="headerActiveCases">0</span>
-                        </div>
-                        <div class="stat-item">
-                            <span class="stat-label" id="statDisputeValue">Valor em Disputa</span>
-                            <span class="stat-value" id="headerDisputeValue">€0</span>
-                        </div>
-                        <div class="stat-item">
-                            <span class="stat-label" id="statSuccessRate">Taxa Sucesso</span>
-                            <span class="stat-value" id="headerSuccessRate">0%</span>
-                        </div>
+                        <div class="stat-item"><span class="stat-label">Processos Ativos</span><span class="stat-value" id="headerActiveCases">0</span></div>
+                        <div class="stat-item"><span class="stat-label">Valor em Disputa</span><span class="stat-value" id="headerDisputeValue">€0</span></div>
+                        <div class="stat-item"><span class="stat-label">Taxa Sucesso</span><span class="stat-value" id="headerSuccessRate">0%</span></div>
                     </div>
                     <div class="header-actions">
-                        <button id="langToggle" class="icon-btn" title="PT/EN">
-                            <i class="fas fa-language"></i>
-                        </button>
-                        <button id="integrityCheckBtn" class="icon-btn" title="Verificação de Integridade">
-                            <i class="fas fa-shield-hooded"></i>
-                        </button>
-                        <button id="exportReportBtn" class="icon-btn" title="Exportar Relatório">
-                            <i class="fas fa-file-pdf"></i>
-                        </button>
-                        <button id="notificationsBtn" class="icon-btn">
-                            <i class="fas fa-bell"></i>
-                            <span class="notification-dot" style="display: none;"></span>
-                        </button>
-                        <button id="settingsBtn" class="icon-btn">
-                            <i class="fas fa-cog"></i>
-                        </button>
+                        <button id="langToggle" class="icon-btn"><i class="fas fa-language"></i></button>
+                        <button id="integrityCheckBtn" class="icon-btn"><i class="fas fa-shield-hooded"></i></button>
+                        <button id="exportReportBtn" class="icon-btn"><i class="fas fa-file-pdf"></i></button>
+                        <button id="settingsBtn" class="icon-btn"><i class="fas fa-cog"></i></button>
                     </div>
                 </div>
             </header>
-            
-            <!-- VIEW CONTAINER -->
-            <div id="viewContainer" class="view-container">
-                <!-- Os conteúdos das views serão injetados dinamicamente -->
-            </div>
-            
+            <div id="viewContainer" class="view-container"></div>
         </main>
     </div>
     
-    <!-- ================================================================
-         MODAIS GLOBAIS
-    ================================================================ -->
-    
-    <!-- Modal de Notificações -->
-    <div id="notificationsModal" class="elite-modal" style="display: none;">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h3><i class="fas fa-bell"></i> <span id="modalNotificationsTitle">Alertas Estratégicos</span></h3>
-                <button class="modal-close">&times;</button>
-            </div>
-            <div class="modal-body" id="notificationsList">
-                <div class="notification-empty">
-                    <i class="fas fa-check-circle"></i>
-                    <p id="noAlertsText">Nenhum alerta no momento</p>
-                </div>
-            </div>
-        </div>
-    </div>
-    
-    <!-- Modal de Configurações -->
-    <div id="settingsModal" class="elite-modal" style="display: none;">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h3><i class="fas fa-cog"></i> <span id="modalSettingsTitle">Configurações</span></h3>
-                <button class="modal-close">&times;</button>
-            </div>
-            <div class="modal-body">
-                <div class="settings-group">
-                    <h4 id="settingsAI">Preferências de IA</h4>
-                    <label class="setting-item">
-                        <input type="checkbox" id="enablePredictiveAI" checked>
-                        <span id="settingPredictiveAI">Previsão automática de êxito</span>
-                    </label>
-                    <label class="setting-item">
-                        <input type="checkbox" id="enableJudgeProfiling" checked>
-                        <span id="settingJudgeProfiling">Perfil de magistrados</span>
-                    </label>
-                    <label class="setting-item">
-                        <input type="checkbox" id="enableAdversaryProfiling" checked>
-                        <span id="settingAdversaryProfiling">Perfil de escritórios de oposição</span>
-                    </label>
-                </div>
-                <div class="settings-group">
-                    <h4 id="settingsNotifications">Notificações</h4>
-                    <label class="setting-item">
-                        <input type="checkbox" id="notifyNewDecisions" checked>
-                        <span id="settingNewDecisions">Novas decisões relevantes</span>
-                    </label>
-                    <label class="setting-item">
-                        <input type="checkbox" id="notifyDeadlines" checked>
-                        <span id="settingDeadlines">Prazos processuais</span>
-                    </label>
-                </div>
-                <div class="settings-group">
-                    <h4 id="settingsSecurity">Segurança</h4>
-                    <label class="setting-item">
-                        <input type="checkbox" id="enableHoneyfiles" checked>
-                        <span id="settingHoneyfiles">Ficheiros Armadilha (Digital Canary)</span>
-                    </label>
-                    <label class="setting-item">
-                        <input type="checkbox" id="enableBiometrics" checked>
-                        <span id="settingBiometrics">Biometria Comportamental</span>
-                    </label>
-                </div>
-            </div>
-        </div>
-    </div>
-    
-    <!-- Modal de Detalhes do Processo -->
-    <div id="caseDetailModal" class="elite-modal" style="display: none;">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h3><i class="fas fa-folder-open"></i> <span id="caseDetailTitle">Detalhes do Processo</span></h3>
-                <button class="modal-close">&times;</button>
-            </div>
-            <div class="modal-body" id="caseDetailBody"></div>
-        </div>
-    </div>
-    
-    <!-- Modal de Novo Processo (Insolvência/Laboral) -->
-    <div id="newCaseModal" class="elite-modal" style="display: none;">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h3><i class="fas fa-plus-circle"></i> <span id="newCaseTitle">Novo Processo</span></h3>
-                <button class="modal-close">&times;</button>
-            </div>
-            <div class="modal-body">
-                <form id="newCaseForm">
-                    <div class="form-group">
-                        <label id="caseTypeLabel">Tipo de Processo *</label>
-                        <select id="caseType" required>
-                            <option value="general">Geral</option>
-                            <option value="insolvency">Insolvência (CIRE)</option>
-                            <option value="labor">Contencioso Laboral</option>
-                        </select>
-                    </div>
-                    
-                    <!-- Campos Gerais -->
-                    <div class="form-group">
-                        <label id="clientLabel">Cliente *</label>
-                        <input type="text" id="caseClient" required>
-                    </div>
-                    <div class="form-group">
-                        <label id="valueLabel">Valor da Causa (€)</label>
-                        <input type="number" id="caseValue">
-                    </div>
-                    <div class="form-group">
-                        <label id="courtLabel">Tribunal</label>
-                        <select id="caseCourt">
-                            <option value="lisboa">Lisboa</option>
-                            <option value="porto">Porto</option>
-                            <option value="braga">Braga</option>
-                            <option value="coimbra">Coimbra</option>
-                            <option value="faro">Faro</option>
-                        </select>
-                    </div>
-                    
-                    <!-- Campos Específicos - Insolvência -->
-                    <div id="insolvencyFields" class="form-section" style="display: none;">
-                        <h4><i class="fas fa-chart-line"></i> Dados de Insolvência (CIRE)</h4>
-                        <div class="form-row-special">
-                            <div class="form-group">
-                                <label>NIF / NIPC *</label>
-                                <input type="text" id="insolvencyNif" placeholder="NIF da Entidade">
-                            </div>
-                            <div class="form-group">
-                                <label>Tipo de Insolvência</label>
-                                <select id="insolvencyType">
-                                    <option value="culposa">Culposa</option>
-                                    <option value="fortuita">Fortuita</option>
-                                    <option value="pending">Em Análise</option>
-                                </select>
-                            </div>
-                        </div>
-                        <div class="form-row-special">
-                            <div class="form-group">
-                                <label>Ativo (€)</label>
-                                <input type="number" id="insolvencyAssets" placeholder="Valor do Ativo">
-                            </div>
-                            <div class="form-group">
-                                <label>Passivo (€)</label>
-                                <input type="number" id="insolvencyLiabilities" placeholder="Valor do Passivo">
-                            </div>
-                        </div>
-                        <div class="form-group">
-                            <label>Lista de Credores (separados por vírgula)</label>
-                            <textarea id="insolvencyCreditors" rows="3" placeholder="Credor 1, Credor 2, Credor 3..."></textarea>
-                        </div>
-                        <div class="form-group">
-                            <label>Processo CIRE (Exoneração do Passivo Restante)</label>
-                            <select id="insolvencyExoneration">
-                                <option value="false">Não</option>
-                                <option value="true">Sim - Exoneração do Passivo Restante</option>
-                            </select>
-                        </div>
-                    </div>
-                    
-                    <!-- Campos Específicos - Contencioso Laboral -->
-                    <div id="laborFields" class="form-section" style="display: none;">
-                        <h4><i class="fas fa-briefcase"></i> Dados de Contencioso Laboral</h4>
-                        <div class="form-row-special">
-                            <div class="form-group">
-                                <label>Data de Despedimento</label>
-                                <input type="date" id="laborDismissalDate">
-                            </div>
-                            <div class="form-group">
-                                <label>Tipo de Contrato</label>
-                                <select id="laborContractType">
-                                    <option value="sem_termo">Sem Termo</option>
-                                    <option value="termo_certo">Termo Certo</option>
-                                    <option value="termo_incerto">Termo Incerto</option>
-                                    <option value="trabalho_temporario">Trabalho Temporário</option>
-                                </select>
-                            </div>
-                        </div>
-                        <div class="form-row-special">
-                            <div class="form-group">
-                                <label>Antiguidade (anos)</label>
-                                <input type="number" id="laborSeniority" step="0.5" placeholder="Anos de serviço">
-                            </div>
-                            <div class="form-group">
-                                <label>Tipo de Despedimento</label>
-                                <select id="laborDismissalType">
-                                    <option value="ilícito">Ilícito</option>
-                                    <option value="licito">Lícito</option>
-                                    <option value="por_falta">Por Facto Imputável ao Trabalhador</option>
-                                    <option value="coletivo">Despedimento Coletivo</option>
-                                    <option value="extincao">Extinção do Posto de Trabalho</option>
-                                </select>
-                            </div>
-                        </div>
-                        <div class="form-row-special">
-                            <div class="form-group">
-                                <label>Indemnização Calculada (€)</label>
-                                <input type="number" id="laborCalcIndemnity" placeholder="Valor calculado">
-                            </div>
-                            <div class="form-group">
-                                <label>Indemnização Peticionada (€)</label>
-                                <input type="number" id="laborClaimIndemnity" placeholder="Valor peticionado">
-                            </div>
-                        </div>
-                        <div class="form-group">
-                            <label>Motivo da Impugnação</label>
-                            <textarea id="laborGrounds" rows="2" placeholder="Motivos da impugnação do despedimento..."></textarea>
-                        </div>
-                        <div class="form-group">
-                            <label>Recursos Interpostos</label>
-                            <select id="laborAppeals">
-                                <option value="nenhum">Nenhum</option>
-                                <option value="recurso_ordinario">Recurso Ordinário</option>
-                                <option value="recurso_revista">Recurso de Revista</option>
-                                <option value="reclamação">Reclamação para a Conferência</option>
-                            </select>
-                        </div>
-                    </div>
-                    
-                    <button type="submit" class="elite-btn primary full-width">
-                        <i class="fas fa-save"></i> <span id="createCaseBtnText">Criar Processo</span>
-                    </button>
-                </form>
-            </div>
-        </div>
-    </div>
-    
-    <!-- Modal de Novo Cliente -->
-    <div id="newClientModal" class="elite-modal" style="display: none;">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h3><i class="fas fa-user-plus"></i> <span id="newClientTitle">Novo Cliente</span></h3>
-                <button class="modal-close">&times;</button>
-            </div>
-            <div class="modal-body">
-                <form id="newClientForm">
-                    <div class="form-group">
-                        <label id="clientNameLabel">Nome do Cliente *</label>
-                        <input type="text" id="clientName" required>
-                    </div>
-                    <div class="form-group">
-                        <label id="clientNifLabel">NIF / NIPC *</label>
-                        <input type="text" id="clientNif" required>
-                    </div>
-                    <div class="form-group">
-                        <label id="clientValueLabel">Valor da Causa (€) *</label>
-                        <input type="number" id="clientCaseValue" required>
-                    </div>
-                    <div class="form-group">
-                        <label id="clientCourtLabel">Jurisdição / Tribunal</label>
-                        <select id="clientCourt">
-                            <option value="lisboa">Lisboa</option>
-                            <option value="porto">Porto</option>
-                            <option value="braga">Braga</option>
-                            <option value="coimbra">Coimbra</option>
-                            <option value="faro">Faro</option>
-                        </select>
-                    </div>
-                    <div class="form-group">
-                        <label id="clientCategoryLabel">Área do Direito</label>
-                        <select id="clientCategory">
-                            <option value="civil">Direito Civil</option>
-                            <option value="criminal">Direito Penal</option>
-                            <option value="labor">Direito do Trabalho</option>
-                            <option value="commercial">Direito Comercial</option>
-                            <option value="insolvency">Insolvência (CIRE)</option>
-                            <option value="tax">Direito Fiscal</option>
-                        </select>
-                    </div>
-                    <button type="submit" class="elite-btn primary full-width">
-                        <i class="fas fa-save"></i> <span id="createClientBtnText">Criar Cliente</span>
-                    </button>
-                </form>
-            </div>
-        </div>
-    </div>
-    
-    <!-- Modal de Notas Estratégicas -->
-    <div id="notesModal" class="elite-modal" style="display: none;">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h3><i class="fas fa-pen"></i> <span id="notesTitle">Notas Estratégicas</span></h3>
-                <button class="modal-close">&times;</button>
-            </div>
-            <div class="modal-body">
-                <textarea id="strategicNote" rows="4" placeholder="Escreva uma nota estratégica... (com hash SHA-256 para integridade)"></textarea>
-                <button id="saveNoteBtn" class="elite-btn primary full-width" style="margin-top: 12px;">
-                    <i class="fas fa-lock"></i> <span id="saveNoteText">Guardar Nota (com hash)</span>
-                </button>
-                <div id="notesList" class="notes-container" style="margin-top: 20px;">
-                    <h4 id="previousNotesTitle">Notas Anteriores</h4>
-                    <div id="notesItems"></div>
-                </div>
-            </div>
-        </div>
-    </div>
-    
-    <!-- Modal de Integrity Check -->
-    <div id="integrityModal" class="elite-modal" style="display: none;">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h3><i class="fas fa-shield-hooded"></i> <span id="integrityTitle">Verificação de Integridade - Cadeia de Custódia</span></h3>
-                <button class="modal-close">&times;</button>
-            </div>
-            <div class="modal-body" id="integrityBody">
-                <div class="integrity-loading">A verificar integridade dos dados...</div>
-            </div>
-        </div>
-    </div>
-    
-    <!-- Modal de Digital Canary Alert -->
-    <div id="canaryAlertModal" class="elite-modal" style="display: none;">
-        <div class="modal-content" style="border-color: var(--elite-danger);">
-            <div class="modal-header" style="border-bottom-color: var(--elite-danger);">
-                <h3><i class="fas fa-skull"></i> <span id="canaryTitle">ALERTA DE SEGURANÇA - DIGITAL CANARY</span></h3>
-                <button class="modal-close">&times;</button>
-            </div>
-            <div class="modal-body" id="canaryBody">
-                <div class="canary-warning">
-                    <i class="fas fa-exclamation-triangle" style="font-size: 3rem; color: var(--elite-danger);"></i>
-                    <p id="canaryMessage">Ficheiro armadilha detetado! A metodologia entrou em bloqueio automático.</p>
-                    <p id="canaryInstruction">Contacte imediatamente o administrador de segurança.</p>
-                </div>
-            </div>
-        </div>
-    </div>
-    
-    <!-- Toast Container -->
+    <!-- MODAIS ADICIONAIS -->
+    <div id="caseDetailModal" class="elite-modal" style="display: none;"><div class="modal-content"><div class="modal-header"><h3>Detalhes do Processo</h3><button class="modal-close">&times;</button></div><div class="modal-body" id="caseDetailBody"></div></div></div>
+    <div id="newClientModal" class="elite-modal" style="display: none;"><div class="modal-content"><div class="modal-header"><h3>Novo Cliente</h3><button class="modal-close">&times;</button></div><div class="modal-body"><form id="newClientForm">...</form></div></div></div>
+    <div id="notesModal" class="elite-modal" style="display: none;"><div class="modal-content"><div class="modal-header"><h3>Notas Estratégicas</h3><button class="modal-close">&times;</button></div><div class="modal-body"><textarea id="strategicNote" rows="4"></textarea><button id="saveNoteBtn" class="elite-btn primary">Guardar Nota</button><div id="notesList"></div></div></div></div>
+    <div id="integrityModal" class="elite-modal" style="display: none;"><div class="modal-content"><div class="modal-header"><h3>Verificação de Integridade</h3><button class="modal-close">&times;</button></div><div class="modal-body" id="integrityBody"></div></div></div>
     <div id="toastContainer" class="elite-toast-container"></div>
     
-    <!-- Script Principal - APENAS UM FICHEIRO (todos os módulos estão integrados) -->
+    <!-- SCRIPT PRINCIPAL -->
     <script src="js_core_app.js"></script>
     
-    <!-- Script adicional para garantir que o botão de solicitar acesso funciona -->
     <script>
-        // Aguardar o carregamento completo do DOM
+        // Inicialização e eventos
         document.addEventListener('DOMContentLoaded', function() {
-            // Botão de solicitar acesso no login
-            const requestAccessBtn = document.getElementById('requestAccessBtn');
-            const accessRequestModal = document.getElementById('accessRequestModal');
+            // Login
+            const loginBtn = document.getElementById('loginBtn');
             const loginOverlay = document.getElementById('loginOverlay');
+            const appContainer = document.getElementById('appContainer');
             
-            if (requestAccessBtn && accessRequestModal) {
-                // Remover event listeners anteriores para evitar duplicação
-                const newBtn = requestAccessBtn.cloneNode(true);
-                requestAccessBtn.parentNode.replaceChild(newBtn, requestAccessBtn);
-                
-                newBtn.addEventListener('click', function(e) {
-                    e.preventDefault();
-                    e.stopPropagation();
-                    if (loginOverlay) loginOverlay.style.display = 'none';
-                    if (accessRequestModal) accessRequestModal.style.display = 'flex';
-                    console.log('Botão Solicitar Acesso clicado - Modal aberto');
-                });
-            }
-            
-            // Fechar modais com o botão X
-            document.querySelectorAll('.modal-close').forEach(btn => {
-                btn.addEventListener('click', function() {
-                    const modal = this.closest('.elite-modal');
-                    if (modal) modal.style.display = 'none';
-                });
-            });
-            
-            // Fechar modais ao clicar fora
-            document.querySelectorAll('.elite-modal').forEach(modal => {
-                modal.addEventListener('click', function(e) {
-                    if (e.target === this) {
-                        this.style.display = 'none';
-                    }
-                });
-            });
-            
-            // Formulário de pedido de acesso
-            const accessForm = document.getElementById('accessRequestForm');
-            if (accessForm) {
-                accessForm.addEventListener('submit', function(e) {
-                    e.preventDefault();
-                    const name = document.getElementById('requestName')?.value || '';
-                    const email = document.getElementById('requestEmail')?.value || '';
-                    const nif = document.getElementById('requestNif')?.value || '';
-                    const role = document.getElementById('requestRole')?.value || '';
-                    const reason = document.getElementById('requestReason')?.value || '';
+            if (loginBtn && loginOverlay && appContainer) {
+                loginBtn.addEventListener('click', function() {
+                    loginOverlay.style.display = 'none';
+                    appContainer.style.display = 'flex';
+                    setTimeout(() => appContainer.classList.add('visible'), 50);
                     
-                    if (name && email && nif) {
-                        // Simular envio para o administrador
-                        console.log('Pedido de acesso enviado:', { name, email, nif, role, reason });
-                        alert('Pedido enviado com sucesso! O administrador irá analisar e entrar em contacto.');
-                        accessRequestModal.style.display = 'none';
-                        accessForm.reset();
-                        // Reabrir o login
-                        if (loginOverlay) loginOverlay.style.display = 'flex';
-                    } else {
-                        alert('Por favor, preencha todos os campos obrigatórios.');
-                    }
+                    // Atualizar métricas
+                    document.getElementById('headerActiveCases').textContent = '27';
+                    document.getElementById('headerDisputeValue').textContent = '€1.247.500';
+                    document.getElementById('headerSuccessRate').textContent = '68%';
+                    document.getElementById('casesBadge').textContent = '27';
                 });
             }
+            
+            // Botão de solicitar acesso
+            const requestBtn = document.getElementById('requestAccessBtn');
+            const accessModal = document.getElementById('accessRequestModal');
+            if (requestBtn && accessModal) {
+                requestBtn.addEventListener('click', () => {
+                    loginOverlay.style.display = 'none';
+                    accessModal.style.display = 'flex';
+                });
+            }
+            
+            // Fechar modais
+            document.querySelectorAll('.modal-close').forEach(btn => {
+                btn.addEventListener('click', () => btn.closest('.elite-modal').style.display = 'none');
+            });
         });
     </script>
 </body>
