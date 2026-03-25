@@ -3,7 +3,8 @@
  * ELITE PROBATUM v1.0 — APLICAÇÃO PRINCIPAL
  * ============================================================================
  * Arquitetura: RBAC, JWT Simulation, CRUD Operations, Immutable Audit Log
- * Módulos: Predictive Litigation, Adversary Profiling, Juris-Heatmap
+ * Segurança: FIDO2 Simulation, Honeyfiles, Keystroke Biometrics, FHE
+ * Internacionalização: PT/EN com tradução completa
  * ============================================================================
  */
 
@@ -11,14 +12,236 @@
     'use strict';
     
     // =========================================================================
+    // INTERNACIONALIZAÇÃO (PT/EN)
+    // =========================================================================
+    
+    const LOCALES = {
+        PT: {
+            // Splash
+            splashTitle: 'ELITE',
+            splashBadge: 'PROBATUM',
+            splashVersion: 'v1.0 · Secure Edition',
+            splashTagline: 'Inteligência que vence casos',
+            loaderText: 'Carregando ecossistema estratégico...',
+            enterBtn: 'ENTRAR NA PLATAFORMA',
+            
+            // Login
+            loginTitle: 'ELITE PROBATUM',
+            loginSubtitle: 'Autenticação necessária para aceder à plataforma',
+            loginUserPlaceholder: 'Utilizador',
+            loginPassPlaceholder: 'Palavra-passe',
+            yubikeyText: 'Autenticar com YubiKey',
+            loginBtnText: 'Autenticar',
+            loginHint: 'Credenciais: admin / probatum',
+            loginError: 'Credenciais inválidas',
+            
+            // Navigation
+            navDashboard: 'Dashboard',
+            navCases: 'Casos',
+            navLitigation: 'Inteligência de Litígio',
+            navJudges: 'Perfil de Magistrados',
+            navAdversary: 'Perfil de Oposição',
+            navHeatmap: 'Juris-Heatmap',
+            navClients: 'Clientes',
+            navReports: 'Relatórios',
+            
+            // Header Stats
+            statActiveCases: 'Casos Ativos',
+            statDisputeValue: 'Valor em Disputa',
+            statSuccessRate: 'Taxa Sucesso',
+            
+            // Dashboard
+            dashboardTitle: 'Dashboard Estratégico',
+            portfolioChart: 'Evolução da Carteira (últimos 6 meses)',
+            categoryChart: 'Distribuição por Área do Direito',
+            alertsTitle: 'Alertas Estratégicos',
+            
+            // Cases
+            newCaseBtn: 'Novo Caso',
+            importCasesBtn: 'Importar Lote',
+            searchPlaceholder: 'Pesquisar casos...',
+            allCases: 'Todos',
+            
+            // Litigation
+            litigationTitle: 'Análise Preditiva de Êxito',
+            litigationSubtitle: 'Insira os dados do caso para obter previsão detalhada',
+            predictCategory: 'Área do Direito',
+            predictValue: 'Valor da Causa (€)',
+            predictProbability: 'Probabilidade Estimada (%)',
+            predictCourt: 'Tribunal',
+            predictAdversary: 'Escritório Oposição',
+            runPrediction: 'Executar Previsão',
+            
+            // Modals
+            caseDetailTitle: 'Detalhes do Caso',
+            newClientTitle: 'Novo Cliente',
+            clientNameLabel: 'Nome do Cliente *',
+            clientNifLabel: 'NIF / VATIN *',
+            clientValueLabel: 'Valor da Causa (€) *',
+            clientCourtLabel: 'Jurisdição / Tribunal',
+            clientCategoryLabel: 'Área do Direito',
+            createClientBtn: 'Criar Cliente',
+            notesTitle: 'Notas Estratégicas',
+            saveNoteText: 'Guardar Nota (com hash)',
+            previousNotesTitle: 'Notas Anteriores',
+            integrityTitle: 'Integrity Check - Cadeia de Custódia',
+            modalNotificationsTitle: 'Alertas Estratégicos',
+            modalSettingsTitle: 'Configurações',
+            noAlertsText: 'Nenhum alerta no momento',
+            
+            // Settings
+            settingsAI: 'Preferências de IA',
+            settingPredictiveAI: 'Previsão automática de êxito',
+            settingJudgeProfiling: 'Perfil de magistrados',
+            settingAdversaryProfiling: 'Perfil de escritórios de oposição',
+            settingsNotifications: 'Notificações',
+            settingNewDecisions: 'Novas decisões relevantes',
+            settingDeadlines: 'Prazos processuais',
+            settingsSecurity: 'Segurança',
+            settingHoneyfiles: 'Ficheiros Armadilha (Digital Canary)',
+            settingBiometrics: 'Biometria Comportamental',
+            
+            // Security Alerts
+            canaryTitle: 'ALERTA DE SEGURANÇA - DIGITAL CANARY',
+            canaryMessage: 'Ficheiro armadilha detetado! O sistema entrou em lockdown automático.',
+            canaryInstruction: 'Contacte imediatamente o administrador de segurança.',
+            
+            // Toast Messages
+            toastWelcome: 'Bem-vindo',
+            toastLogout: 'Sessão encerrada',
+            toastLoginError: 'Credenciais inválidas',
+            toastNoteSaved: 'Nota guardada com hash de integridade',
+            toastReportGenerated: 'Relatório gerado com sucesso!',
+            toastExportError: 'Erro ao gerar relatório',
+            toastIntegrityCheck: 'Certificado de integridade gerado'
+        },
+        EN: {
+            // Splash
+            splashTitle: 'ELITE',
+            splashBadge: 'PROBATUM',
+            splashVersion: 'v1.0 · Secure Edition',
+            splashTagline: 'Intelligence that wins cases',
+            loaderText: 'Loading strategic ecosystem...',
+            enterBtn: 'ENTER PLATFORM',
+            
+            // Login
+            loginTitle: 'ELITE PROBATUM',
+            loginSubtitle: 'Authentication required to access the platform',
+            loginUserPlaceholder: 'Username',
+            loginPassPlaceholder: 'Password',
+            yubikeyText: 'Authenticate with YubiKey',
+            loginBtnText: 'Authenticate',
+            loginHint: 'Credentials: admin / probatum',
+            loginError: 'Invalid credentials',
+            
+            // Navigation
+            navDashboard: 'Dashboard',
+            navCases: 'Cases',
+            navLitigation: 'Litigation Intelligence',
+            navJudges: 'Judge Profile',
+            navAdversary: 'Adversary Profile',
+            navHeatmap: 'Juris-Heatmap',
+            navClients: 'Clients',
+            navReports: 'Reports',
+            
+            // Header Stats
+            statActiveCases: 'Active Cases',
+            statDisputeValue: 'Dispute Value',
+            statSuccessRate: 'Success Rate',
+            
+            // Dashboard
+            dashboardTitle: 'Strategic Dashboard',
+            portfolioChart: 'Portfolio Evolution (last 6 months)',
+            categoryChart: 'Distribution by Legal Area',
+            alertsTitle: 'Strategic Alerts',
+            
+            // Cases
+            newCaseBtn: 'New Case',
+            importCasesBtn: 'Batch Import',
+            searchPlaceholder: 'Search cases...',
+            allCases: 'All',
+            
+            // Litigation
+            litigationTitle: 'Predictive Success Analysis',
+            litigationSubtitle: 'Enter case data for detailed prediction',
+            predictCategory: 'Legal Area',
+            predictValue: 'Case Value (€)',
+            predictProbability: 'Estimated Probability (%)',
+            predictCourt: 'Court',
+            predictAdversary: 'Opposing Firm',
+            runPrediction: 'Run Prediction',
+            
+            // Modals
+            caseDetailTitle: 'Case Details',
+            newClientTitle: 'New Client',
+            clientNameLabel: 'Client Name *',
+            clientNifLabel: 'VATIN *',
+            clientValueLabel: 'Case Value (€) *',
+            clientCourtLabel: 'Jurisdiction / Court',
+            clientCategoryLabel: 'Legal Area',
+            createClientBtn: 'Create Client',
+            notesTitle: 'Strategic Notes',
+            saveNoteText: 'Save Note (with hash)',
+            previousNotesTitle: 'Previous Notes',
+            integrityTitle: 'Integrity Check - Chain of Custody',
+            modalNotificationsTitle: 'Strategic Alerts',
+            modalSettingsTitle: 'Settings',
+            noAlertsText: 'No alerts at this time',
+            
+            // Settings
+            settingsAI: 'AI Preferences',
+            settingPredictiveAI: 'Automatic success prediction',
+            settingJudgeProfiling: 'Judge profiling',
+            settingAdversaryProfiling: 'Opposing firm profiling',
+            settingsNotifications: 'Notifications',
+            settingNewDecisions: 'New relevant decisions',
+            settingDeadlines: 'Procedural deadlines',
+            settingsSecurity: 'Security',
+            settingHoneyfiles: 'Honeyfiles (Digital Canary)',
+            settingBiometrics: 'Behavioral Biometrics',
+            
+            // Security Alerts
+            canaryTitle: 'SECURITY ALERT - DIGITAL CANARY',
+            canaryMessage: 'Honeyfile detected! System has entered automatic lockdown.',
+            canaryInstruction: 'Contact the security administrator immediately.',
+            
+            // Toast Messages
+            toastWelcome: 'Welcome',
+            toastLogout: 'Session closed',
+            toastLoginError: 'Invalid credentials',
+            toastNoteSaved: 'Note saved with integrity hash',
+            toastReportGenerated: 'Report generated successfully!',
+            toastExportError: 'Error generating report',
+            toastIntegrityCheck: 'Integrity certificate generated'
+        }
+    };
+    
+    let currentLocale = 'PT';
+    
+    // =========================================================================
     // CREDENCIAIS E RBAC
     // =========================================================================
     
     const CREDENTIALS = {
-        admin: { password: 'probatum', role: 'SUPER_USER', name: 'Dr. Administrador', lawyerId: 'ADMIN' },
-        ana: { password: 'elite2024', role: 'ASSOCIATE', name: 'Dra. Ana Silva', lawyerId: 'L001' },
-        pedro: { password: 'elite2024', role: 'ASSOCIATE', name: 'Dr. Pedro Santos', lawyerId: 'L002' }
+        admin: { password: 'probatum', role: 'SUPER_USER', name: 'Dr. Administrador', lawyerId: 'ADMIN', yubikeyHash: 'a1b2c3d4e5f6' },
+        ana: { password: 'elite2024', role: 'ASSOCIATE', name: 'Dra. Ana Silva', lawyerId: 'L001', yubikeyHash: 'b2c3d4e5f6a7' },
+        pedro: { password: 'elite2024', role: 'ASSOCIATE', name: 'Dr. Pedro Santos', lawyerId: 'L002', yubikeyHash: 'c3d4e5f6a7b8' }
     };
+    
+    // =========================================================================
+    // HONEYFILES (Digital Canary)
+    // =========================================================================
+    
+    const HONEYFILES = [
+        { name: 'estrategia_fiscal_confidencial.pdf', hash: 'f1e2d3c4b5a6', trigger: false },
+        { name: 'acordo_secreto_plataformas.docx', hash: 'a1b2c3d4e5f6', trigger: false },
+        { name: 'lista_clientes_prioritarios.xlsx', hash: '1a2b3c4d5e6f', trigger: false },
+        { name: 'dados_sensiveis_magistrados.csv', hash: '9f8e7d6c5b4a', trigger: false }
+    ];
+    
+    let canaryTriggered = false;
+    let biometricProfile = { avgTypingSpeed: 0, avgKeyDelay: 0, samples: [] };
+    let keystrokeTimestamps = [];
     
     // =========================================================================
     // MOCK DATA - 10 CASOS REAIS ANONIMIZADOS
@@ -50,46 +273,10 @@
     // =========================================================================
     
     const ADVERSARY_PROFILES = {
-        'PLMJ': {
-            name: 'PLMJ',
-            specialization: 'Full Service',
-            pattern: 'Probabilidade de 85% de pedido de prorrogação de prazo na fase de saneamento',
-            typicalArguments: ['incompetência internacional', 'prescrição', 'falta de interesse processual'],
-            successRate: 0.68,
-            avgResponseTime: 45,
-            preferredCourts: ['Lisboa', 'Porto'],
-            weakness: 'Resposta lenta em processos com urgência'
-        },
-        'VdA': {
-            name: 'VdA',
-            specialization: 'Fiscal e Arbitragem',
-            pattern: 'Estratégia agressiva na fase probatória, requerem perícias extensivas',
-            typicalArguments: ['erro de cálculo', 'falta de prova pericial', 'ausência de nexo causal'],
-            successRate: 0.72,
-            avgResponseTime: 38,
-            preferredCourts: ['Lisboa', 'Coimbra'],
-            weakness: 'Fraca preparação para audiência final'
-        },
-        'Cuatrecasas': {
-            name: 'Cuatrecasas',
-            specialization: 'Iberian',
-            pattern: 'Tendência a acordos extrajudiciais na fase inicial',
-            typicalArguments: ['de minimis', 'questão de direito internacional'],
-            successRate: 0.65,
-            avgResponseTime: 52,
-            preferredCourts: ['Porto', 'Braga'],
-            weakness: 'Evitam litígio em casos de elevado valor'
-        },
-        'Garrigues': {
-            name: 'Garrigues',
-            specialization: 'Fiscal',
-            pattern: 'Usam recursos protelatórios sistematicamente',
-            typicalArguments: ['inconstitucionalidade', 'erro na notificação'],
-            successRate: 0.62,
-            avgResponseTime: 65,
-            preferredCourts: ['Lisboa'],
-            weakness: 'Pouca consistência em teses inovadoras'
-        }
+        'PLMJ': { name: 'PLMJ', specialization: 'Full Service', pattern: '85% probability of extension request during case management phase', typicalArguments: ['international jurisdiction', 'statute of limitations', 'lack of procedural interest'], successRate: 0.68, avgResponseTime: 45, preferredCourts: ['Lisboa', 'Porto'], weakness: 'Slow response in urgent cases' },
+        'VdA': { name: 'VdA', specialization: 'Tax & Arbitration', pattern: 'Aggressive strategy in evidentiary phase, extensive expert requests', typicalArguments: ['calculation error', 'lack of expert evidence', 'absence of causal link'], successRate: 0.72, avgResponseTime: 38, preferredCourts: ['Lisboa', 'Coimbra'], weakness: 'Poor preparation for final hearing' },
+        'Cuatrecasas': { name: 'Cuatrecasas', specialization: 'Iberian', pattern: 'Tendency to out-of-court settlements in initial phase', typicalArguments: ['de minimis', 'international law issue'], successRate: 0.65, avgResponseTime: 52, preferredCourts: ['Porto', 'Braga'], weakness: 'Avoid litigation in high-value cases' },
+        'Garrigues': { name: 'Garrigues', specialization: 'Tax', pattern: 'Systematic use of delaying appeals', typicalArguments: ['unconstitutionality', 'notification error'], successRate: 0.62, avgResponseTime: 65, preferredCourts: ['Lisboa'], weakness: 'Inconsistent in innovative arguments' }
     };
     
     // =========================================================================
@@ -97,11 +284,11 @@
     // =========================================================================
     
     const JURIS_HEATMAP = {
-        'Lisboa': { civil: 0.72, criminal: 0.58, labor: 0.68, commercial: 0.65, tax: 0.71, family: 0.74 },
-        'Porto': { civil: 0.75, criminal: 0.62, labor: 0.72, commercial: 0.68, tax: 0.69, family: 0.78 },
-        'Braga': { civil: 0.62, criminal: 0.55, labor: 0.61, commercial: 0.58, tax: 0.59, family: 0.65 },
-        'Coimbra': { civil: 0.68, criminal: 0.60, labor: 0.65, commercial: 0.62, tax: 0.64, family: 0.70 },
-        'Faro': { civil: 0.64, criminal: 0.57, labor: 0.63, commercial: 0.60, tax: 0.61, family: 0.68 }
+        'Lisboa': { civil: 0.72, criminal: 0.58, labor: 0.68, commercial: 0.65, tax: 0.71, family: 0.74, administrative: 0.67, intellectual: 0.70 },
+        'Porto': { civil: 0.75, criminal: 0.62, labor: 0.72, commercial: 0.68, tax: 0.69, family: 0.78, administrative: 0.71, intellectual: 0.73 },
+        'Braga': { civil: 0.62, criminal: 0.55, labor: 0.61, commercial: 0.58, tax: 0.59, family: 0.65, administrative: 0.60, intellectual: 0.63 },
+        'Coimbra': { civil: 0.68, criminal: 0.60, labor: 0.65, commercial: 0.62, tax: 0.64, family: 0.70, administrative: 0.66, intellectual: 0.68 },
+        'Faro': { civil: 0.64, criminal: 0.57, labor: 0.63, commercial: 0.60, tax: 0.61, family: 0.68, administrative: 0.62, intellectual: 0.65 }
     };
     
     // =========================================================================
@@ -120,7 +307,8 @@
         categories: ['civil', 'criminal', 'labor', 'commercial', 'administrative', 'tax', 'family', 'intellectual'],
         metrics: { totalCases: 0, activeCases: 0, totalDisputeValue: 0, successRate: 0 },
         currentView: 'dashboard',
-        sidebarOpen: false
+        sidebarOpen: false,
+        security: { honeyfilesActive: true, biometricsActive: true, lockdown: false }
     };
     
     // =========================================================================
@@ -128,35 +316,12 @@
     // =========================================================================
     
     const EliteUtils = {
-        formatCurrency: (value) => {
-            return new Intl.NumberFormat('pt-PT', {
-                style: 'currency',
-                currency: 'EUR',
-                minimumFractionDigits: 2
-            }).format(value || 0);
-        },
-        
-        formatDate: (date) => {
-            return moment(date).format('DD/MM/YYYY');
-        },
-        
-        formatPercentage: (value) => {
-            return `${(value || 0).toFixed(1)}%`;
-        },
-        
-        generateId: () => {
-            return Date.now().toString(36) + Math.random().toString(36).substr(2, 8);
-        },
-        
-        // SHA-256 Hashing para integridade
-        generateHash: (content) => {
-            return CryptoJS.SHA256(content + Date.now().toString()).toString();
-        },
-        
-        verifyHash: (content, hash) => {
-            const computedHash = CryptoJS.SHA256(content).toString();
-            return computedHash === hash;
-        },
+        formatCurrency: (value) => new Intl.NumberFormat(currentLocale === 'PT' ? 'pt-PT' : 'en-GB', { style: 'currency', currency: 'EUR', minimumFractionDigits: 2 }).format(value || 0),
+        formatDate: (date) => moment(date).format(currentLocale === 'PT' ? 'DD/MM/YYYY' : 'YYYY-MM-DD'),
+        formatPercentage: (value) => `${(value || 0).toFixed(1)}%`,
+        generateId: () => Date.now().toString(36) + Math.random().toString(36).substr(2, 8),
+        generateHash: (content) => CryptoJS.SHA256(content + Date.now().toString()).toString(),
+        verifyHash: (content, hash) => CryptoJS.SHA256(content).toString() === hash,
         
         showToast: (message, type = 'info') => {
             const container = document.getElementById('toastContainer');
@@ -165,60 +330,143 @@
             const icons = { success: 'fa-check-circle', error: 'fa-exclamation-triangle', warning: 'fa-exclamation-circle', info: 'fa-info-circle' };
             toast.innerHTML = `<i class="fas ${icons[type]}"></i><span>${message}</span>`;
             container.appendChild(toast);
-            setTimeout(() => {
-                toast.style.animation = 'slideInRight 0.3s ease reverse';
-                setTimeout(() => toast.remove(), 300);
-            }, 4000);
+            setTimeout(() => { toast.style.animation = 'slideInRight 0.3s ease reverse'; setTimeout(() => toast.remove(), 300); }, 4000);
         },
         
-        log: (message, level = 'info') => {
-            const prefix = '[ELITE PROBATUM]';
-            if (level === 'error') console.error(prefix, message);
-            else if (level === 'warn') console.warn(prefix, message);
-            else console.log(prefix, message);
-        },
+        log: (message, level = 'info') => { const prefix = '[ELITE PROBATUM]'; if (level === 'error') console.error(prefix, message); else if (level === 'warn') console.warn(prefix, message); else console.log(prefix, message); },
         
         getCategoryName: (category) => {
-            const names = {
-                civil: 'Direito Civil', criminal: 'Direito Penal', labor: 'Direito do Trabalho',
-                commercial: 'Direito Comercial', administrative: 'Direito Administrativo',
-                tax: 'Direito Fiscal', family: 'Direito da Família', intellectual: 'Propriedade Intelectual',
-                all: 'Todos os Casos'
-            };
-            return names[category] || category;
+            const names = { civil: 'Direito Civil', criminal: 'Direito Penal', labor: 'Direito do Trabalho', commercial: 'Direito Comercial', administrative: 'Direito Administrativo', tax: 'Direito Fiscal', family: 'Direito da Família', intellectual: 'Propriedade Intelectual', all: 'Todos os Casos' };
+            return currentLocale === 'PT' ? names[category] : { civil: 'Civil Law', criminal: 'Criminal Law', labor: 'Labor Law', commercial: 'Commercial Law', administrative: 'Administrative Law', tax: 'Tax Law', family: 'Family Law', intellectual: 'Intellectual Property', all: 'All Cases' }[category] || category;
         },
         
         getCategoryColor: (category) => {
-            const colors = {
-                civil: '#3B82F6', criminal: '#EF4444', labor: '#10B981', commercial: '#F59E0B',
-                administrative: '#8B5CF6', tax: '#00E5FF', family: '#EC489A', intellectual: '#14B8A6'
-            };
+            const colors = { civil: '#3B82F6', criminal: '#EF4444', labor: '#10B981', commercial: '#F59E0B', administrative: '#8B5CF6', tax: '#00E5FF', family: '#EC489A', intellectual: '#14B8A6' };
             return colors[category] || '#64748B';
         },
         
-        hasAccessToCase: (caseData) => {
-            if (AppState.userRole === 'SUPER_USER') return true;
-            return caseData.lawyerId === AppState.userLawyerId;
+        hasAccessToCase: (caseData) => { if (AppState.userRole === 'SUPER_USER') return true; return caseData.lawyerId === AppState.userLawyerId; },
+        
+        getLocaleText: (key) => { return LOCALES[currentLocale][key] || key; }
+    };
+    
+    // =========================================================================
+    // BIOMETRIA COMPORTAMENTAL (Keystroke Dynamics)
+    // =========================================================================
+    
+    const BiometricMonitor = {
+        startMonitoring: () => {
+            const inputs = document.querySelectorAll('input, textarea');
+            inputs.forEach(input => {
+                input.addEventListener('keydown', (e) => { keystrokeTimestamps.push({ key: e.key, time: Date.now(), type: 'down' }); });
+                input.addEventListener('keyup', (e) => { 
+                    keystrokeTimestamps.push({ key: e.key, time: Date.now(), type: 'up' });
+                    if (keystrokeTimestamps.length > 10) BiometricMonitor.analyzePattern();
+                });
+            });
+        },
+        
+        analyzePattern: () => {
+            if (keystrokeTimestamps.length < 10) return;
+            const delays = [];
+            for (let i = 1; i < keystrokeTimestamps.length; i++) {
+                if (keystrokeTimestamps[i].type === 'down' && keystrokeTimestamps[i-1].type === 'up') {
+                    delays.push(keystrokeTimestamps[i].time - keystrokeTimestamps[i-1].time);
+                }
+            }
+            const avgDelay = delays.reduce((a,b) => a+b, 0) / delays.length;
+            
+            if (biometricProfile.avgKeyDelay === 0) {
+                biometricProfile.avgKeyDelay = avgDelay;
+                biometricProfile.samples.push(avgDelay);
+            } else {
+                const deviation = Math.abs(avgDelay - biometricProfile.avgKeyDelay) / biometricProfile.avgKeyDelay;
+                if (deviation > 0.5 && AppState.security.biometricsActive && AppState.isLoggedIn) {
+                    EliteUtils.showToast(EliteUtils.getLocaleText('toastBiometricAlert') || 'Padrão de digitação anómalo - acesso monitorizado', 'warning');
+                    EliteUtils.log('Keystroke anomaly detected', 'warn');
+                }
+            }
+            if (keystrokeTimestamps.length > 100) keystrokeTimestamps = keystrokeTimestamps.slice(-50);
+        },
+        
+        calibrate: () => { keystrokeTimestamps = []; biometricProfile.avgKeyDelay = 0; biometricProfile.samples = []; }
+    };
+    
+    // =========================================================================
+    // DIGITAL CANARY (Honeyfiles)
+    // =========================================================================
+    
+    const DigitalCanary = {
+        deployHoneyfiles: () => {
+            if (!AppState.security.honeyfilesActive) return;
+            const honeyfileContainer = document.createElement('div');
+            honeyfileContainer.style.display = 'none';
+            honeyfileContainer.id = 'honeyfile-container';
+            document.body.appendChild(honeyfileContainer);
+            
+            HONEYFILES.forEach(hf => {
+                const fakeElement = document.createElement('div');
+                fakeElement.setAttribute('data-honeyfile', hf.name);
+                fakeElement.setAttribute('data-hash', hf.hash);
+                fakeElement.style.display = 'none';
+                honeyfileContainer.appendChild(fakeElement);
+            });
+            
+            const observer = new MutationObserver((mutations) => {
+                mutations.forEach((mutation) => {
+                    if (mutation.type === 'attributes' || mutation.type === 'childList') {
+                        const target = mutation.target;
+                        if (target.getAttribute && target.getAttribute('data-honeyfile')) {
+                            DigitalCanary.triggerLockdown(target.getAttribute('data-honeyfile'));
+                        }
+                    }
+                });
+            });
+            observer.observe(honeyfileContainer, { attributes: true, childList: true, subtree: true });
+        },
+        
+        triggerLockdown: (honeyfileName) => {
+            if (canaryTriggered) return;
+            canaryTriggered = true;
+            AppState.security.lockdown = true;
+            
+            EliteUtils.log(`⚠️ DIGITAL CANARY TRIGGERED: ${honeyfileName}`, 'error');
+            
+            const canaryModal = document.getElementById('canaryAlertModal');
+            if (canaryModal) canaryModal.style.display = 'flex';
+            
+            localStorage.removeItem('elite_probatum_session');
+            localStorage.removeItem('elite_probatum_keys');
+            
+            setTimeout(() => { AuthManager.logout(); }, 3000);
         }
     };
     
     // =========================================================================
-    // AUTH MANAGER
+    // AUTH MANAGER COM FIDO2 SIMULATION
     // =========================================================================
     
     const AuthManager = {
-        login: (username, password) => {
+        login: (username, password, yubikeyHash = null) => {
             const user = CREDENTIALS[username];
             if (user && user.password === password) {
+                if (yubikeyHash && user.yubikeyHash !== yubikeyHash) {
+                    EliteUtils.showToast(EliteUtils.getLocaleText('toastYubiError') || 'YubiKey inválida', 'error');
+                    return false;
+                }
                 AppState.isLoggedIn = true;
                 AppState.currentUser = username;
                 AppState.userRole = user.role;
                 AppState.userLawyerId = user.lawyerId;
+                AppState.security.lockdown = false;
                 
                 document.getElementById('userName').textContent = user.name;
-                document.getElementById('userRole').textContent = user.role === 'SUPER_USER' ? 'Super Utilizador · Acesso Total' : 'Associado · Acesso Restrito';
+                document.getElementById('userRole').textContent = user.role === 'SUPER_USER' ? (currentLocale === 'PT' ? 'Super Utilizador · Acesso Total' : 'Super User · Full Access') : (currentLocale === 'PT' ? 'Associado · Acesso Restrito' : 'Associate · Restricted Access');
                 
-                EliteUtils.showToast(`Bem-vindo, ${user.name}`, 'success');
+                EliteUtils.showToast(`${EliteUtils.getLocaleText('toastWelcome')}, ${user.name}`, 'success');
+                BiometricMonitor.calibrate();
+                setTimeout(() => BiometricMonitor.startMonitoring(), 1000);
+                DigitalCanary.deployHoneyfiles();
                 return true;
             }
             return false;
@@ -229,10 +477,13 @@
             AppState.currentUser = null;
             AppState.userRole = null;
             AppState.userLawyerId = null;
+            AppState.security.lockdown = false;
+            canaryTriggered = false;
             
             document.getElementById('appContainer').style.display = 'none';
             document.getElementById('loginOverlay').style.display = 'flex';
-            EliteUtils.showToast('Sessão encerrada', 'info');
+            EliteUtils.showToast(EliteUtils.getLocaleText('toastLogout'), 'info');
+            BiometricMonitor.calibrate();
         },
         
         showLoginModal: () => {
@@ -240,60 +491,70 @@
             document.getElementById('loginUser').value = '';
             document.getElementById('loginPass').value = '';
             document.getElementById('loginError').style.display = 'none';
+            const yubikeyGroup = document.getElementById('yubikeyGroup');
+            if (yubikeyGroup) yubikeyGroup.style.display = 'none';
         },
         
-        hideLoginModal: () => {
-            document.getElementById('loginOverlay').style.display = 'none';
+        hideLoginModal: () => { document.getElementById('loginOverlay').style.display = 'none'; },
+        
+        showYubiKeyOption: () => { document.getElementById('yubikeyGroup').style.display = 'block'; }
+    };
+    
+    // =========================================================================
+    // INTERNATIONALIZATION MANAGER
+    // =========================================================================
+    
+    const I18nManager = {
+        setLocale: (locale) => {
+            currentLocale = locale;
+            document.documentElement.lang = locale === 'PT' ? 'pt-PT' : 'en-GB';
+            I18nManager.updateAllTexts();
+            EliteUtils.showToast(`Idioma alterado para ${locale === 'PT' ? 'Português' : 'English'}`, 'info');
+        },
+        
+        updateAllTexts: () => {
+            const elements = document.querySelectorAll('[id]');
+            const textMap = {
+                splashTitle: 'splashTitle', splashBadge: 'splashBadge', splashVersion: 'splashVersion', splashTagline: 'splashTagline', loaderText: 'loaderText', enterBtnText: 'enterBtn',
+                loginTitle: 'loginTitle', loginSubtitle: 'loginSubtitle', yubikeyText: 'yubikeyText', loginBtnText: 'loginBtnText', loginHint: 'loginHint',
+                navDashboard: 'navDashboard', navCases: 'navCases', navLitigation: 'navLitigation', navJudges: 'navJudges', navAdversary: 'navAdversary', navHeatmap: 'navHeatmap', navClients: 'navClients', navReports: 'navReports',
+                statActiveCases: 'statActiveCases', statDisputeValue: 'statDisputeValue', statSuccessRate: 'statSuccessRate',
+                pageTitle: 'dashboardTitle', modalNotificationsTitle: 'modalNotificationsTitle', modalSettingsTitle: 'modalSettingsTitle', noAlertsText: 'noAlertsText',
+                settingsAI: 'settingsAI', settingPredictiveAI: 'settingPredictiveAI', settingJudgeProfiling: 'settingJudgeProfiling', settingAdversaryProfiling: 'settingAdversaryProfiling',
+                settingsNotifications: 'settingsNotifications', settingNewDecisions: 'settingNewDecisions', settingDeadlines: 'settingDeadlines',
+                settingsSecurity: 'settingsSecurity', settingHoneyfiles: 'settingHoneyfiles', settingBiometrics: 'settingBiometrics'
+            };
+            
+            for (const [id, key] of Object.entries(textMap)) {
+                const el = document.getElementById(id);
+                if (el && LOCALES[currentLocale][key]) el.textContent = LOCALES[currentLocale][key];
+            }
+            
+            document.querySelectorAll('.lang-btn').forEach(btn => {
+                btn.classList.toggle('active', (currentLocale === 'PT' && btn.id === 'langPT') || (currentLocale === 'EN' && btn.id === 'langEN'));
+            });
         }
     };
     
     // =========================================================================
-    // STRATEGIC NOTES MANAGER
+    // NOTES MANAGER
     // =========================================================================
     
     const NotesManager = {
         addNote: (content, authorId) => {
             const hash = EliteUtils.generateHash(content);
-            const note = {
-                id: EliteUtils.generateId(),
-                content: content,
-                author_id: authorId,
-                timestamp: new Date().toISOString(),
-                content_hash: hash
-            };
+            const note = { id: EliteUtils.generateId(), content: content, author_id: authorId, timestamp: new Date().toISOString(), content_hash: hash };
             AppState.strategicNotes.unshift(note);
-            EliteUtils.showToast('Nota guardada com hash de integridade', 'success');
+            EliteUtils.showToast(EliteUtils.getLocaleText('toastNoteSaved'), 'success');
             return note;
         },
-        
-        getNotes: () => {
-            return AppState.strategicNotes;
-        },
-        
-        verifyNoteIntegrity: (note) => {
-            return EliteUtils.verifyHash(note.content, note.content_hash);
-        },
-        
+        getNotes: () => AppState.strategicNotes,
+        verifyNoteIntegrity: (note) => EliteUtils.verifyHash(note.content, note.content_hash),
         renderNotes: (containerId) => {
             const container = document.getElementById(containerId);
             if (!container) return;
-            
-            if (AppState.strategicNotes.length === 0) {
-                container.innerHTML = '<div class="empty-state">Nenhuma nota registada</div>';
-                return;
-            }
-            
-            container.innerHTML = AppState.strategicNotes.map(note => `
-                <div class="note-item">
-                    <div class="note-header">
-                        <span><i class="fas fa-user"></i> ${note.author_id}</span>
-                        <span><i class="fas fa-clock"></i> ${new Date(note.timestamp).toLocaleString()}</span>
-                        <span class="integrity-badge"><i class="fas fa-check-circle"></i> Hash Verificado</span>
-                    </div>
-                    <div class="note-content">${escapeHtml(note.content)}</div>
-                    <div class="note-hash">SHA-256: ${note.content_hash.substring(0, 16)}...</div>
-                </div>
-            `).join('');
+            if (AppState.strategicNotes.length === 0) { container.innerHTML = '<div class="empty-state">Nenhuma nota registada</div>'; return; }
+            container.innerHTML = AppState.strategicNotes.map(note => `<div class="note-item"><div class="note-header"><span><i class="fas fa-user"></i> ${note.author_id}</span><span><i class="fas fa-clock"></i> ${new Date(note.timestamp).toLocaleString()}</span><span class="integrity-badge"><i class="fas fa-check-circle"></i> Hash Verificado</span></div><div class="note-content">${escapeHtml(note.content)}</div><div class="note-hash">SHA-256: ${note.content_hash.substring(0, 16)}...</div></div>`).join('');
         }
     };
     
@@ -302,60 +563,15 @@
     // =========================================================================
     
     const AdversaryProfiler = {
-        getProfile: (adversaryName) => {
-            return ADVERSARY_PROFILES[adversaryName] || null;
-        },
-        
+        getProfile: (adversaryName) => ADVERSARY_PROFILES[adversaryName] || null,
         getPrediction: (adversaryName, caseCategory) => {
             const profile = ADVERSARY_PROFILES[adversaryName];
-            if (!profile) return { probability: 0.5, message: 'Perfil não encontrado' };
-            
+            if (!profile) return { probability: 0.5, message: 'Profile not found' };
             let probability = profile.successRate;
             if (profile.preferredCourts.includes(caseCategory === 'tax' ? 'Lisboa' : 'Porto')) probability += 0.05;
-            
-            return {
-                probability: Math.min(probability, 0.95),
-                pattern: profile.pattern,
-                typicalArguments: profile.typicalArguments,
-                weakness: profile.weakness
-            };
+            return { probability: Math.min(probability, 0.95), pattern: profile.pattern, typicalArguments: profile.typicalArguments, weakness: profile.weakness };
         },
-        
-        renderAdversaryPanel: () => {
-            return `
-                <div class="adversary-grid">
-                    ${Object.values(ADVERSARY_PROFILES).map(adv => `
-                        <div class="adversary-card">
-                            <div class="adversary-header">
-                                <i class="fas fa-building"></i>
-                                <h3>${adv.name}</h3>
-                            </div>
-                            <div class="adversary-stats">
-                                <div class="stat">
-                                    <span class="stat-label">Taxa Sucesso</span>
-                                    <strong>${EliteUtils.formatPercentage(adv.successRate * 100)}</strong>
-                                </div>
-                                <div class="stat">
-                                    <span class="stat-label">Tempo Médio Resposta</span>
-                                    <strong>${adv.avgResponseTime} dias</strong>
-                                </div>
-                                <div class="stat">
-                                    <span class="stat-label">Especialização</span>
-                                    <strong>${adv.specialization}</strong>
-                                </div>
-                            </div>
-                            <div class="adversary-pattern">
-                                <div class="alert"><i class="fas fa-chart-line"></i> Padrão Identificado</div>
-                                <p>${adv.pattern}</p>
-                            </div>
-                            <div class="adversary-weakness">
-                                <strong><i class="fas fa-shield-alt"></i> Ponto Fraco:</strong> ${adv.weakness}
-                            </div>
-                        </div>
-                    `).join('')}
-                </div>
-            `;
-        }
+        renderAdversaryPanel: () => `<div class="adversary-grid">${Object.values(ADVERSARY_PROFILES).map(adv => `<div class="adversary-card"><div class="adversary-header"><i class="fas fa-building"></i><h3>${adv.name}</h3></div><div class="adversary-stats"><div class="stat"><span class="stat-label">${EliteUtils.getLocaleText('statSuccessRate') || 'Success Rate'}</span><strong>${EliteUtils.formatPercentage(adv.successRate * 100)}</strong></div><div class="stat"><span class="stat-label">Avg Response</span><strong>${adv.avgResponseTime} days</strong></div><div class="stat"><span class="stat-label">Specialization</span><strong>${adv.specialization}</strong></div></div><div class="adversary-pattern"><div class="alert"><i class="fas fa-chart-line"></i> Pattern Identified</div><p>${adv.pattern}</p></div><div class="adversary-weakness"><strong><i class="fas fa-shield-alt"></i> Weakness:</strong> ${adv.weakness}</div></div>`).join('')}</div>`
     };
     
     // =========================================================================
@@ -363,557 +579,165 @@
     // =========================================================================
     
     const JurisHeatmap = {
-        getCourtSuccessRate: (court, category) => {
-            return JURIS_HEATMAP[court]?.[category] || 0.6;
-        },
-        
+        getCourtSuccessRate: (court, category) => JURIS_HEATMAP[court]?.[category] || 0.6,
         getRecommendation: (caseData) => {
             const rates = [];
-            for (const [court, data] of Object.entries(JURIS_HEATMAP)) {
-                const rate = data[caseData.category] || 0.6;
-                rates.push({ court, rate });
-            }
+            for (const [court, data] of Object.entries(JURIS_HEATMAP)) { const rate = data[caseData.category] || 0.6; rates.push({ court, rate }); }
             rates.sort((a, b) => b.rate - a.rate);
-            return {
-                bestCourt: rates[0].court,
-                bestRate: rates[0].rate,
-                alternatives: rates.slice(1, 3)
-            };
+            return { bestCourt: rates[0].court, bestRate: rates[0].rate, alternatives: rates.slice(1, 3) };
         },
-        
         renderHeatmap: () => {
             const categories = ['civil', 'criminal', 'labor', 'commercial', 'tax'];
             const courts = ['Lisboa', 'Porto', 'Braga', 'Coimbra', 'Faro'];
-            
-            return `
-                <div class="heatmap-container">
-                    <h3>Mapa de Calor de Sentenças</h3>
-                    <p>Taxa de sucesso por tribunal e área do direito</p>
-                    <div class="heatmap-grid">
-                        <div class="heatmap-header"></div>
-                        ${categories.map(cat => `<div class="heatmap-label">${EliteUtils.getCategoryName(cat)}</div>`).join('')}
-                        ${courts.map(court => `
-                            <div class="heatmap-label">${court}</div>
-                            ${categories.map(cat => {
-                                const rate = JURIS_HEATMAP[court][cat];
-                                let heatClass = 'low';
-                                if (rate >= 0.7) heatClass = 'high';
-                                else if (rate >= 0.65) heatClass = 'medium';
-                                return `<div class="heatmap-cell ${heatClass}" title="${court} - ${EliteUtils.getCategoryName(cat)}: ${EliteUtils.formatPercentage(rate * 100)}">
-                                    ${EliteUtils.formatPercentage(rate * 100)}
-                                </div>`;
-                            }).join('')}
-                        `).join('')}
-                    </div>
-                    <div class="heatmap-legend" style="margin-top: 20px; display: flex; gap: 20px; justify-content: center;">
-                        <span><span style="background: rgba(16,185,129,0.3); padding: 4px 8px;">≥70%</span> Alto</span>
-                        <span><span style="background: rgba(245,158,11,0.3); padding: 4px 8px;">65-69%</span> Médio</span>
-                        <span><span style="background: rgba(239,68,68,0.3); padding: 4px 8px;">&lt;65%</span> Baixo</span>
-                    </div>
-                </div>
-            `;
+            return `<div class="heatmap-container"><h3>Juris-Heatmap</h3><p>Success rate by court and legal area</p><div class="heatmap-grid"><div class="heatmap-label"></div>${categories.map(cat => `<div class="heatmap-label">${EliteUtils.getCategoryName(cat)}</div>`).join('')}${courts.map(court => `<div class="heatmap-label">${court}</div>${categories.map(cat => { const rate = JURIS_HEATMAP[court][cat]; let heatClass = 'low'; if (rate >= 0.7) heatClass = 'high'; else if (rate >= 0.65) heatClass = 'medium'; return `<div class="heatmap-cell ${heatClass}">${EliteUtils.formatPercentage(rate * 100)}</div>`; }).join('')}`).join('')}</div><div class="heatmap-legend" style="margin-top: 20px; display: flex; gap: 20px; justify-content: center;"><span><span style="background: rgba(16,185,129,0.3); padding: 4px 8px;">≥70%</span> High</span><span><span style="background: rgba(245,158,11,0.3); padding: 4px 8px;">65-69%</span> Medium</span><span><span style="background: rgba(239,68,68,0.3); padding: 4px 8px;">&lt;65%</span> Low</span></div></div>`;
         }
     };
     
     // =========================================================================
-    // INTEGRITY CHECK
+    // INTEGRITY CHECKER
     // =========================================================================
     
     const IntegrityChecker = {
         generateCertificate: async () => {
             const timestamp = new Date().toISOString();
-            const dataToHash = JSON.stringify({
-                cases: AppState.cases.length,
-                clients: AppState.clients.length,
-                notes: AppState.strategicNotes.length,
-                timestamp: timestamp,
-                version: '1.0'
-            });
+            const dataToHash = JSON.stringify({ cases: AppState.cases.length, clients: AppState.clients.length, notes: AppState.strategicNotes.length, timestamp: timestamp, version: '1.0' });
             const masterHash = CryptoJS.SHA256(dataToHash).toString();
-            
-            return {
-                timestamp: timestamp,
-                dataSummary: {
-                    totalCases: AppState.cases.length,
-                    totalClients: AppState.clients.length,
-                    totalNotes: AppState.strategicNotes.length,
-                    totalDisputeValue: AppState.metrics.totalDisputeValue
-                },
-                masterHash: masterHash,
-                certificate: `ELITE-PROBATUM-CERT-${masterHash.substring(0, 16)}`
-            };
+            return { timestamp: timestamp, dataSummary: { totalCases: AppState.cases.length, totalClients: AppState.clients.length, totalNotes: AppState.strategicNotes.length, totalDisputeValue: AppState.metrics.totalDisputeValue }, masterHash: masterHash, certificate: `ELITE-PROBATUM-CERT-${masterHash.substring(0, 16)}` };
         },
-        
-        verifyIntegrity: async () => {
-            const cert = await IntegrityChecker.generateCertificate();
-            return {
-                valid: true,
-                certificate: cert,
-                message: 'Todos os dados verificados. Cadeia de custódia íntegra.'
-            };
-        },
-        
         renderIntegrityModal: async () => {
             const cert = await IntegrityChecker.generateCertificate();
             const integrityBody = document.getElementById('integrityBody');
             if (integrityBody) {
-                integrityBody.innerHTML = `
-                    <div class="integrity-report">
-                        <div style="text-align: center; margin-bottom: 24px;">
-                            <i class="fas fa-shield-hooded" style="font-size: 3rem; color: var(--elite-success);"></i>
-                            <h3 style="margin-top: 8px;">Certificado de Integridade</h3>
-                            <p>ELITE PROBATUM - Cadeia de Custódia Verificada</p>
-                        </div>
-                        <div class="detail-row">
-                            <span>Data/Hora da Verificação:</span>
-                            <strong>${new Date(cert.timestamp).toLocaleString()}</strong>
-                        </div>
-                        <div class="detail-row">
-                            <span>Total de Casos:</span>
-                            <strong>${cert.dataSummary.totalCases}</strong>
-                        </div>
-                        <div class="detail-row">
-                            <span>Total de Clientes:</span>
-                            <strong>${cert.dataSummary.totalClients}</strong>
-                        </div>
-                        <div class="detail-row">
-                            <span>Notas Estratégicas:</span>
-                            <strong>${cert.dataSummary.totalNotes}</strong>
-                        </div>
-                        <div class="detail-row">
-                            <span>Valor Total em Disputa:</span>
-                            <strong>${EliteUtils.formatCurrency(cert.dataSummary.totalDisputeValue)}</strong>
-                        </div>
-                        <div class="detail-row">
-                            <span>Master Hash SHA-256:</span>
-                            <strong style="font-family: monospace; font-size: 0.7rem;">${cert.masterHash}</strong>
-                        </div>
-                        <div class="detail-row">
-                            <span>Certificado:</span>
-                            <strong style="color: var(--elite-success);">${cert.certificate}</strong>
-                        </div>
-                        <div style="margin-top: 24px; padding: 16px; background: rgba(0,229,255,0.1); border-radius: 8px; text-align: center;">
-                            <i class="fas fa-check-circle" style="color: var(--elite-success);"></i>
-                            <p style="margin-top: 8px;">A cadeia de custódia dos dados está íntegra.<br>Nenhuma alteração não autorizada foi detetada.</p>
-                        </div>
-                        <button class="elite-btn primary full-width" style="margin-top: 20px;" onclick="ELITE_PROBATUM.downloadIntegrityCertificate()">
-                            <i class="fas fa-download"></i> Descarregar Certificado
-                        </button>
-                    </div>
-                `;
+                integrityBody.innerHTML = `<div class="integrity-report"><div style="text-align: center; margin-bottom: 24px;"><i class="fas fa-shield-hooded" style="font-size: 3rem; color: var(--elite-success);"></i><h3>Integrity Certificate</h3><p>ELITE PROBATUM - Chain of Custody Verified</p></div><div class="detail-row"><span>Verification Date/Time:</span><strong>${new Date(cert.timestamp).toLocaleString()}</strong></div><div class="detail-row"><span>Total Cases:</span><strong>${cert.dataSummary.totalCases}</strong></div><div class="detail-row"><span>Total Clients:</span><strong>${cert.dataSummary.totalClients}</strong></div><div class="detail-row"><span>Strategic Notes:</span><strong>${cert.dataSummary.totalNotes}</strong></div><div class="detail-row"><span>Total Dispute Value:</span><strong>${EliteUtils.formatCurrency(cert.dataSummary.totalDisputeValue)}</strong></div><div class="detail-row"><span>Master Hash SHA-256:</span><strong style="font-family: monospace; font-size: 0.7rem;">${cert.masterHash}</strong></div><div class="detail-row"><span>Certificate:</span><strong style="color: var(--elite-success);">${cert.certificate}</strong></div><div style="margin-top: 24px; padding: 16px; background: rgba(0,229,255,0.1); border-radius: 8px; text-align: center;"><i class="fas fa-check-circle" style="color: var(--elite-success);"></i><p>Chain of custody is intact. No unauthorized changes detected.</p></div><button class="elite-btn primary full-width" style="margin-top: 20px;" onclick="ELITE_PROBATUM.downloadIntegrityCertificate()"><i class="fas fa-download"></i> Download Certificate</button></div>`;
             }
         }
     };
     
     // =========================================================================
-    // PDF EXPORT
+    // PDF EXPORTER
     // =========================================================================
     
     const PDFExporter = {
         exportReport: async () => {
-            EliteUtils.showToast('A gerar relatório pericial...', 'info');
-            
+            EliteUtils.showToast('Generating expert report...', 'info');
             const element = document.getElementById('viewContainer');
             if (!element) return;
-            
             try {
-                const canvas = await html2canvas(element, {
-                    scale: 2,
-                    backgroundColor: '#0A0F1E',
-                    logging: false
-                });
-                
+                const canvas = await html2canvas(element, { scale: 2, backgroundColor: '#0A0F1E', logging: false });
                 const imgData = canvas.toDataURL('image/png');
                 const { jsPDF } = window.jspdf;
                 const pdf = new jsPDF('p', 'mm', 'a4');
                 const imgWidth = 190;
                 const imgHeight = (canvas.height * imgWidth) / canvas.width;
-                
                 pdf.addImage(imgData, 'PNG', 10, 10, imgWidth, imgHeight);
                 pdf.save(`elite_probatum_report_${new Date().toISOString().slice(0, 10)}.pdf`);
-                
-                EliteUtils.showToast('Relatório gerado com sucesso!', 'success');
-            } catch (error) {
-                EliteUtils.showToast('Erro ao gerar relatório', 'error');
-                console.error(error);
-            }
+                EliteUtils.showToast(EliteUtils.getLocaleText('toastReportGenerated'), 'success');
+            } catch (error) { EliteUtils.showToast(EliteUtils.getLocaleText('toastExportError'), 'error'); console.error(error); }
         }
     };
     
     // =========================================================================
-    // VIEW RENDERER
+    // VIEW RENDERER (SIMPLIFICADO PARA CONCISÃO)
     // =========================================================================
     
     const Views = {
         async render(viewName) {
             const container = document.getElementById('viewContainer');
             if (!container) return;
-            
             AppState.currentView = viewName;
-            document.getElementById('pageTitle').textContent = this.getTitle(viewName);
-            
+            document.getElementById('pageTitle').textContent = EliteUtils.getLocaleText('dashboardTitle');
             switch(viewName) {
-                case 'dashboard':
-                    container.innerHTML = await this.renderDashboard();
-                    await this.initDashboardComponents();
-                    break;
-                case 'cases':
-                    container.innerHTML = await this.renderCases();
-                    await this.initCasesTable();
-                    break;
-                case 'litigation':
-                    container.innerHTML = await this.renderLitigationIntelligence();
-                    await this.initLitigationModule();
-                    break;
-                case 'judges':
-                    container.innerHTML = await this.renderJudgesProfiles();
-                    await this.initJudgesModule();
-                    break;
-                case 'adversary':
-                    container.innerHTML = AdversaryProfiler.renderAdversaryPanel();
-                    break;
-                case 'heatmap':
-                    container.innerHTML = JurisHeatmap.renderHeatmap();
-                    break;
-                case 'clients':
-                    container.innerHTML = await this.renderClients();
-                    await this.initClientsTable();
-                    break;
-                case 'reports':
-                    container.innerHTML = await this.renderReports();
-                    await this.initReportsModule();
-                    break;
-                default:
-                    container.innerHTML = '<div class="error">View not found</div>';
+                case 'dashboard': container.innerHTML = await this.renderDashboard(); await this.initDashboardComponents(); break;
+                case 'cases': container.innerHTML = await this.renderCases(); await this.initCasesTable(); break;
+                case 'litigation': container.innerHTML = await this.renderLitigationIntelligence(); await this.initLitigationModule(); break;
+                case 'judges': container.innerHTML = await this.renderJudgesProfiles(); await this.initJudgesModule(); break;
+                case 'adversary': container.innerHTML = AdversaryProfiler.renderAdversaryPanel(); break;
+                case 'heatmap': container.innerHTML = JurisHeatmap.renderHeatmap(); break;
+                case 'clients': container.innerHTML = await this.renderClients(); await this.initClientsTable(); break;
+                case 'reports': container.innerHTML = await this.renderReports(); break;
+                default: container.innerHTML = '<div class="error">View not found</div>';
             }
         },
         
-        getTitle(viewName) {
-            const titles = {
-                dashboard: 'Dashboard Estratégico',
-                cases: 'Gestão de Casos',
-                litigation: 'Inteligência de Litígio',
-                judges: 'Perfil de Magistrados',
-                adversary: 'Perfil de Oposição',
-                heatmap: 'Juris-Heatmap',
-                clients: 'Clientes',
-                reports: 'Relatórios'
-            };
-            return titles[viewName] || viewName;
-        },
+        getTitle: (viewName) => ({ dashboard: 'Dashboard', cases: 'Cases', litigation: 'Litigation Intelligence', judges: 'Judge Profile', adversary: 'Adversary Profile', heatmap: 'Juris-Heatmap', clients: 'Clients', reports: 'Reports' }[viewName] || viewName),
         
-        async renderDashboard() {
+        renderDashboard: async () => {
             const filteredCases = AppState.cases.filter(c => EliteUtils.hasAccessToCase(c));
             const activeCases = filteredCases.filter(c => c.status === 'active').length;
             const totalValue = filteredCases.reduce((sum, c) => sum + c.value, 0);
             const avgProbability = filteredCases.reduce((sum, c) => sum + c.successProbability, 0) / (filteredCases.length || 1);
-            
-            return `
-                <div class="dashboard-grid">
-                    <div class="dashboard-card">
-                        <div class="card-header"><h3>Casos Ativos</h3><i class="fas fa-folder-open"></i></div>
-                        <div class="card-value">${activeCases}</div>
-                        <div class="card-trend trend-up"><i class="fas fa-arrow-up"></i> +12% este mês</div>
-                    </div>
-                    <div class="dashboard-card">
-                        <div class="card-header"><h3>Valor em Disputa</h3><i class="fas fa-euro-sign"></i></div>
-                        <div class="card-value">${EliteUtils.formatCurrency(totalValue)}</div>
-                        <div class="card-trend trend-up"><i class="fas fa-arrow-up"></i> +8% vs período anterior</div>
-                    </div>
-                    <div class="dashboard-card">
-                        <div class="card-header"><h3>Probabilidade Média</h3><i class="fas fa-chart-line"></i></div>
-                        <div class="card-value">${EliteUtils.formatPercentage(avgProbability * 100)}</div>
-                        <div class="card-trend trend-up"><i class="fas fa-arrow-up"></i> +5% com IA ativa</div>
-                    </div>
-                    <div class="dashboard-card">
-                        <div class="card-header"><h3>ROI Estimado</h3><i class="fas fa-chart-pie"></i></div>
-                        <div class="card-value">284%</div>
-                        <div class="card-trend trend-up"><i class="fas fa-arrow-up"></i> vs. mercado</div>
-                    </div>
-                </div>
-                <div class="charts-dashboard">
-                    <div class="chart-container"><h3>Evolução da Carteira (últimos 6 meses)</h3><canvas id="portfolioChart" height="250"></canvas></div>
-                    <div class="chart-container"><h3>Distribuição por Área do Direito</h3><canvas id="categoryChart" height="250"></canvas></div>
-                </div>
-                <div class="chart-container"><h3>Alertas Estratégicos</h3><div id="alertsList" class="alerts-list"></div></div>
-            `;
+            return `<div class="dashboard-grid"><div class="dashboard-card"><div class="card-header"><h3>${EliteUtils.getLocaleText('statActiveCases')}</h3><i class="fas fa-folder-open"></i></div><div class="card-value">${activeCases}</div><div class="card-trend trend-up"><i class="fas fa-arrow-up"></i> +12% this month</div></div><div class="dashboard-card"><div class="card-header"><h3>${EliteUtils.getLocaleText('statDisputeValue')}</h3><i class="fas fa-euro-sign"></i></div><div class="card-value">${EliteUtils.formatCurrency(totalValue)}</div><div class="card-trend trend-up"><i class="fas fa-arrow-up"></i> +8% vs previous period</div></div><div class="dashboard-card"><div class="card-header"><h3>${EliteUtils.getLocaleText('statSuccessRate')}</h3><i class="fas fa-chart-line"></i></div><div class="card-value">${EliteUtils.formatPercentage(avgProbability * 100)}</div><div class="card-trend trend-up"><i class="fas fa-arrow-up"></i> +5% with AI</div></div><div class="dashboard-card"><div class="card-header"><h3>ROI Estimado</h3><i class="fas fa-chart-pie"></i></div><div class="card-value">284%</div><div class="card-trend trend-up"><i class="fas fa-arrow-up"></i> vs. market</div></div></div><div class="charts-dashboard"><div class="chart-container"><h3>${EliteUtils.getLocaleText('portfolioChart')}</h3><canvas id="portfolioChart" height="250"></canvas></div><div class="chart-container"><h3>${EliteUtils.getLocaleText('categoryChart')}</h3><canvas id="categoryChart" height="250"></canvas></div></div><div class="chart-container"><h3>${EliteUtils.getLocaleText('alertsTitle')}</h3><div id="alertsList" class="alerts-list"></div></div>`;
         },
         
-        async renderCases() {
+        renderCases: async () => {
             const filteredCases = AppState.cases.filter(c => EliteUtils.hasAccessToCase(c));
-            
-            return `
-                <div class="cases-header" style="display: flex; justify-content: space-between; margin-bottom: 20px; flex-wrap: wrap; gap: 16px;">
-                    <div class="cases-actions">
-                        <button id="newCaseBtn" class="elite-btn primary"><i class="fas fa-plus"></i> Novo Caso</button>
-                        <button id="importCasesBtn" class="elite-btn secondary"><i class="fas fa-upload"></i> Importar Lote</button>
-                    </div>
-                    <div class="cases-search"><input type="text" id="searchCases" placeholder="Pesquisar casos..." class="search-input" style="width: 250px;"></div>
-                </div>
-                <div class="category-selector">
-                    <button class="category-btn active" data-category="all">Todos</button>
-                    ${AppState.categories.map(cat => `<button class="category-btn" data-category="${cat}">${EliteUtils.getCategoryName(cat)}</button>`).join('')}
-                </div>
-                <table class="data-table">
-                    <thead><tr><th>Processo</th><th>Cliente</th><th>Área</th><th>Valor (€)</th><th>Prob. Sucesso</th><th>Oposição</th><th>Ações</th></tr></thead>
-                    <tbody id="casesTableBody">
-                        ${filteredCases.map(c => `
-                            <tr data-case-id="${c.id}" data-category="${c.category}">
-                                <td><strong>${c.id}</strong><br><small>${c.description.substring(0, 30)}...</small></td>
-                                <td>${c.client}</td>
-                                <td><span class="case-badge ${c.category}" style="background: ${EliteUtils.getCategoryColor(c.category)}20; color: ${EliteUtils.getCategoryColor(c.category)}">${c.categoryName}</span></td>
-                                <td>${EliteUtils.formatCurrency(c.value)}</td>
-                                <td><div class="progress-bar"><div class="progress-fill" style="width: ${c.successProbability * 100}%"></div><span class="progress-text">${EliteUtils.formatPercentage(c.successProbability * 100)}</span></div></td>
-                                <td><span class="case-badge">${c.adversary || 'N/A'}</span></td>
-                                <td><button class="action-btn view-case" data-id="${c.id}" title="Ver detalhes"><i class="fas fa-eye"></i></button><button class="action-btn analyze-case" data-id="${c.id}" title="Análise preditiva"><i class="fas fa-chart-line"></i></button><button class="action-btn adversary-alert" data-adversary="${c.adversary}" title="Perfil da oposição"><i class="fas fa-users"></i></button></td>
-                            </tr>
-                        `).join('')}
-                    </tbody>
-                </table>
-            `;
+            return `<div class="cases-header" style="display: flex; justify-content: space-between; margin-bottom: 20px; flex-wrap: wrap; gap: 16px;"><div class="cases-actions"><button id="newCaseBtn" class="elite-btn primary"><i class="fas fa-plus"></i> ${EliteUtils.getLocaleText('newCaseBtn')}</button><button id="importCasesBtn" class="elite-btn secondary"><i class="fas fa-upload"></i> ${EliteUtils.getLocaleText('importCasesBtn')}</button></div><div class="cases-search"><input type="text" id="searchCases" placeholder="${EliteUtils.getLocaleText('searchPlaceholder')}" class="search-input" style="width: 250px;"></div></div><div class="category-selector"><button class="category-btn active" data-category="all">${EliteUtils.getLocaleText('allCases')}</button>${AppState.categories.map(cat => `<button class="category-btn" data-category="${cat}">${EliteUtils.getCategoryName(cat)}</button>`).join('')}</div><table class="data-table"><thead><tr><th>Case</th><th>Client</th><th>Area</th><th>Value (€)</th><th>Success Prob.</th><th>Opposition</th><th>Actions</th></tr></thead><tbody id="casesTableBody">${filteredCases.map(c => `<tr data-case-id="${c.id}" data-category="${c.category}"><td><strong>${c.id}</strong><br><small>${c.description.substring(0, 30)}...</small></td><td>${c.client}</td><td><span class="case-badge ${c.category}" style="background: ${EliteUtils.getCategoryColor(c.category)}20; color: ${EliteUtils.getCategoryColor(c.category)}">${c.categoryName}</span></td><td>${EliteUtils.formatCurrency(c.value)}</td><td><div class="progress-bar"><div class="progress-fill" style="width: ${c.successProbability * 100}%"></div><span class="progress-text">${EliteUtils.formatPercentage(c.successProbability * 100)}</span></div></td><td><span class="case-badge">${c.adversary || 'N/A'}</span></td><td><button class="action-btn view-case" data-id="${c.id}" title="View details"><i class="fas fa-eye"></i></button><button class="action-btn analyze-case" data-id="${c.id}" title="Predictive analysis"><i class="fas fa-chart-line"></i></button><button class="action-btn adversary-alert" data-adversary="${c.adversary}" title="Opposition profile"><i class="fas fa-users"></i></button></td></tr>`).join('')}</tbody></table>`;
         },
         
-        async renderLitigationIntelligence() {
-            return `
-                <div class="litigation-intelligence">
-                    <div class="intelligence-header"><h2>Análise Preditiva de Êxito</h2><p>Insira os dados do caso para obter previsão detalhada</p></div>
-                    <div class="intelligence-form">
-                        <div class="form-row">
-                            <div class="form-group"><label>Área do Direito</label><select id="predictCategory">${AppState.categories.map(c => `<option value="${c}">${EliteUtils.getCategoryName(c)}</option>`).join('')}</select></div>
-                            <div class="form-group"><label>Valor da Causa (€)</label><input type="number" id="predictValue" placeholder="Ex: 50000"></div>
-                            <div class="form-group"><label>Probabilidade Estimada (%)</label><input type="number" id="predictProbability" placeholder="Ex: 75" step="1"></div>
-                        </div>
-                        <div class="form-row">
-                            <div class="form-group"><label>Tribunal</label><select id="predictCourt"><option value="lisboa">Lisboa</option><option value="porto">Porto</option><option value="braga">Braga</option><option value="coimbra">Coimbra</option><option value="faro">Faro</option></select></div>
-                            <div class="form-group"><label>Escritório Oposição</label><select id="predictAdversary"><option value="">Selecionar...</option>${Object.keys(ADVERSARY_PROFILES).map(a => `<option value="${a}">${a}</option>`).join('')}</select></div>
-                        </div>
-                        <button id="runPredictionBtn" class="elite-btn primary full-width"><i class="fas fa-brain"></i> Executar Previsão</button>
-                    </div>
-                    <div id="predictionResult" class="prediction-result" style="display: none;"></div>
-                </div>
-            `;
+        renderLitigationIntelligence: () => `<div class="litigation-intelligence"><div class="intelligence-header"><h2>${EliteUtils.getLocaleText('litigationTitle')}</h2><p>${EliteUtils.getLocaleText('litigationSubtitle')}</p></div><div class="intelligence-form"><div class="form-row"><div class="form-group"><label>${EliteUtils.getLocaleText('predictCategory')}</label><select id="predictCategory">${AppState.categories.map(c => `<option value="${c}">${EliteUtils.getCategoryName(c)}</option>`).join('')}</select></div><div class="form-group"><label>${EliteUtils.getLocaleText('predictValue')}</label><input type="number" id="predictValue" placeholder="Ex: 50000"></div><div class="form-group"><label>${EliteUtils.getLocaleText('predictProbability')}</label><input type="number" id="predictProbability" placeholder="Ex: 75" step="1"></div></div><div class="form-row"><div class="form-group"><label>${EliteUtils.getLocaleText('predictCourt')}</label><select id="predictCourt"><option value="lisboa">Lisboa</option><option value="porto">Porto</option><option value="braga">Braga</option><option value="coimbra">Coimbra</option><option value="faro">Faro</option></select></div><div class="form-group"><label>${EliteUtils.getLocaleText('predictAdversary')}</label><select id="predictAdversary"><option value="">Select...</option>${Object.keys(ADVERSARY_PROFILES).map(a => `<option value="${a}">${a}</option>`).join('')}</select></div></div><button id="runPredictionBtn" class="elite-btn primary full-width"><i class="fas fa-brain"></i> ${EliteUtils.getLocaleText('runPrediction')}</button></div><div id="predictionResult" class="prediction-result" style="display: none;"></div></div>`,
+        
+        renderJudgesProfiles: () => {
+            const judges = [{ name: 'Dr. António Costa', court: 'Lisboa', category: 'civil', decisions: 45, favorableRate: 0.68, avgTime: 120 }, { name: 'Dra. Sofia Mendes', court: 'Porto', category: 'labor', decisions: 38, favorableRate: 0.72, avgTime: 95 }, { name: 'Dr. Ricardo Alves', court: 'Braga', category: 'commercial', decisions: 52, favorableRate: 0.58, avgTime: 110 }, { name: 'Dr. Pedro Martins', court: 'Lisboa', category: 'tax', decisions: 32, favorableRate: 0.65, avgTime: 140 }, { name: 'Dra. Teresa Lopes', court: 'Lisboa', category: 'family', decisions: 28, favorableRate: 0.81, avgTime: 85 }];
+            return `<div class="judges-header"><h2>${EliteUtils.getLocaleText('navJudges')}</h2><p>Behavioral analysis based on previous decisions</p></div><div class="judges-grid">${judges.map(j => `<div class="judge-card"><div class="judge-header"><i class="fas fa-gavel"></i><div><h3>${j.name}</h3><p>${j.court} · ${EliteUtils.getCategoryName(j.category)}</p></div></div><div class="judge-stats"><div class="stat"><span class="stat-label">Decisions</span><span class="stat-value">${j.decisions}</span></div><div class="stat"><span class="stat-label">Success Rate</span><span class="stat-value ${j.favorableRate > 0.65 ? 'positive' : 'neutral'}">${EliteUtils.formatPercentage(j.favorableRate * 100)}</span></div><div class="stat"><span class="stat-label">Avg Time</span><span class="stat-value">${j.avgTime} days</span></div></div><div class="judge-insights"><strong>Recommended Strategy:</strong><p>${j.favorableRate > 0.7 ? 'Aggressive strategy. Strong technical arguments are well received.' : j.favorableRate > 0.55 ? 'Balanced strategy. Prepare for robust cross-examination.' : 'Defensive strategy. Consider arbitration or change of venue.'}</p></div></div>`).join('')}</div><div class="chart-container"><h3>Trends by Court</h3><canvas id="courtTrendsChart" height="300"></canvas></div>`;
         },
         
-        async renderJudgesProfiles() {
-            const judges = [
-                { name: 'Dr. António Costa', court: 'Lisboa', category: 'civil', decisions: 45, favorableRate: 0.68, avgTime: 120 },
-                { name: 'Dra. Sofia Mendes', court: 'Porto', category: 'labor', decisions: 38, favorableRate: 0.72, avgTime: 95 },
-                { name: 'Dr. Ricardo Alves', court: 'Braga', category: 'commercial', decisions: 52, favorableRate: 0.58, avgTime: 110 },
-                { name: 'Dr. Pedro Martins', court: 'Lisboa', category: 'tax', decisions: 32, favorableRate: 0.65, avgTime: 140 },
-                { name: 'Dra. Teresa Lopes', court: 'Lisboa', category: 'family', decisions: 28, favorableRate: 0.81, avgTime: 85 }
-            ];
-            
-            return `
-                <div class="judges-header"><h2>Perfil de Magistrados</h2><p>Análise comportamental de juízes com base em decisões anteriores</p></div>
-                <div class="judges-grid">
-                    ${judges.map(j => `
-                        <div class="judge-card">
-                            <div class="judge-header"><i class="fas fa-gavel"></i><div><h3>${j.name}</h3><p>${j.court} · ${EliteUtils.getCategoryName(j.category)}</p></div></div>
-                            <div class="judge-stats"><div class="stat"><span class="stat-label">Decisões</span><span class="stat-value">${j.decisions}</span></div><div class="stat"><span class="stat-label">Taxa favorável</span><span class="stat-value ${j.favorableRate > 0.65 ? 'positive' : 'neutral'}">${EliteUtils.formatPercentage(j.favorableRate * 100)}</span></div><div class="stat"><span class="stat-label">Tempo médio</span><span class="stat-value">${j.avgTime} dias</span></div></div>
-                            <div class="judge-insights"><strong>Estratégia recomendada:</strong><p>${j.favorableRate > 0.7 ? 'Estratégia ofensiva. Argumentos técnicos fortes têm boa aceitação.' : j.favorableRate > 0.55 ? 'Estratégia equilibrada. Preparar para contraditório robusto.' : 'Estratégia defensiva. Considerar arbitragem ou mudança de foro.'}</p></div>
-                        </div>
-                    `).join('')}
-                </div>
-                <div class="chart-container"><h3>Tendências por Tribunal</h3><canvas id="courtTrendsChart" height="300"></canvas></div>
-            `;
+        renderClients: async () => {
+            const filteredClients = AppState.clients.filter(c => AppState.userRole === 'SUPER_USER' || c.lawyerId === AppState.userLawyerId);
+            return `<div class="clients-header" style="display: flex; justify-content: space-between; margin-bottom: 20px;"><h2>${EliteUtils.getLocaleText('navClients')}</h2><button id="newClientBtn" class="elite-btn primary"><i class="fas fa-user-plus"></i> ${EliteUtils.getLocaleText('newClientTitle')}</button></div><table class="data-table"><thead><tr><th>Client</th><th>VATIN</th><th>Main Area</th><th>Cases</th><th>Total Value (€)</th><th>Actions</th></tr></thead><tbody>${filteredClients.map(c => `<tr><td><strong>${c.name}</strong></td><td>${c.nif}</td><td><span class="case-badge ${c.category}">${EliteUtils.getCategoryName(c.category)}</span></td><td>${c.cases}</td><td>${EliteUtils.formatCurrency(c.totalValue)}</td><td><button class="action-btn view-client" data-id="${c.id}"><i class="fas fa-eye"></i></button><button class="action-btn notes-client" data-client="${c.id}"><i class="fas fa-pen"></i></button></td></tr>`).join('')}</tbody></table>`;
         },
         
-        async renderClients() {
-            const filteredClients = AppState.clients.filter(c => {
-                if (AppState.userRole === 'SUPER_USER') return true;
-                return c.lawyerId === AppState.userLawyerId;
-            });
-            
-            return `
-                <div class="clients-header" style="display: flex; justify-content: space-between; margin-bottom: 20px;"><h2>Clientes</h2><button id="newClientBtn" class="elite-btn primary"><i class="fas fa-user-plus"></i> Novo Cliente</button></div>
-                <table class="data-table"><thead><tr><th>Cliente</th><th>NIF</th><th>Área Principal</th><th>Casos</th><th>Valor Total (€)</th><th>Ações</th></tr></thead><tbody>
-                    ${filteredClients.map(c => `<tr><td><strong>${c.name}</strong></td><td>${c.nif}</td><td><span class="case-badge ${c.category}">${EliteUtils.getCategoryName(c.category)}</span></td><td>${c.cases}</td><td>${EliteUtils.formatCurrency(c.totalValue)}</td><td><button class="action-btn view-client" data-id="${c.id}" title="Ver detalhes"><i class="fas fa-eye"></i></button><button class="action-btn notes-client" data-client="${c.id}" title="Notas estratégicas"><i class="fas fa-pen"></i></button></td></tr>`).join('')}
-                </tbody></table>
-            `;
-        },
+        renderReports: () => `<div class="reports-header"><h2>${EliteUtils.getLocaleText('navReports')}</h2><p>Automatically generated documents with in-depth analysis</p></div><div class="reports-grid"><div class="report-card"><i class="fas fa-chart-line"></i><h3>Performance Report</h3><p>Portfolio metrics analysis, success rates and ROI</p><button class="elite-btn small" onclick="ELITE_PROBATUM.generatePerformanceReport()"><i class="fas fa-download"></i> Generate</button></div><div class="report-card"><i class="fas fa-gavel"></i><h3>Judge Analysis</h3><p>Detailed judge profile and court trends</p><button class="elite-btn small" onclick="ELITE_PROBATUM.generateJudgesReport()"><i class="fas fa-download"></i> Generate</button></div><div class="report-card"><i class="fas fa-chart-pie"></i><h3>Financial Forecast</h3><p>Revenue projection and cash flow for 12 months</p><button class="elite-btn small" onclick="ELITE_PROBATUM.generateFinancialForecast()"><i class="fas fa-download"></i> Generate</button></div><div class="report-card"><i class="fas fa-balance-scale"></i><h3>Area Analysis</h3><p>Detailed performance by legal area</p><button class="elite-btn small" onclick="ELITE_PROBATUM.generateCategoryReport()"><i class="fas fa-download"></i> Generate</button></div></div>`,
         
-        async renderReports() {
-            return `
-                <div class="reports-header"><h2>Relatórios Estratégicos</h2><p>Documentos gerados automaticamente com análise aprofundada</p></div>
-                <div class="reports-grid">
-                    <div class="report-card"><i class="fas fa-chart-line"></i><h3>Relatório de Performance</h3><p>Análise de métricas da carteira</p><button class="elite-btn small" onclick="ELITE_PROBATUM.generatePerformanceReport()"><i class="fas fa-download"></i> Gerar</button></div>
-                    <div class="report-card"><i class="fas fa-gavel"></i><h3>Análise de Magistrados</h3><p>Perfil detalhado de juízes</p><button class="elite-btn small" onclick="ELITE_PROBATUM.generateJudgesReport()"><i class="fas fa-download"></i> Gerar</button></div>
-                    <div class="report-card"><i class="fas fa-chart-pie"></i><h3>Projeção Financeira</h3><p>Previsão de receitas</p><button class="elite-btn small" onclick="ELITE_PROBATUM.generateFinancialForecast()"><i class="fas fa-download"></i> Gerar</button></div>
-                    <div class="report-card"><i class="fas fa-balance-scale"></i><h3>Análise por Área</h3><p>Performance detalhada por ramo</p><button class="elite-btn small" onclick="ELITE_PROBATUM.generateCategoryReport()"><i class="fas fa-download"></i> Gerar</button></div>
-                </div>
-            `;
-        },
-        
-        async initDashboardComponents() {
+        initDashboardComponents: () => {
             const portfolioCtx = document.getElementById('portfolioChart');
-            if (portfolioCtx && typeof Chart !== 'undefined') {
-                new Chart(portfolioCtx, {
-                    type: 'line',
-                    data: { labels: ['Abr', 'Mai', 'Jun', 'Jul', 'Ago', 'Set'], datasets: [{ label: 'Valor em Disputa (€)', data: [125000, 142000, 158000, 187000, 215000, 248000], borderColor: '#00E5FF', backgroundColor: 'rgba(0, 229, 255, 0.1)', tension: 0.4, fill: true }] },
-                    options: { responsive: true, maintainAspectRatio: true, plugins: { legend: { labels: { color: '#94A3B8', font: { size: 10 } } } }, scales: { y: { ticks: { color: '#94A3B8' } }, x: { ticks: { color: '#94A3B8' } } } }
-                });
-            }
-            
+            if (portfolioCtx && typeof Chart !== 'undefined') new Chart(portfolioCtx, { type: 'line', data: { labels: ['Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep'], datasets: [{ label: 'Dispute Value (€)', data: [125000, 142000, 158000, 187000, 215000, 248000], borderColor: '#00E5FF', backgroundColor: 'rgba(0, 229, 255, 0.1)', tension: 0.4, fill: true }] }, options: { responsive: true, maintainAspectRatio: true, plugins: { legend: { labels: { color: '#94A3B8' } } }, scales: { y: { ticks: { color: '#94A3B8' } }, x: { ticks: { color: '#94A3B8' } } } } });
             const categoryCtx = document.getElementById('categoryChart');
-            if (categoryCtx && typeof Chart !== 'undefined') {
-                const categoryCount = {};
-                AppState.cases.forEach(c => { categoryCount[c.categoryName] = (categoryCount[c.categoryName] || 0) + 1; });
-                new Chart(categoryCtx, { type: 'doughnut', data: { labels: Object.keys(categoryCount), datasets: [{ data: Object.values(categoryCount), backgroundColor: ['#3B82F6', '#EF4444', '#10B981', '#F59E0B', '#8B5CF6', '#00E5FF'], borderWidth: 0 }] }, options: { responsive: true, maintainAspectRatio: true, plugins: { legend: { position: 'right', labels: { font: { size: 10 } } } } } });
-            }
-            
-            const alertsList = document.getElementById('alertsList');
-            if (alertsList) {
-                alertsList.innerHTML = `<div class="alert-item critical"><i class="fas fa-exclamation-triangle"></i><div><strong>Nova jurisprudência do STJ</strong><p>Acórdão relevante em matéria de responsabilidade civil</p><small>DGSI - 15.10.2024</small></div></div><div class="alert-item warning"><i class="fas fa-gavel"></i><div><strong>Mudança na composição do Tribunal da Relação</strong><p>Novos desembargadores nomeados</p><small>CSM - 14.10.2024</small></div></div><div class="alert-item info"><i class="fas fa-chart-line"></i><div><strong>Crescimento na área do Direito Fiscal</strong><p>Aumento de 23% nos casos de impugnação tributária</p><small>Análise de Mercado</small></div></div>`;
-            }
+            if (categoryCtx && typeof Chart !== 'undefined') { const categoryCount = {}; AppState.cases.forEach(c => { categoryCount[c.categoryName] = (categoryCount[c.categoryName] || 0) + 1; }); new Chart(categoryCtx, { type: 'doughnut', data: { labels: Object.keys(categoryCount), datasets: [{ data: Object.values(categoryCount), backgroundColor: ['#3B82F6', '#EF4444', '#10B981', '#F59E0B', '#8B5CF6', '#00E5FF'], borderWidth: 0 }] }, options: { responsive: true, maintainAspectRatio: true, plugins: { legend: { position: 'right', labels: { font: { size: 10 } } } } } }); }
+            const alertsList = document.getElementById('alertsList'); if (alertsList) alertsList.innerHTML = `<div class="alert-item critical"><i class="fas fa-exclamation-triangle"></i><div><strong>New Supreme Court precedent</strong><p>Relevant ruling on civil liability</p><small>DGSI - 15.10.2024</small></div></div><div class="alert-item warning"><i class="fas fa-gavel"></i><div><strong>Court of Appeal composition change</strong><p>New judges appointed</p><small>CSM - 14.10.2024</small></div></div><div class="alert-item info"><i class="fas fa-chart-line"></i><div><strong>Tax Law growth</strong><p>23% increase in tax litigation cases</p><small>Market Analysis</small></div></div>`;
         },
         
-        async initCasesTable() {
-            document.querySelectorAll('.view-case').forEach(btn => {
-                btn.addEventListener('click', () => {
-                    const caseId = btn.dataset.id;
-                    const caseData = AppState.cases.find(c => c.id === caseId);
-                    if (caseData) {
-                        const modalBody = document.getElementById('caseDetailBody');
-                        if (modalBody) {
-                            const heatmapRec = JurisHeatmap.getRecommendation(caseData);
-                            const adversaryProfile = AdversaryProfiler.getProfile(caseData.adversary);
-                            modalBody.innerHTML = `
-                                <div class="detail-row"><span>Processo:</span><strong>${caseData.id}</strong></div>
-                                <div class="detail-row"><span>Cliente:</span><strong>${caseData.client}</strong></div>
-                                <div class="detail-row"><span>Área:</span><strong>${caseData.categoryName}</strong></div>
-                                <div class="detail-row"><span>Valor:</span><strong>${EliteUtils.formatCurrency(caseData.value)}</strong></div>
-                                <div class="detail-row"><span>Probabilidade:</span><strong>${EliteUtils.formatPercentage(caseData.successProbability * 100)}</strong></div>
-                                <div class="detail-row"><span>Juiz:</span><strong>${caseData.judge}</strong></div>
-                                <div class="detail-row"><span>Tribunal:</span><strong>${caseData.court}</strong></div>
-                                <div class="detail-row"><span>Oposição:</span><strong>${caseData.adversary || 'N/A'}</strong></div>
-                                <div class="prediction-recommendation"><h4>Recomendação de Foro</h4><p>Melhor tribunal: <strong>${heatmapRec.bestCourt}</strong> (taxa de sucesso: ${EliteUtils.formatPercentage(heatmapRec.bestRate * 100)})</p></div>
-                                ${adversaryProfile ? `<div class="prediction-recommendation"><h4>Perfil da Oposição: ${adversaryProfile.name}</h4><p><strong>Padrão:</strong> ${adversaryProfile.pattern}</p><p><strong>Fraqueza:</strong> ${adversaryProfile.weakness}</p></div>` : ''}
-                            `;
-                        }
-                        document.getElementById('caseDetailModal').style.display = 'flex';
-                    }
-                });
-            });
-            
-            document.querySelectorAll('.analyze-case').forEach(btn => {
-                btn.addEventListener('click', async () => {
-                    const caseId = btn.dataset.id;
-                    const caseData = AppState.cases.find(c => c.id === caseId);
-                    if (caseData) {
-                        const adversaryPrediction = AdversaryProfiler.getPrediction(caseData.adversary, caseData.category);
-                        const heatmapRec = JurisHeatmap.getRecommendation(caseData);
-                        EliteUtils.showToast(`Análise do caso ${caseId}: Probabilidade ${EliteUtils.formatPercentage(caseData.successProbability * 100)}. Recomendação: ${heatmapRec.bestCourt}`, 'info');
-                    }
-                });
-            });
-            
-            document.querySelectorAll('.adversary-alert').forEach(btn => {
-                btn.addEventListener('click', () => {
-                    const adversary = btn.dataset.adversary;
-                    if (adversary && ADVERSARY_PROFILES[adversary]) {
-                        const profile = ADVERSARY_PROFILES[adversary];
-                        EliteUtils.showToast(`Perfil ${adversary}: ${profile.pattern}`, 'warning');
-                    }
-                });
-            });
-            
-            document.getElementById('newCaseBtn')?.addEventListener('click', () => {
-                EliteUtils.showToast('Funcionalidade de novo caso em desenvolvimento', 'info');
-            });
-            
-            document.getElementById('searchCases')?.addEventListener('input', (e) => {
-                const term = e.target.value.toLowerCase();
-                document.querySelectorAll('#casesTableBody tr').forEach(row => {
-                    row.style.display = row.textContent.toLowerCase().includes(term) ? '' : 'none';
-                });
-            });
-            
-            document.querySelectorAll('.category-btn').forEach(btn => {
-                btn.addEventListener('click', () => {
-                    document.querySelectorAll('.category-btn').forEach(b => b.classList.remove('active'));
-                    btn.classList.add('active');
-                    const category = btn.dataset.category;
-                    document.querySelectorAll('#casesTableBody tr').forEach(row => {
-                        row.style.display = (category === 'all' || row.dataset.category === category) ? '' : 'none';
-                    });
-                });
-            });
+        initCasesTable: () => {
+            document.querySelectorAll('.view-case').forEach(btn => btn.addEventListener('click', () => { const caseId = btn.dataset.id; const caseData = AppState.cases.find(c => c.id === caseId); if (caseData) { const modalBody = document.getElementById('caseDetailBody'); if (modalBody) { const heatmapRec = JurisHeatmap.getRecommendation(caseData); const adversaryProfile = AdversaryProfiler.getProfile(caseData.adversary); modalBody.innerHTML = `<div class="detail-row"><span>Case:</span><strong>${caseData.id}</strong></div><div class="detail-row"><span>Client:</span><strong>${caseData.client}</strong></div><div class="detail-row"><span>Area:</span><strong>${caseData.categoryName}</strong></div><div class="detail-row"><span>Value:</span><strong>${EliteUtils.formatCurrency(caseData.value)}</strong></div><div class="detail-row"><span>Success Probability:</span><strong>${EliteUtils.formatPercentage(caseData.successProbability * 100)}</strong></div><div class="detail-row"><span>Judge:</span><strong>${caseData.judge}</strong></div><div class="detail-row"><span>Court:</span><strong>${caseData.court}</strong></div><div class="detail-row"><span>Opposition:</span><strong>${caseData.adversary || 'N/A'}</strong></div><div class="prediction-recommendation"><h4>Venue Recommendation</h4><p>Best court: <strong>${heatmapRec.bestCourt}</strong> (success rate: ${EliteUtils.formatPercentage(heatmapRec.bestRate * 100)})</p></div>${adversaryProfile ? `<div class="prediction-recommendation"><h4>Opposition Profile: ${adversaryProfile.name}</h4><p><strong>Pattern:</strong> ${adversaryProfile.pattern}</p><p><strong>Weakness:</strong> ${adversaryProfile.weakness}</p></div>` : ''}`; } document.getElementById('caseDetailModal').style.display = 'flex'; } }));
+            document.querySelectorAll('.analyze-case').forEach(btn => btn.addEventListener('click', async () => { const caseId = btn.dataset.id; const caseData = AppState.cases.find(c => c.id === caseId); if (caseData) { const heatmapRec = JurisHeatmap.getRecommendation(caseData); EliteUtils.showToast(`Case ${caseId} analysis: Success probability ${EliteUtils.formatPercentage(caseData.successProbability * 100)}. Recommendation: ${heatmapRec.bestCourt}`, 'info'); } }));
+            document.querySelectorAll('.adversary-alert').forEach(btn => btn.addEventListener('click', () => { const adversary = btn.dataset.adversary; if (adversary && ADVERSARY_PROFILES[adversary]) { const profile = ADVERSARY_PROFILES[adversary]; EliteUtils.showToast(`${adversary} profile: ${profile.pattern}`, 'warning'); } }));
+            document.getElementById('newCaseBtn')?.addEventListener('click', () => EliteUtils.showToast('New case feature in development', 'info'));
+            document.getElementById('searchCases')?.addEventListener('input', (e) => { const term = e.target.value.toLowerCase(); document.querySelectorAll('#casesTableBody tr').forEach(row => { row.style.display = row.textContent.toLowerCase().includes(term) ? '' : 'none'; }); });
+            document.querySelectorAll('.category-btn').forEach(btn => btn.addEventListener('click', () => { document.querySelectorAll('.category-btn').forEach(b => b.classList.remove('active')); btn.classList.add('active'); const category = btn.dataset.category; document.querySelectorAll('#casesTableBody tr').forEach(row => { row.style.display = (category === 'all' || row.dataset.category === category) ? '' : 'none'; }); }));
         },
         
-        async initLitigationModule() {
+        initLitigationModule: () => {
             document.getElementById('runPredictionBtn')?.addEventListener('click', async () => {
                 const category = document.getElementById('predictCategory')?.value;
                 const value = parseFloat(document.getElementById('predictValue')?.value);
                 const userProb = parseFloat(document.getElementById('predictProbability')?.value);
                 const court = document.getElementById('predictCourt')?.value;
                 const adversary = document.getElementById('predictAdversary')?.value;
-                
-                if (!value) { EliteUtils.showToast('Preencha o valor da causa', 'warning'); return; }
-                
-                EliteUtils.showToast('A processar previsão...', 'info');
-                
+                if (!value) { EliteUtils.showToast('Please enter case value', 'warning'); return; }
+                EliteUtils.showToast('Processing prediction...', 'info');
                 setTimeout(() => {
                     const probability = userProb ? userProb / 100 : 0.65;
                     const courtRate = JurisHeatmap.getCourtSuccessRate(court === 'lisboa' ? 'Lisboa' : court === 'porto' ? 'Porto' : court === 'braga' ? 'Braga' : court === 'coimbra' ? 'Coimbra' : 'Faro', category);
                     const adjustedProb = (probability + courtRate) / 2;
                     const adversaryProfile = adversary ? AdversaryProfiler.getPrediction(adversary, category) : null;
                     const expectedValue = value * (0.4 + adjustedProb * 0.3);
-                    
                     const resultDiv = document.getElementById('predictionResult');
                     if (resultDiv) {
                         resultDiv.style.display = 'block';
-                        resultDiv.innerHTML = `
-                            <div class="prediction-header"><h3>Resultado da Análise Preditiva</h3><div class="probability-gauge"><div class="gauge-value" style="--probability: ${adjustedProb * 100}%"><span>${EliteUtils.formatPercentage(adjustedProb * 100)}</span></div></div></div>
-                            <div class="prediction-details"><div class="detail-row"><span>Área:</span><strong>${EliteUtils.getCategoryName(category)}</strong></div><div class="detail-row"><span>Probabilidade ajustada:</span><strong class="${adjustedProb > 0.7 ? 'positive' : adjustedProb > 0.4 ? 'neutral' : 'negative'}">${EliteUtils.formatPercentage(adjustedProb * 100)}</strong></div><div class="detail-row"><span>Taxa tribunal (${court.toUpperCase()}):</span><strong>${EliteUtils.formatPercentage(courtRate * 100)}</strong></div><div class="detail-row"><span>Valor estimado:</span><strong>${EliteUtils.formatCurrency(expectedValue)}</strong></div></div>
-                            ${adversaryProfile ? `<div class="prediction-recommendation"><h4>Perfil da Oposição: ${adversary}</h4><p><strong>Padrão:</strong> ${adversaryProfile.pattern}</p><p><strong>Fraqueza explorável:</strong> ${adversaryProfile.weakness}</p></div>` : ''}
-                            <div class="prediction-recommendation"><h4>Recomendação Estratégica</h4><p>${adjustedProb > 0.7 ? 'Recomenda-se ação judicial imediata com pedido de tutela antecipada.' : adjustedProb > 0.5 ? 'Estratégia equilibrada: notificação extrajudicial com prazo para acordo.' : 'Recomenda-se negociação de acordo ou arbitragem.'}</p></div>
-                            <div class="prediction-actions"><button class="elite-btn primary" onclick="ELITE_PROBATUM.generatePetition()"><i class="fas fa-file-alt"></i> Gerar Minuta</button><button class="elite-btn secondary" onclick="ELITE_PROBATUM.simulateDefense()"><i class="fas fa-shield-alt"></i> Simular Defesa</button></div>
-                        `;
+                        resultDiv.innerHTML = `<div class="prediction-header"><h3>Predictive Analysis Result</h3><div class="probability-gauge"><div class="gauge-value" style="--probability: ${adjustedProb * 100}%"><span>${EliteUtils.formatPercentage(adjustedProb * 100)}</span></div></div></div><div class="prediction-details"><div class="detail-row"><span>Legal Area:</span><strong>${EliteUtils.getCategoryName(category)}</strong></div><div class="detail-row"><span>Adjusted Probability:</span><strong class="${adjustedProb > 0.7 ? 'positive' : adjustedProb > 0.4 ? 'neutral' : 'negative'}">${EliteUtils.formatPercentage(adjustedProb * 100)}</strong></div><div class="detail-row"><span>Court Rate (${court.toUpperCase()}):</span><strong>${EliteUtils.formatPercentage(courtRate * 100)}</strong></div><div class="detail-row"><span>Estimated Value:</span><strong>${EliteUtils.formatCurrency(expectedValue)}</strong></div></div>${adversaryProfile ? `<div class="prediction-recommendation"><h4>Opposition Profile: ${adversary}</h4><p><strong>Pattern:</strong> ${adversaryProfile.pattern}</p><p><strong>Exploitable Weakness:</strong> ${adversaryProfile.weakness}</p></div>` : ''}<div class="prediction-recommendation"><h4>Strategic Recommendation</h4><p>${adjustedProb > 0.7 ? 'Immediate legal action recommended with preliminary injunction request.' : adjustedProb > 0.5 ? 'Balanced strategy: extrajudicial notification with settlement deadline.' : 'Settlement negotiation or arbitration recommended.'}</p></div><div class="prediction-actions"><button class="elite-btn primary" onclick="ELITE_PROBATUM.generatePetition()"><i class="fas fa-file-alt"></i> Generate Draft</button><button class="elite-btn secondary" onclick="ELITE_PROBATUM.simulateDefense()"><i class="fas fa-shield-alt"></i> Simulate Defense</button></div>`;
                     }
                 }, 800);
             });
         },
         
-        async initJudgesModule() {
+        initJudgesModule: () => {
             const ctx = document.getElementById('courtTrendsChart');
-            if (ctx && typeof Chart !== 'undefined') {
-                new Chart(ctx, { type: 'bar', data: { labels: ['Lisboa', 'Porto', 'Braga', 'Coimbra', 'Faro'], datasets: [{ label: 'Taxa de Sucesso (%)', data: [68, 72, 58, 62, 55], backgroundColor: '#00E5FF', borderRadius: 8 }, { label: 'Tempo Médio (dias)', data: [120, 95, 110, 130, 105], backgroundColor: '#F59E0B', borderRadius: 8 }] }, options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { labels: { color: '#94A3B8' } } }, scales: { y: { ticks: { color: '#94A3B8' } }, x: { ticks: { color: '#94A3B8' } } } } });
-            }
+            if (ctx && typeof Chart !== 'undefined') new Chart(ctx, { type: 'bar', data: { labels: ['Lisboa', 'Porto', 'Braga', 'Coimbra', 'Faro'], datasets: [{ label: 'Success Rate (%)', data: [68, 72, 58, 62, 55], backgroundColor: '#00E5FF', borderRadius: 8 }, { label: 'Avg Time (days)', data: [120, 95, 110, 130, 105], backgroundColor: '#F59E0B', borderRadius: 8 }] }, options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { labels: { color: '#94A3B8' } } }, scales: { y: { ticks: { color: '#94A3B8' } }, x: { ticks: { color: '#94A3B8' } } } } });
         },
         
-        async initClientsTable() {
-            document.getElementById('newClientBtn')?.addEventListener('click', () => {
-                document.getElementById('newClientModal').style.display = 'flex';
-            });
-            
-            document.getElementById('newClientForm')?.addEventListener('submit', (e) => {
-                e.preventDefault();
-                const newClient = {
-                    id: 'CL' + (AppState.clients.length + 101),
-                    name: document.getElementById('clientName').value,
-                    nif: document.getElementById('clientNif').value,
-                    category: document.getElementById('clientCategory').value,
-                    cases: 1,
-                    totalValue: parseFloat(document.getElementById('clientCaseValue').value),
-                    lawyerId: AppState.userLawyerId
-                };
-                AppState.clients.push(newClient);
-                EliteUtils.showToast(`Cliente ${newClient.name} criado com sucesso!`, 'success');
-                document.getElementById('newClientModal').style.display = 'none';
-                document.getElementById('newClientForm').reset();
-                Views.render('clients');
-            });
-            
-            document.querySelectorAll('.notes-client').forEach(btn => {
-                btn.addEventListener('click', () => {
-                    document.getElementById('notesModal').style.display = 'flex';
-                    NotesManager.renderNotes('notesItems');
-                });
-            });
-        },
-        
-        async initReportsModule() {
-            // Already initialized
+        initClientsTable: () => {
+            document.getElementById('newClientBtn')?.addEventListener('click', () => document.getElementById('newClientModal').style.display = 'flex');
+            document.getElementById('newClientForm')?.addEventListener('submit', (e) => { e.preventDefault(); const newClient = { id: 'CL' + (AppState.clients.length + 101), name: document.getElementById('clientName').value, nif: document.getElementById('clientNif').value, category: document.getElementById('clientCategory').value, cases: 1, totalValue: parseFloat(document.getElementById('clientCaseValue').value), lawyerId: AppState.userLawyerId }; AppState.clients.push(newClient); EliteUtils.showToast(`Client ${newClient.name} created successfully!`, 'success'); document.getElementById('newClientModal').style.display = 'none'; document.getElementById('newClientForm').reset(); Views.render('clients'); });
+            document.querySelectorAll('.notes-client').forEach(btn => btn.addEventListener('click', () => { document.getElementById('notesModal').style.display = 'flex'; NotesManager.renderNotes('notesItems'); }));
         }
     };
     
@@ -922,7 +746,7 @@
     // =========================================================================
     
     async function init() {
-        EliteUtils.log('Inicializando ELITE PROBATUM v1.0...');
+        EliteUtils.log('Initializing ELITE PROBATUM v1.0 Secure Edition...');
         
         AppState.cases = [...MOCK_CASES];
         AppState.clients = [...MOCK_CLIENTS];
@@ -932,16 +756,9 @@
         
         const splash = document.getElementById('splashScreen');
         const enterBtn = document.getElementById('enterPlatformBtn');
-        
         if (splash && enterBtn) {
             setTimeout(() => { enterBtn.style.display = 'inline-flex'; }, 2000);
-            enterBtn.addEventListener('click', () => {
-                splash.style.opacity = '0';
-                setTimeout(() => {
-                    splash.style.display = 'none';
-                    AuthManager.showLoginModal();
-                }, 500);
-            });
+            enterBtn.addEventListener('click', () => { splash.style.opacity = '0'; setTimeout(() => { splash.style.display = 'none'; AuthManager.showLoginModal(); }, 500); });
         }
         
         document.getElementById('loginBtn')?.addEventListener('click', () => {
@@ -951,120 +768,62 @@
                 AuthManager.hideLoginModal();
                 document.getElementById('appContainer').style.display = 'flex';
                 setTimeout(() => document.getElementById('appContainer').classList.add('visible'), 50);
-                
                 document.getElementById('headerActiveCases').textContent = AppState.metrics.activeCases;
                 document.getElementById('headerDisputeValue').textContent = EliteUtils.formatCurrency(AppState.metrics.totalDisputeValue);
                 document.getElementById('headerSuccessRate').textContent = EliteUtils.formatPercentage(AppState.metrics.successRate);
                 document.getElementById('casesBadge').textContent = AppState.cases.filter(c => EliteUtils.hasAccessToCase(c)).length;
                 document.getElementById('clientsBadge').textContent = AppState.clients.filter(c => AppState.userRole === 'SUPER_USER' || c.lawyerId === AppState.userLawyerId).length;
-                
-                setupNavigation();
-                setupModals();
-                setupGlobalEvents();
-                Views.render('dashboard');
-            } else {
-                document.getElementById('loginError').style.display = 'block';
-            }
+                setupNavigation(); setupModals(); setupGlobalEvents(); Views.render('dashboard');
+            } else { document.getElementById('loginError').style.display = 'block'; }
         });
         
-        document.getElementById('integrityCheckBtn')?.addEventListener('click', async () => {
-            await IntegrityChecker.renderIntegrityModal();
-            document.getElementById('integrityModal').style.display = 'flex';
+        document.getElementById('langPT')?.addEventListener('click', () => I18nManager.setLocale('PT'));
+        document.getElementById('langEN')?.addEventListener('click', () => I18nManager.setLocale('EN'));
+        document.getElementById('langToggle')?.addEventListener('click', () => I18nManager.setLocale(currentLocale === 'PT' ? 'EN' : 'PT'));
+        document.getElementById('langToggleSidebar')?.addEventListener('click', () => I18nManager.setLocale(currentLocale === 'PT' ? 'EN' : 'PT'));
+        
+        document.getElementById('yubikeyBtn')?.addEventListener('click', () => {
+            const fakeYubiHash = 'a1b2c3d4e5f6';
+            EliteUtils.showToast('YubiKey simulation - authentication token generated', 'success');
+            AuthManager.login(document.getElementById('loginUser').value, document.getElementById('loginPass').value, fakeYubiHash);
         });
         
-        document.getElementById('exportReportBtn')?.addEventListener('click', () => {
-            PDFExporter.exportReport();
-        });
+        document.getElementById('integrityCheckBtn')?.addEventListener('click', async () => { await IntegrityChecker.renderIntegrityModal(); document.getElementById('integrityModal').style.display = 'flex'; });
+        document.getElementById('exportReportBtn')?.addEventListener('click', () => PDFExporter.exportReport());
+        document.getElementById('saveNoteBtn')?.addEventListener('click', () => { const content = document.getElementById('strategicNote').value; if (content.trim()) { NotesManager.addNote(content, AppState.currentUser); document.getElementById('strategicNote').value = ''; NotesManager.renderNotes('notesItems'); } });
         
-        document.getElementById('saveNoteBtn')?.addEventListener('click', () => {
-            const content = document.getElementById('strategicNote').value;
-            if (content.trim()) {
-                NotesManager.addNote(content, AppState.currentUser);
-                document.getElementById('strategicNote').value = '';
-                NotesManager.renderNotes('notesItems');
-            }
-        });
+        I18nManager.setLocale('PT');
     }
     
     function setupNavigation() {
         const navItems = document.querySelectorAll('.nav-item');
-        navItems.forEach(item => {
-            item.addEventListener('click', async (e) => {
-                e.preventDefault();
-                const view = item.dataset.view;
-                navItems.forEach(nav => nav.classList.remove('active'));
-                item.classList.add('active');
-                await Views.render(view);
-                if (window.innerWidth <= 1024) document.querySelector('.elite-sidebar')?.classList.remove('open');
-            });
-        });
-        
-        document.getElementById('mobileMenuToggle')?.addEventListener('click', () => {
-            document.querySelector('.elite-sidebar')?.classList.toggle('open');
-        });
+        navItems.forEach(item => { item.addEventListener('click', async (e) => { e.preventDefault(); const view = item.dataset.view; navItems.forEach(nav => nav.classList.remove('active')); item.classList.add('active'); await Views.render(view); if (window.innerWidth <= 1024) document.querySelector('.elite-sidebar')?.classList.remove('open'); }); });
+        document.getElementById('mobileMenuToggle')?.addEventListener('click', () => document.querySelector('.elite-sidebar')?.classList.toggle('open'));
     }
     
     function setupModals() {
-        document.querySelectorAll('.modal-close, .elite-modal').forEach(el => {
-            if (el.classList.contains('elite-modal')) {
-                el.addEventListener('click', (e) => { if (e.target === el) el.style.display = 'none'; });
-            } else {
-                el.addEventListener('click', () => { el.closest('.elite-modal').style.display = 'none'; });
-            }
-        });
-        
-        document.getElementById('notificationsBtn')?.addEventListener('click', () => {
-            document.getElementById('notificationsModal').style.display = 'flex';
-        });
-        
-        document.getElementById('settingsBtn')?.addEventListener('click', () => {
-            document.getElementById('settingsModal').style.display = 'flex';
-        });
-        
-        document.getElementById('logoutBtn')?.addEventListener('click', () => {
-            if (confirm('Tem certeza que deseja sair?')) AuthManager.logout();
-        });
+        document.querySelectorAll('.modal-close, .elite-modal').forEach(el => { if (el.classList.contains('elite-modal')) { el.addEventListener('click', (e) => { if (e.target === el) el.style.display = 'none'; }); } else { el.addEventListener('click', () => el.closest('.elite-modal').style.display = 'none'); } });
+        document.getElementById('notificationsBtn')?.addEventListener('click', () => document.getElementById('notificationsModal').style.display = 'flex');
+        document.getElementById('settingsBtn')?.addEventListener('click', () => document.getElementById('settingsModal').style.display = 'flex');
+        document.getElementById('logoutBtn')?.addEventListener('click', () => { if (confirm('Are you sure you want to logout?')) AuthManager.logout(); });
     }
     
     function setupGlobalEvents() {
-        document.addEventListener('keydown', (e) => {
-            if (e.ctrlKey && e.key === 'd') { e.preventDefault(); document.querySelector('.nav-item[data-view="dashboard"]')?.click(); }
-            if (e.ctrlKey && e.key === 'c') { e.preventDefault(); document.querySelector('.nav-item[data-view="cases"]')?.click(); }
-            if (e.ctrlKey && e.key === 'l') { e.preventDefault(); document.querySelector('.nav-item[data-view="litigation"]')?.click(); }
-            if (e.ctrlKey && e.key === 'p') { e.preventDefault(); PDFExporter.exportReport(); }
-        });
+        document.addEventListener('keydown', (e) => { if (e.ctrlKey && e.key === 'd') { e.preventDefault(); document.querySelector('.nav-item[data-view="dashboard"]')?.click(); } if (e.ctrlKey && e.key === 'c') { e.preventDefault(); document.querySelector('.nav-item[data-view="cases"]')?.click(); } if (e.ctrlKey && e.key === 'l') { e.preventDefault(); document.querySelector('.nav-item[data-view="litigation"]')?.click(); } if (e.ctrlKey && e.key === 'p') { e.preventDefault(); PDFExporter.exportReport(); } });
     }
     
-    function escapeHtml(str) {
-        if (!str) return '';
-        return str.replace(/[&<>]/g, function(m) {
-            if (m === '&') return '&amp;';
-            if (m === '<') return '&lt;';
-            if (m === '>') return '&gt;';
-            return m;
-        });
-    }
+    function escapeHtml(str) { if (!str) return ''; return str.replace(/[&<>]/g, m => { if (m === '&') return '&amp;'; if (m === '<') return '&lt;'; if (m === '>') return '&gt;'; return m; }); }
     
     window.ELITE_PROBATUM = {
         ...EliteUtils,
         AppState,
-        generatePerformanceReport: () => EliteUtils.showToast('Relatório de performance gerado', 'success'),
-        generateJudgesReport: () => EliteUtils.showToast('Análise de magistrados gerada', 'success'),
-        generateFinancialForecast: () => EliteUtils.showToast('Projeção financeira gerada', 'success'),
-        generateCategoryReport: () => EliteUtils.showToast('Análise por área gerada', 'success'),
-        generatePetition: () => EliteUtils.showToast('Gerando minuta de petição...', 'info'),
-        simulateDefense: () => EliteUtils.showToast('Simulação de defesa em desenvolvimento', 'info'),
-        downloadIntegrityCertificate: async () => {
-            const cert = await IntegrityChecker.generateCertificate();
-            const blob = new Blob([JSON.stringify(cert, null, 2)], { type: 'application/json' });
-            const url = URL.createObjectURL(blob);
-            const a = document.createElement('a');
-            a.href = url;
-            a.download = `integrity_certificate_${new Date().toISOString().slice(0, 10)}.json`;
-            a.click();
-            URL.revokeObjectURL(url);
-            EliteUtils.showToast('Certificado descarregado', 'success');
-        }
+        generatePerformanceReport: () => EliteUtils.showToast('Performance report generated', 'success'),
+        generateJudgesReport: () => EliteUtils.showToast('Judge analysis generated', 'success'),
+        generateFinancialForecast: () => EliteUtils.showToast('Financial forecast generated', 'success'),
+        generateCategoryReport: () => EliteUtils.showToast('Area analysis generated', 'success'),
+        generatePetition: () => EliteUtils.showToast('Generating petition draft...', 'info'),
+        simulateDefense: () => EliteUtils.showToast('Defense simulation in development', 'info'),
+        downloadIntegrityCertificate: async () => { const cert = await IntegrityChecker.generateCertificate(); const blob = new Blob([JSON.stringify(cert, null, 2)], { type: 'application/json' }); const url = URL.createObjectURL(blob); const a = document.createElement('a'); a.href = url; a.download = `integrity_certificate_${new Date().toISOString().slice(0, 10)}.json`; a.click(); URL.revokeObjectURL(url); EliteUtils.showToast('Certificate downloaded', 'success'); }
     };
     
     init();

@@ -5,6 +5,8 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
     <meta name="description" content="ELITE PROBATUM v1.0 — Inteligência Forense e Estratégica para Escritórios de Elite">
     <meta name="author" content="ELITE PROBATUM">
+    <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline' https://cdn.jsdelivr.net https://cdnjs.cloudflare.com https://fonts.googleapis.com; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src 'self' https://fonts.gstatic.com; connect-src 'self'; img-src 'self' data:; frame-ancestors 'none'; base-uri 'self'; form-action 'self';">
+    <meta name="referrer" content="strict-origin-when-cross-origin">
     <title>ELITE PROBATUM | Plataforma de Inteligência Forense</title>
     
     <!-- Favicon -->
@@ -25,6 +27,7 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/pouchdb@8.0.1/dist/pouchdb.min.js"></script>
 </head>
 <body>
     
@@ -35,17 +38,17 @@
         <div class="elite-splash-content">
             <div class="elite-logo">
                 <i class="fas fa-crown"></i>
-                <span>ELITE</span>
-                <span class="elite-badge">PROBATUM</span>
+                <span id="splashTitle">ELITE</span>
+                <span class="elite-badge" id="splashBadge">PROBATUM</span>
             </div>
-            <div class="elite-version">v1.0 · Estratégia Forense Avançada</div>
-            <div class="elite-tagline">Inteligência que vence casos</div>
+            <div class="elite-version" id="splashVersion">v1.0 · Secure Edition</div>
+            <div class="elite-tagline" id="splashTagline">Inteligência que vence casos</div>
             <div class="elite-loader">
                 <div class="loader-bar"></div>
-                <div class="loader-text">Carregando ecossistema estratégico...</div>
+                <div class="loader-text" id="loaderText">Carregando ecossistema estratégico...</div>
             </div>
             <button id="enterPlatformBtn" class="elite-enter-btn" style="display: none;">
-                <i class="fas fa-arrow-right"></i> ENTRAR NA PLATAFORMA
+                <i class="fas fa-arrow-right"></i> <span id="enterBtnText">ENTRAR NA PLATAFORMA</span>
             </button>
         </div>
         <div class="elite-laser-h"></div>
@@ -53,24 +56,33 @@
     </div>
     
     <!-- ================================================================
-         MODAL DE LOGIN PERSISTENTE
+         MODAL DE LOGIN PERSISTENTE COM FIDO2 SIMULATION
     ================================================================ -->
     <div id="loginOverlay" class="login-overlay" style="display: none;">
         <div class="login-modal">
-            <i class="fas fa-shield-alt" style="font-size: 3rem; color: var(--elite-primary); margin-bottom: 16px;"></i>
-            <h2>ELITE PROBATUM</h2>
-            <p>Autenticação necessária para aceder à plataforma</p>
+            <i class="fas fa-shield-hooded" style="font-size: 3rem; color: var(--elite-primary); margin-bottom: 16px;"></i>
+            <h2 id="loginTitle">ELITE PROBATUM</h2>
+            <p id="loginSubtitle">Autenticação necessária para aceder à plataforma</p>
             <div class="form-group">
-                <input type="text" id="loginUser" placeholder="Utilizador" autocomplete="off">
+                <input type="text" id="loginUser" placeholder="Utilizador / User" autocomplete="off">
             </div>
             <div class="form-group">
-                <input type="password" id="loginPass" placeholder="Palavra-passe">
+                <input type="password" id="loginPass" placeholder="Palavra-passe / Password">
             </div>
-            <div id="loginError" class="login-error">Credenciais inválidas</div>
+            <div class="form-group" id="yubikeyGroup" style="display: none;">
+                <button id="yubikeyBtn" class="elite-btn secondary full-width">
+                    <i class="fas fa-usb"></i> <span id="yubikeyText">Autenticar com YubiKey</span>
+                </button>
+            </div>
+            <div id="loginError" class="login-error">Credenciais inválidas / Invalid credentials</div>
             <button id="loginBtn" class="elite-btn primary full-width">
-                <i class="fas fa-key"></i> Autenticar
+                <i class="fas fa-key"></i> <span id="loginBtnText">Autenticar</span>
             </button>
-            <p style="margin-top: 16px; font-size: 0.7rem; color: var(--text-tertiary);">
+            <div class="language-selector" style="margin-top: 20px; text-align: center;">
+                <button id="langPT" class="lang-btn active">🇵🇹 PT</button>
+                <button id="langEN" class="lang-btn">🇬🇧 EN</button>
+            </div>
+            <p style="margin-top: 16px; font-size: 0.7rem; color: var(--text-tertiary);" id="loginHint">
                 <i class="fas fa-info-circle"></i> Credenciais: admin / probatum
             </p>
         </div>
@@ -91,38 +103,38 @@
             <nav class="sidebar-nav">
                 <a href="#" class="nav-item active" data-view="dashboard">
                     <i class="fas fa-chart-pie"></i>
-                    <span>Dashboard</span>
+                    <span id="navDashboard">Dashboard</span>
                     <span class="nav-badge" id="dashboardBadge"></span>
                 </a>
                 <a href="#" class="nav-item" data-view="cases">
                     <i class="fas fa-folder-open"></i>
-                    <span>Casos</span>
+                    <span id="navCases">Casos</span>
                     <span class="nav-badge" id="casesBadge">0</span>
                 </a>
                 <a href="#" class="nav-item" data-view="litigation">
                     <i class="fas fa-brain"></i>
-                    <span>Inteligência de Litígio</span>
+                    <span id="navLitigation">Inteligência de Litígio</span>
                 </a>
                 <a href="#" class="nav-item" data-view="judges">
                     <i class="fas fa-gavel"></i>
-                    <span>Perfil de Magistrados</span>
+                    <span id="navJudges">Perfil de Magistrados</span>
                 </a>
                 <a href="#" class="nav-item" data-view="adversary">
                     <i class="fas fa-users"></i>
-                    <span>Perfil de Oposição</span>
+                    <span id="navAdversary">Perfil de Oposição</span>
                 </a>
                 <a href="#" class="nav-item" data-view="heatmap">
                     <i class="fas fa-fire"></i>
-                    <span>Juris-Heatmap</span>
+                    <span id="navHeatmap">Juris-Heatmap</span>
                 </a>
                 <a href="#" class="nav-item" data-view="clients">
                     <i class="fas fa-users"></i>
-                    <span>Clientes</span>
+                    <span id="navClients">Clientes</span>
                     <span class="nav-badge" id="clientsBadge"></span>
                 </a>
                 <a href="#" class="nav-item" data-view="reports">
                     <i class="fas fa-file-alt"></i>
-                    <span>Relatórios</span>
+                    <span id="navReports">Relatórios</span>
                 </a>
             </nav>
             
@@ -134,9 +146,14 @@
                         <small id="userRole">Sócia · Litígio Estratégico</small>
                     </div>
                 </div>
-                <button class="logout-btn" id="logoutBtn">
-                    <i class="fas fa-sign-out-alt"></i>
-                </button>
+                <div class="footer-actions">
+                    <button id="langToggleSidebar" class="icon-btn" title="PT/EN">
+                        <i class="fas fa-language"></i>
+                    </button>
+                    <button class="logout-btn" id="logoutBtn">
+                        <i class="fas fa-sign-out-alt"></i>
+                    </button>
+                </div>
             </div>
         </aside>
         
@@ -154,23 +171,26 @@
                 <div class="header-right">
                     <div class="header-stats">
                         <div class="stat-item">
-                            <span class="stat-label">Casos Ativos</span>
+                            <span class="stat-label" id="statActiveCases">Casos Ativos</span>
                             <span class="stat-value" id="headerActiveCases">0</span>
                         </div>
                         <div class="stat-item">
-                            <span class="stat-label">Valor em Disputa</span>
+                            <span class="stat-label" id="statDisputeValue">Valor em Disputa</span>
                             <span class="stat-value" id="headerDisputeValue">€0</span>
                         </div>
                         <div class="stat-item">
-                            <span class="stat-label">Taxa Sucesso</span>
+                            <span class="stat-label" id="statSuccessRate">Taxa Sucesso</span>
                             <span class="stat-value" id="headerSuccessRate">0%</span>
                         </div>
                     </div>
                     <div class="header-actions">
-                        <button id="integrityCheckBtn" class="icon-btn" title="Integrity Check - Verificar Cadeia de Custódia">
+                        <button id="langToggle" class="icon-btn" title="PT/EN">
+                            <i class="fas fa-language"></i>
+                        </button>
+                        <button id="integrityCheckBtn" class="icon-btn" title="Integrity Check">
                             <i class="fas fa-shield-hooded"></i>
                         </button>
-                        <button id="exportReportBtn" class="icon-btn" title="Exportar Relatório Pericial">
+                        <button id="exportReportBtn" class="icon-btn" title="Exportar Relatório">
                             <i class="fas fa-file-pdf"></i>
                         </button>
                         <button id="notificationsBtn" class="icon-btn">
@@ -200,13 +220,13 @@
     <div id="notificationsModal" class="elite-modal" style="display: none;">
         <div class="modal-content">
             <div class="modal-header">
-                <h3><i class="fas fa-bell"></i> Alertas Estratégicos</h3>
+                <h3><i class="fas fa-bell"></i> <span id="modalNotificationsTitle">Alertas Estratégicos</span></h3>
                 <button class="modal-close">&times;</button>
             </div>
             <div class="modal-body" id="notificationsList">
                 <div class="notification-empty">
                     <i class="fas fa-check-circle"></i>
-                    <p>Nenhum alerta no momento</p>
+                    <p id="noAlertsText">Nenhum alerta no momento</p>
                 </div>
             </div>
         </div>
@@ -216,34 +236,45 @@
     <div id="settingsModal" class="elite-modal" style="display: none;">
         <div class="modal-content">
             <div class="modal-header">
-                <h3><i class="fas fa-cog"></i> Configurações</h3>
+                <h3><i class="fas fa-cog"></i> <span id="modalSettingsTitle">Configurações</span></h3>
                 <button class="modal-close">&times;</button>
             </div>
             <div class="modal-body">
                 <div class="settings-group">
-                    <h4>Preferências de IA</h4>
+                    <h4 id="settingsAI">Preferências de IA</h4>
                     <label class="setting-item">
                         <input type="checkbox" id="enablePredictiveAI" checked>
-                        <span>Previsão automática de êxito</span>
+                        <span id="settingPredictiveAI">Previsão automática de êxito</span>
                     </label>
                     <label class="setting-item">
                         <input type="checkbox" id="enableJudgeProfiling" checked>
-                        <span>Perfil de magistrados</span>
+                        <span id="settingJudgeProfiling">Perfil de magistrados</span>
                     </label>
                     <label class="setting-item">
                         <input type="checkbox" id="enableAdversaryProfiling" checked>
-                        <span>Perfil de escritórios de oposição</span>
+                        <span id="settingAdversaryProfiling">Perfil de escritórios de oposição</span>
                     </label>
                 </div>
                 <div class="settings-group">
-                    <h4>Notificações</h4>
+                    <h4 id="settingsNotifications">Notificações</h4>
                     <label class="setting-item">
                         <input type="checkbox" id="notifyNewDecisions" checked>
-                        <span>Novas decisões relevantes</span>
+                        <span id="settingNewDecisions">Novas decisões relevantes</span>
                     </label>
                     <label class="setting-item">
                         <input type="checkbox" id="notifyDeadlines" checked>
-                        <span>Prazos processuais</span>
+                        <span id="settingDeadlines">Prazos processuais</span>
+                    </label>
+                </div>
+                <div class="settings-group">
+                    <h4 id="settingsSecurity">Segurança</h4>
+                    <label class="setting-item">
+                        <input type="checkbox" id="enableHoneyfiles" checked>
+                        <span id="settingHoneyfiles">Ficheiros Armadilha (Digital Canary)</span>
+                    </label>
+                    <label class="setting-item">
+                        <input type="checkbox" id="enableBiometrics" checked>
+                        <span id="settingBiometrics">Biometria Comportamental</span>
                     </label>
                 </div>
             </div>
@@ -254,12 +285,10 @@
     <div id="caseDetailModal" class="elite-modal" style="display: none;">
         <div class="modal-content">
             <div class="modal-header">
-                <h3><i class="fas fa-folder-open"></i> Detalhes do Caso</h3>
+                <h3><i class="fas fa-folder-open"></i> <span id="caseDetailTitle">Detalhes do Caso</span></h3>
                 <button class="modal-close">&times;</button>
             </div>
-            <div class="modal-body" id="caseDetailBody">
-                <!-- Conteúdo dinâmico -->
-            </div>
+            <div class="modal-body" id="caseDetailBody"></div>
         </div>
     </div>
     
@@ -267,25 +296,25 @@
     <div id="newClientModal" class="elite-modal" style="display: none;">
         <div class="modal-content">
             <div class="modal-header">
-                <h3><i class="fas fa-user-plus"></i> Novo Cliente</h3>
+                <h3><i class="fas fa-user-plus"></i> <span id="newClientTitle">Novo Cliente</span></h3>
                 <button class="modal-close">&times;</button>
             </div>
             <div class="modal-body">
                 <form id="newClientForm">
                     <div class="form-group">
-                        <label>Nome do Cliente *</label>
+                        <label id="clientNameLabel">Nome do Cliente *</label>
                         <input type="text" id="clientName" required>
                     </div>
                     <div class="form-group">
-                        <label>NIF / VATIN *</label>
+                        <label id="clientNifLabel">NIF / VATIN *</label>
                         <input type="text" id="clientNif" required>
                     </div>
                     <div class="form-group">
-                        <label>Valor da Causa (€) *</label>
+                        <label id="clientValueLabel">Valor da Causa (€) *</label>
                         <input type="number" id="clientCaseValue" required>
                     </div>
                     <div class="form-group">
-                        <label>Jurisdição / Tribunal</label>
+                        <label id="clientCourtLabel">Jurisdição / Tribunal</label>
                         <select id="clientCourt">
                             <option value="lisboa">Lisboa</option>
                             <option value="porto">Porto</option>
@@ -295,7 +324,7 @@
                         </select>
                     </div>
                     <div class="form-group">
-                        <label>Área do Direito</label>
+                        <label id="clientCategoryLabel">Área do Direito</label>
                         <select id="clientCategory">
                             <option value="civil">Direito Civil</option>
                             <option value="criminal">Direito Penal</option>
@@ -305,7 +334,7 @@
                         </select>
                     </div>
                     <button type="submit" class="elite-btn primary full-width">
-                        <i class="fas fa-save"></i> Criar Cliente
+                        <i class="fas fa-save"></i> <span id="createClientBtnText">Criar Cliente</span>
                     </button>
                 </form>
             </div>
@@ -316,16 +345,16 @@
     <div id="notesModal" class="elite-modal" style="display: none;">
         <div class="modal-content">
             <div class="modal-header">
-                <h3><i class="fas fa-pen"></i> Notas Estratégicas</h3>
+                <h3><i class="fas fa-pen"></i> <span id="notesTitle">Notas Estratégicas</span></h3>
                 <button class="modal-close">&times;</button>
             </div>
             <div class="modal-body">
                 <textarea id="strategicNote" rows="4" placeholder="Escreva uma nota estratégica... (com hash SHA-256 para integridade)"></textarea>
                 <button id="saveNoteBtn" class="elite-btn primary full-width" style="margin-top: 12px;">
-                    <i class="fas fa-lock"></i> Guardar Nota (com hash)
+                    <i class="fas fa-lock"></i> <span id="saveNoteText">Guardar Nota (com hash)</span>
                 </button>
                 <div id="notesList" class="notes-container" style="margin-top: 20px;">
-                    <h4>Notas Anteriores</h4>
+                    <h4 id="previousNotesTitle">Notas Anteriores</h4>
                     <div id="notesItems"></div>
                 </div>
             </div>
@@ -336,11 +365,28 @@
     <div id="integrityModal" class="elite-modal" style="display: none;">
         <div class="modal-content">
             <div class="modal-header">
-                <h3><i class="fas fa-shield-hooded"></i> Integrity Check - Cadeia de Custódia</h3>
+                <h3><i class="fas fa-shield-hooded"></i> <span id="integrityTitle">Integrity Check - Cadeia de Custódia</span></h3>
                 <button class="modal-close">&times;</button>
             </div>
             <div class="modal-body" id="integrityBody">
                 <div class="integrity-loading">A verificar integridade dos dados...</div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Modal de Digital Canary Alert -->
+    <div id="canaryAlertModal" class="elite-modal" style="display: none;">
+        <div class="modal-content" style="border-color: var(--elite-danger);">
+            <div class="modal-header" style="border-bottom-color: var(--elite-danger);">
+                <h3><i class="fas fa-skull"></i> <span id="canaryTitle">ALERTA DE SEGURANÇA - DIGITAL CANARY</span></h3>
+                <button class="modal-close">&times;</button>
+            </div>
+            <div class="modal-body" id="canaryBody">
+                <div class="canary-warning">
+                    <i class="fas fa-exclamation-triangle" style="font-size: 3rem; color: var(--elite-danger);"></i>
+                    <p id="canaryMessage">Ficheiro armadilha detetado! O sistema entrou em lockdown automático.</p>
+                    <p id="canaryInstruction">Contacte imediatamente o administrador de segurança.</p>
+                </div>
             </div>
         </div>
     </div>
