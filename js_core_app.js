@@ -57,49 +57,49 @@
     
     const MOCK_CASES = [
         // Insolvência (CIRE) - 3 processos
-        { id: 'INS001', client: 'Construtora ABC, Lda', category: 'insolvency', value: 450000, successProbability: 0.48, status: 'active', court: 'Lisboa', startDate: '2022-08-15', hoursSpent: 120, resourceLevel: 'senior', evidence: ['Insolvência culposa', 'Lista de credores extensa'], adversary: 'PLMJ' },
-        { id: 'INS002', client: 'Retail Solutions, Lda', category: 'insolvency', value: 125000, successProbability: 0.52, status: 'active', court: 'Porto', startDate: '2023-02-10', hoursSpent: 65, resourceLevel: 'associate', evidence: ['Exoneração passivo', 'Ativo remanescente'], adversary: 'VdA' },
-        { id: 'INS003', client: 'Tech Start, Unipessoal', category: 'insolvency', value: 89000, successProbability: 0.44, status: 'pending', court: 'Braga', startDate: '2023-09-01', hoursSpent: 38, resourceLevel: 'junior', evidence: ['Processo CIRE', 'Credores privilegiados'], adversary: 'Garrigues' },
+        { id: 'INS001', client: 'Construtora ABC, Lda', category: 'insolvency', categoryName: 'Insolvência (CIRE)', value: 450000, successProbability: 0.48, status: 'active', court: 'Lisboa', startDate: '2022-08-15', hoursSpent: 120, resourceLevel: 'senior', evidence: ['Insolvência culposa', 'Lista de credores extensa'], adversary: 'PLMJ', judge: 'Dr. António Costa' },
+        { id: 'INS002', client: 'Retail Solutions, Lda', category: 'insolvency', categoryName: 'Insolvência (CIRE)', value: 125000, successProbability: 0.52, status: 'active', court: 'Porto', startDate: '2023-02-10', hoursSpent: 65, resourceLevel: 'associate', evidence: ['Exoneração passivo', 'Ativo remanescente'], adversary: 'VdA', judge: 'Dra. Sofia Mendes' },
+        { id: 'INS003', client: 'Tech Start, Unipessoal', category: 'insolvency', categoryName: 'Insolvência (CIRE)', value: 89000, successProbability: 0.44, status: 'pending', court: 'Braga', startDate: '2023-09-01', hoursSpent: 38, resourceLevel: 'junior', evidence: ['Processo CIRE', 'Credores privilegiados'], adversary: 'Garrigues', judge: 'Dr. Ricardo Alves' },
         
         // Contencioso Laboral - 3 processos
-        { id: 'LAB001', client: 'Carlos Manuel Santos', category: 'labor', value: 15720, successProbability: 0.75, status: 'active', court: 'Porto', startDate: '2023-03-01', hoursSpent: 38, resourceLevel: 'associate', evidence: ['Despedimento ilícito', 'Testemunhas presenciais'], adversary: 'VdA' },
-        { id: 'LAB002', client: 'Ana Sofia Rodrigues', category: 'labor', value: 28900, successProbability: 0.68, status: 'active', court: 'Lisboa', startDate: '2023-08-15', hoursSpent: 42, resourceLevel: 'senior', evidence: ['Contrato sem termo', 'Antiguidade 8 anos'], adversary: 'PLMJ' },
-        { id: 'LAB003', client: 'Pedro Miguel Martins', category: 'labor', value: 9500, successProbability: 0.82, status: 'active', court: 'Lisboa', startDate: '2023-10-01', hoursSpent: 22, resourceLevel: 'junior', evidence: ['Despedimento coletivo', 'Acordo com sindicato'], adversary: 'Cuatrecasas' },
+        { id: 'LAB001', client: 'Carlos Manuel Santos', category: 'labor', categoryName: 'Direito do Trabalho', value: 15720, successProbability: 0.75, status: 'active', court: 'Porto', startDate: '2023-03-01', hoursSpent: 38, resourceLevel: 'associate', evidence: ['Despedimento ilícito', 'Testemunhas presenciais'], adversary: 'VdA', judge: 'Dra. Sofia Mendes' },
+        { id: 'LAB002', client: 'Ana Sofia Rodrigues', category: 'labor', categoryName: 'Direito do Trabalho', value: 28900, successProbability: 0.68, status: 'active', court: 'Lisboa', startDate: '2023-08-15', hoursSpent: 42, resourceLevel: 'senior', evidence: ['Contrato sem termo', 'Antiguidade 8 anos'], adversary: 'PLMJ', judge: 'Dr. António Costa' },
+        { id: 'LAB003', client: 'Pedro Miguel Martins', category: 'labor', categoryName: 'Direito do Trabalho', value: 9500, successProbability: 0.82, status: 'active', court: 'Lisboa', startDate: '2023-10-01', hoursSpent: 22, resourceLevel: 'junior', evidence: ['Despedimento coletivo', 'Acordo com sindicato'], adversary: 'Cuatrecasas', judge: 'Dra. Teresa Lopes' },
         
         // Direito Civil - 3 processos
-        { id: 'CIV001', client: 'João Manuel Ferreira', category: 'civil', value: 28450, successProbability: 0.72, status: 'active', court: 'Lisboa', startDate: '2023-01-15', hoursSpent: 45, resourceLevel: 'senior', evidence: ['Prova documental completa', 'Jurisprudência favorável'], adversary: 'PLMJ' },
-        { id: 'CIV002', client: 'Maria Isabel Lopes', category: 'civil', value: 15200, successProbability: 0.58, status: 'active', court: 'Porto', startDate: '2023-06-10', hoursSpent: 32, resourceLevel: 'associate', evidence: ['Prova testemunhal frágil', 'Ausência de perícia'], adversary: 'VdA' },
-        { id: 'CIV003', client: 'António José Ribeiro', category: 'civil', value: 42300, successProbability: 0.81, status: 'active', court: 'Braga', startDate: '2023-09-20', hoursSpent: 28, resourceLevel: 'senior', evidence: ['Prova documental completa', 'Jurisprudência favorável'], adversary: 'Garrigues' },
+        { id: 'CIV001', client: 'João Manuel Ferreira', category: 'civil', categoryName: 'Direito Civil', value: 28450, successProbability: 0.72, status: 'active', court: 'Lisboa', startDate: '2023-01-15', hoursSpent: 45, resourceLevel: 'senior', evidence: ['Prova documental completa', 'Jurisprudência favorável'], adversary: 'PLMJ', judge: 'Dr. António Costa' },
+        { id: 'CIV002', client: 'Maria Isabel Lopes', category: 'civil', categoryName: 'Direito Civil', value: 15200, successProbability: 0.58, status: 'active', court: 'Porto', startDate: '2023-06-10', hoursSpent: 32, resourceLevel: 'associate', evidence: ['Prova testemunhal frágil', 'Ausência de perícia'], adversary: 'VdA', judge: 'Dra. Sofia Mendes' },
+        { id: 'CIV003', client: 'António José Ribeiro', category: 'civil', categoryName: 'Direito Civil', value: 42300, successProbability: 0.81, status: 'active', court: 'Braga', startDate: '2023-09-20', hoursSpent: 28, resourceLevel: 'senior', evidence: ['Prova documental completa', 'Jurisprudência favorável'], adversary: 'Garrigues', judge: 'Dr. Ricardo Alves' },
         
         // Direito Fiscal - 3 processos
-        { id: 'TAX001', client: 'Empresa XYZ, SA', category: 'tax', value: 125000, successProbability: 0.68, status: 'active', court: 'Lisboa', startDate: '2022-11-10', hoursSpent: 85, resourceLevel: 'senior', evidence: ['Notificação prévia AT', 'Prova digital com hash'], adversary: 'VdA' },
-        { id: 'TAX002', client: 'Comércio Global, Lda', category: 'tax', value: 45200, successProbability: 0.61, status: 'active', court: 'Porto', startDate: '2023-04-20', hoursSpent: 52, resourceLevel: 'associate', evidence: ['Regularização espontânea', 'Jurisprudência desfavorável'], adversary: 'PLMJ' },
-        { id: 'TAX003', client: 'Serviços Integrados, SA', category: 'tax', value: 78400, successProbability: 0.55, status: 'pending', court: 'Coimbra', startDate: '2023-07-05', hoursSpent: 48, resourceLevel: 'senior', evidence: ['Discrepância DAC7', 'Recurso pendente'], adversary: 'Garrigues' },
+        { id: 'TAX001', client: 'Empresa XYZ, SA', category: 'tax', categoryName: 'Direito Fiscal', value: 125000, successProbability: 0.68, status: 'active', court: 'Lisboa', startDate: '2022-11-10', hoursSpent: 85, resourceLevel: 'senior', evidence: ['Notificação prévia AT', 'Prova digital com hash'], adversary: 'VdA', judge: 'Dr. Pedro Martins' },
+        { id: 'TAX002', client: 'Comércio Global, Lda', category: 'tax', categoryName: 'Direito Fiscal', value: 45200, successProbability: 0.61, status: 'active', court: 'Porto', startDate: '2023-04-20', hoursSpent: 52, resourceLevel: 'associate', evidence: ['Regularização espontânea', 'Jurisprudência desfavorável'], adversary: 'PLMJ', judge: 'Dra. Sofia Mendes' },
+        { id: 'TAX003', client: 'Serviços Integrados, SA', category: 'tax', categoryName: 'Direito Fiscal', value: 78400, successProbability: 0.55, status: 'pending', court: 'Coimbra', startDate: '2023-07-05', hoursSpent: 48, resourceLevel: 'senior', evidence: ['Discrepância DAC7', 'Recurso pendente'], adversary: 'Garrigues', judge: 'Dr. Rui Silva' },
         
         // Direito Comercial - 3 processos
-        { id: 'COM001', client: 'Distribuidora Nacional, Lda', category: 'commercial', value: 32400, successProbability: 0.88, status: 'active', court: 'Braga', startDate: '2023-05-15', hoursSpent: 35, resourceLevel: 'senior', evidence: ['Violação acordo', 'Cláusula penal'], adversary: 'Cuatrecasas' },
-        { id: 'COM002', client: 'Importadora Europa, SA', category: 'commercial', value: 56700, successProbability: 0.71, status: 'active', court: 'Lisboa', startDate: '2023-03-20', hoursSpent: 48, resourceLevel: 'associate', evidence: ['Contrato internacional', 'Arbitragem'], adversary: 'VdA' },
-        { id: 'COM003', client: 'Logística Expresso, Lda', category: 'commercial', value: 21300, successProbability: 0.79, status: 'pending', court: 'Porto', startDate: '2023-10-10', hoursSpent: 22, resourceLevel: 'junior', evidence: ['Faturação em falta', 'Diligências prévias'], adversary: 'PLMJ' },
+        { id: 'COM001', client: 'Distribuidora Nacional, Lda', category: 'commercial', categoryName: 'Direito Comercial', value: 32400, successProbability: 0.88, status: 'active', court: 'Braga', startDate: '2023-05-15', hoursSpent: 35, resourceLevel: 'senior', evidence: ['Violação acordo', 'Cláusula penal'], adversary: 'Cuatrecasas', judge: 'Dr. Ricardo Alves' },
+        { id: 'COM002', client: 'Importadora Europa, SA', category: 'commercial', categoryName: 'Direito Comercial', value: 56700, successProbability: 0.71, status: 'active', court: 'Lisboa', startDate: '2023-03-20', hoursSpent: 48, resourceLevel: 'associate', evidence: ['Contrato internacional', 'Arbitragem'], adversary: 'VdA', judge: 'Dr. António Costa' },
+        { id: 'COM003', client: 'Logística Expresso, Lda', category: 'commercial', categoryName: 'Direito Comercial', value: 21300, successProbability: 0.79, status: 'pending', court: 'Porto', startDate: '2023-10-10', hoursSpent: 22, resourceLevel: 'junior', evidence: ['Faturação em falta', 'Diligências prévias'], adversary: 'PLMJ', judge: 'Dra. Sofia Mendes' },
         
         // Direito Penal - 3 processos
-        { id: 'PEN001', client: 'Rui Fonseca', category: 'criminal', value: 0, successProbability: 0.72, status: 'active', court: 'Lisboa', startDate: '2023-01-20', hoursSpent: 55, resourceLevel: 'senior', evidence: ['Recurso penal', 'Prova testemunhal'], adversary: 'VdA' },
-        { id: 'PEN002', client: 'Maria Santos', category: 'criminal', value: 0, successProbability: 0.58, status: 'active', court: 'Porto', startDate: '2023-06-15', hoursSpent: 42, resourceLevel: 'associate', evidence: ['Queixa crime', 'Prova digital'], adversary: 'PLMJ' },
-        { id: 'PEN003', client: 'João Mendes', category: 'criminal', value: 0, successProbability: 0.65, status: 'pending', court: 'Braga', startDate: '2023-09-10', hoursSpent: 28, resourceLevel: 'junior', evidence: ['Habeas corpus', 'Medidas coação'], adversary: 'Garrigues' },
+        { id: 'PEN001', client: 'Rui Fonseca', category: 'criminal', categoryName: 'Direito Penal', value: 0, successProbability: 0.72, status: 'active', court: 'Lisboa', startDate: '2023-01-20', hoursSpent: 55, resourceLevel: 'senior', evidence: ['Recurso penal', 'Prova testemunhal'], adversary: 'VdA', judge: 'Dr. João Costa' },
+        { id: 'PEN002', client: 'Maria Santos', category: 'criminal', categoryName: 'Direito Penal', value: 0, successProbability: 0.58, status: 'active', court: 'Porto', startDate: '2023-06-15', hoursSpent: 42, resourceLevel: 'associate', evidence: ['Queixa crime', 'Prova digital'], adversary: 'PLMJ', judge: 'Dra. Sofia Mendes' },
+        { id: 'PEN003', client: 'João Mendes', category: 'criminal', categoryName: 'Direito Penal', value: 0, successProbability: 0.65, status: 'pending', court: 'Braga', startDate: '2023-09-10', hoursSpent: 28, resourceLevel: 'junior', evidence: ['Habeas corpus', 'Medidas coação'], adversary: 'Garrigues', judge: 'Dr. Ricardo Alves' },
         
         // Direito da Família - 3 processos
-        { id: 'FAM001', client: 'Ana Pereira', category: 'family', value: 8500, successProbability: 0.91, status: 'active', court: 'Lisboa', startDate: '2023-08-01', hoursSpent: 18, resourceLevel: 'associate', evidence: ['Regulação poder paternal', 'Acordo consensual'], adversary: 'Cuatrecasas' },
-        { id: 'FAM002', client: 'Carlos Mendes', category: 'family', value: 12300, successProbability: 0.78, status: 'active', court: 'Porto', startDate: '2023-04-10', hoursSpent: 32, resourceLevel: 'senior', evidence: ['Divórcio litigioso', 'Partilha de bens'], adversary: 'VdA' },
-        { id: 'FAM003', client: 'Sofia Rodrigues', category: 'family', value: 5600, successProbability: 0.85, status: 'pending', court: 'Coimbra', startDate: '2023-10-15', hoursSpent: 12, resourceLevel: 'junior', evidence: ['Alimentos devidos', 'Acordo prévio'], adversary: 'PLMJ' },
+        { id: 'FAM001', client: 'Ana Pereira', category: 'family', categoryName: 'Direito da Família', value: 8500, successProbability: 0.91, status: 'active', court: 'Lisboa', startDate: '2023-08-01', hoursSpent: 18, resourceLevel: 'associate', evidence: ['Regulação poder paternal', 'Acordo consensual'], adversary: 'Cuatrecasas', judge: 'Dra. Teresa Lopes' },
+        { id: 'FAM002', client: 'Carlos Mendes', category: 'family', categoryName: 'Direito da Família', value: 12300, successProbability: 0.78, status: 'active', court: 'Porto', startDate: '2023-04-10', hoursSpent: 32, resourceLevel: 'senior', evidence: ['Divórcio litigioso', 'Partilha de bens'], adversary: 'VdA', judge: 'Dra. Sofia Mendes' },
+        { id: 'FAM003', client: 'Sofia Rodrigues', category: 'family', categoryName: 'Direito da Família', value: 5600, successProbability: 0.85, status: 'pending', court: 'Coimbra', startDate: '2023-10-15', hoursSpent: 12, resourceLevel: 'junior', evidence: ['Alimentos devidos', 'Acordo prévio'], adversary: 'PLMJ', judge: 'Dr. Rui Silva' },
         
         // Propriedade Intelectual - 3 processos
-        { id: 'IP001', client: 'Innovate Tech, Lda', category: 'intellectual', value: 45200, successProbability: 0.79, status: 'active', court: 'Porto', startDate: '2023-07-20', hoursSpent: 42, resourceLevel: 'senior', evidence: ['Violação patente', 'Prova pericial'], adversary: 'Garrigues' },
-        { id: 'IP002', client: 'Creative Solutions, SA', category: 'intellectual', value: 28700, successProbability: 0.72, status: 'active', court: 'Lisboa', startDate: '2023-05-05', hoursSpent: 35, resourceLevel: 'associate', evidence: ['Marca registada', 'Contrafação'], adversary: 'VdA' },
-        { id: 'IP003', client: 'Design Studio, Lda', category: 'intellectual', value: 15400, successProbability: 0.68, status: 'pending', court: 'Porto', startDate: '2023-09-25', hoursSpent: 24, resourceLevel: 'junior', evidence: ['Direitos autorais', 'Plágio'], adversary: 'PLMJ' },
+        { id: 'IP001', client: 'Innovate Tech, Lda', category: 'intellectual', categoryName: 'Propriedade Intelectual', value: 45200, successProbability: 0.79, status: 'active', court: 'Porto', startDate: '2023-07-20', hoursSpent: 42, resourceLevel: 'senior', evidence: ['Violação patente', 'Prova pericial'], adversary: 'Garrigues', judge: 'Dra. Isabel Ferreira' },
+        { id: 'IP002', client: 'Creative Solutions, SA', category: 'intellectual', categoryName: 'Propriedade Intelectual', value: 28700, successProbability: 0.72, status: 'active', court: 'Lisboa', startDate: '2023-05-05', hoursSpent: 35, resourceLevel: 'associate', evidence: ['Marca registada', 'Contrafação'], adversary: 'VdA', judge: 'Dr. António Costa' },
+        { id: 'IP003', client: 'Design Studio, Lda', category: 'intellectual', categoryName: 'Propriedade Intelectual', value: 15400, successProbability: 0.68, status: 'pending', court: 'Porto', startDate: '2023-09-25', hoursSpent: 24, resourceLevel: 'junior', evidence: ['Direitos autorais', 'Plágio'], adversary: 'PLMJ', judge: 'Dra. Sofia Mendes' },
         
         // Direito Administrativo - 3 processos
-        { id: 'ADM001', client: 'Construções do Sul, SA', category: 'administrative', value: 18900, successProbability: 0.64, status: 'active', court: 'Lisboa', startDate: '2023-02-10', hoursSpent: 38, resourceLevel: 'senior', evidence: ['Impugnação ato administrativo'], adversary: 'Cuatrecasas' },
-        { id: 'ADM002', client: 'Ambiente Sustentável, Lda', category: 'administrative', value: 32100, successProbability: 0.59, status: 'active', court: 'Porto', startDate: '2023-05-18', hoursSpent: 42, resourceLevel: 'associate', evidence: ['Licenciamento ambiental'], adversary: 'VdA' },
-        { id: 'ADM003', client: 'Saúde Integrada, SA', category: 'administrative', value: 45600, successProbability: 0.71, status: 'pending', court: 'Coimbra', startDate: '2023-08-22', hoursSpent: 28, resourceLevel: 'junior', evidence: ['Concurso público', 'Caducidade'], adversary: 'PLMJ' }
+        { id: 'ADM001', client: 'Construções do Sul, SA', category: 'administrative', categoryName: 'Direito Administrativo', value: 18900, successProbability: 0.64, status: 'active', court: 'Lisboa', startDate: '2023-02-10', hoursSpent: 38, resourceLevel: 'senior', evidence: ['Impugnação ato administrativo'], adversary: 'Cuatrecasas', judge: 'Dr. Pedro Martins' },
+        { id: 'ADM002', client: 'Ambiente Sustentável, Lda', category: 'administrative', categoryName: 'Direito Administrativo', value: 32100, successProbability: 0.59, status: 'active', court: 'Porto', startDate: '2023-05-18', hoursSpent: 42, resourceLevel: 'associate', evidence: ['Licenciamento ambiental'], adversary: 'VdA', judge: 'Dra. Sofia Mendes' },
+        { id: 'ADM003', client: 'Saúde Integrada, SA', category: 'administrative', categoryName: 'Direito Administrativo', value: 45600, successProbability: 0.71, status: 'pending', court: 'Coimbra', startDate: '2023-08-22', hoursSpent: 28, resourceLevel: 'junior', evidence: ['Concurso público', 'Caducidade'], adversary: 'PLMJ', judge: 'Dr. Rui Silva' }
     ];
     
     // =========================================================================
@@ -108,10 +108,25 @@
     
     let activeCharts = {};
     
+    function getCategoryName(category) {
+        const names = {
+            civil: 'Direito Civil',
+            criminal: 'Direito Penal',
+            labor: 'Direito do Trabalho',
+            commercial: 'Direito Comercial',
+            tax: 'Direito Fiscal',
+            insolvency: 'Insolvência (CIRE)',
+            family: 'Direito da Família',
+            intellectual: 'Propriedade Intelectual',
+            administrative: 'Direito Administrativo'
+        };
+        return names[category] || category;
+    }
+    
     function renderDashboard() {
         const container = document.getElementById('viewContainer');
         if (!container) {
-            console.error('[ELITE] viewContainer não encontrado');
+            console.error('[ELITE PROBATUM] viewContainer não encontrado');
             return;
         }
         
@@ -193,21 +208,6 @@
         // Inicializar gráficos
         initPortfolioChart();
         initCategoryChart(categoryCount);
-    }
-    
-    function getCategoryName(category) {
-        const names = {
-            civil: 'Direito Civil',
-            criminal: 'Direito Penal',
-            labor: 'Direito do Trabalho',
-            commercial: 'Direito Comercial',
-            tax: 'Direito Fiscal',
-            insolvency: 'Insolvência (CIRE)',
-            family: 'Direito da Família',
-            intellectual: 'Propriedade Intelectual',
-            administrative: 'Direito Administrativo'
-        };
-        return names[category] || category;
     }
     
     function initPortfolioChart() {
@@ -300,6 +300,8 @@
             renderDashboard();
             EliteUtils.showToast('Dashboard carregado com 27 processos estratégicos', 'success');
             EliteUtils.log(`✅ ${MOCK_CASES.length} processos carregados com sucesso`);
+            EliteUtils.log(`📊 9 áreas do direito representadas`);
+            EliteUtils.log(`💰 Valor total em disputa: ${EliteUtils.formatCurrency(MOCK_CASES.reduce((s,c)=>s+(c.value||0),0))}`);
         },
         
         getCasesByCategory: function(category) {
@@ -316,10 +318,20 @@
         
         getActiveCasesCount: function() {
             return MOCK_CASES.filter(c => c.status === 'active').length;
+        },
+        
+        getSuccessRateByCategory: function(category) {
+            const cases = MOCK_CASES.filter(c => c.category === category);
+            if (cases.length === 0) return 0;
+            return cases.reduce((sum, c) => sum + c.successProbability, 0) / cases.length;
         }
     };
     
     window.EliteUtils = EliteUtils;
+    
+    // =========================================================================
+    // AUTO-INICIALIZAÇÃO (se o container já estiver visível)
+    // =========================================================================
     
     EliteUtils.log(`========================================`);
     EliteUtils.log(`ELITE PROBATUM v${APP_VERSION}`);
@@ -328,7 +340,6 @@
     EliteUtils.log(`9 áreas do direito representadas`);
     EliteUtils.log(`========================================`);
     
-    // Auto-execução para verificação
-    console.log('[ELITE] Módulos carregados. Aguardando autenticação...');
+    console.log('[ELITE PROBATUM] Módulos carregados. Aguardando autenticação...');
     
 })();

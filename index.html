@@ -240,9 +240,9 @@
     <!-- SCRIPT DE INTEGRAÇÃO FINAL -->
     <script>
         (function() {
-            // Aguardar o carregamento completo do DOM e do script principal
+            // Aguardar o carregamento completo do DOM
             document.addEventListener('DOMContentLoaded', function() {
-                console.log('[ELITE] DOM carregado, iniciando integração...');
+                console.log('[ELITE PROBATUM] DOM carregado, iniciando integração...');
                 
                 // Elementos principais
                 const authBtn = document.getElementById('authBtn');
@@ -262,7 +262,7 @@
                     const username = usernameInput ? usernameInput.value.trim() : '';
                     const password = passwordInput ? passwordInput.value.trim() : '';
                     
-                    console.log('[ELITE] Tentativa de autenticação:', username);
+                    console.log('[ELITE PROBATUM] Tentativa de autenticação:', username);
                     
                     if (username === 'admin' && password === 'probatum') {
                         // Autenticação bem-sucedida
@@ -285,14 +285,13 @@
                             
                             // INICIALIZAR O MOTOR ELITE
                             if (window.EliteProbatum && typeof window.EliteProbatum.initDashboard === 'function') {
-                                console.log('[ELITE] Inicializando dashboard via EliteProbatum...');
+                                console.log('[ELITE PROBATUM] Inicializando dashboard via EliteProbatum...');
                                 window.EliteProbatum.initDashboard();
-                            } else if (typeof initDashboard === 'function') {
-                                console.log('[ELITE] Inicializando dashboard via função global...');
-                                initDashboard();
+                            } else if (typeof renderDashboard === 'function') {
+                                console.log('[ELITE PROBATUM] Inicializando dashboard via função global...');
+                                renderDashboard();
                             } else {
-                                console.log('[ELITE] Dashboard não encontrado, usando fallback');
-                                // Fallback: renderizar dashboard básico
+                                console.log('[ELITE PROBATUM] Dashboard não encontrado, usando fallback');
                                 const container = document.getElementById('viewContainer');
                                 if (container) {
                                     container.innerHTML = `
@@ -320,7 +319,8 @@
                             if (window.EliteUtils && typeof window.EliteUtils.showToast === 'function') {
                                 window.EliteUtils.showToast('Bem-vindo à ELITE PROBATUM v2.0', 'success');
                             } else {
-                                console.log('[ELITE] Ecossistema Estratégico Ativo');
+                                console.log('[ELITE PROBATUM] Ecossistema Estratégico Ativo');
+                                alert('Bem-vindo à ELITE PROBATUM v2.0\n\n27 processos estratégicos carregados\n9 áreas do direito representadas');
                             }
                         }, 300);
                         
@@ -331,7 +331,7 @@
                             loginError.style.display = 'block';
                             loginError.textContent = 'Credenciais inválidas. Utilize admin / probatum';
                         }
-                        console.log('[ELITE] Falha na autenticação');
+                        console.log('[ELITE PROBATUM] Falha na autenticação');
                         return false;
                     }
                 }
@@ -339,9 +339,9 @@
                 // Associar evento ao botão de autenticação
                 if (authBtn) {
                     authBtn.addEventListener('click', authenticate);
-                    console.log('[ELITE] Evento de autenticação associado');
+                    console.log('[ELITE PROBATUM] Evento de autenticação associado ao botão #authBtn');
                 } else {
-                    console.error('[ELITE] Botão authBtn não encontrado!');
+                    console.error('[ELITE PROBATUM] Botão authBtn não encontrado!');
                 }
                 
                 // Permitir autenticação com tecla Enter
@@ -362,6 +362,7 @@
                         setTimeout(() => {
                             loginOverlay.style.display = 'none';
                             accessModal.style.display = 'flex';
+                            accessModal.style.opacity = '1';
                         }, 200);
                     });
                 }
@@ -390,7 +391,7 @@
                         const email = document.getElementById('requestEmail')?.value || '';
                         
                         if (name && email) {
-                            alert(`Pedido de acesso enviado para ${email}. O Master Hash Controller irá analisar.`);
+                            alert(`Pedido de acesso enviado para ${email}.\n\nO Master Hash Controller irá analisar e entrar em contacto.`);
                             accessModal.style.display = 'none';
                             accessForm.reset();
                             loginOverlay.style.display = 'flex';
@@ -415,7 +416,7 @@
                     });
                 }
                 
-                console.log('[ELITE] Integração concluída. Aguardando autenticação.');
+                console.log('[ELITE PROBATUM] Integração concluída. Aguardando autenticação.');
             });
         })();
     </script>
