@@ -41,9 +41,9 @@
 <body>
     
     <!-- ================================================================
-         SPLASH SCREEN ELITE PROBATUM
+         SPLASH SCREEN - OCULTA (ENTRADA DIRETA NO LOGIN)
     ================================================================ -->
-    <div id="splashScreen" class="elite-splash">
+    <div id="splashScreen" class="elite-splash" style="display: none;">
         <div class="elite-splash-content">
             <div class="elite-logo">
                 <i class="fas fa-crown"></i>
@@ -65,18 +65,18 @@
     </div>
     
     <!-- ================================================================
-         MODAL DE LOGIN PERSISTENTE COM SOLICITAÇÃO DE ACESSO
+         MODAL DE LOGIN PERSISTENTE - VISÍVEL IMEDIATAMENTE
     ================================================================ -->
-    <div id="loginOverlay" class="login-overlay" style="display: none;">
+    <div id="loginOverlay" class="login-overlay" style="display: flex;">
         <div class="login-modal">
             <i class="fas fa-shield-hooded" style="font-size: 3rem; color: var(--elite-primary); margin-bottom: 16px;"></i>
             <h2 id="loginTitle">ELITE PROBATUM</h2>
             <p id="loginSubtitle">Autenticação necessária para aceder à metodologia</p>
             <div class="form-group">
-                <input type="text" id="loginUser" placeholder="Utilizador" autocomplete="off">
+                <input type="text" id="loginUser" placeholder="Utilizador" autocomplete="off" value="admin">
             </div>
             <div class="form-group">
-                <input type="password" id="loginPass" placeholder="Palavra-passe">
+                <input type="password" id="loginPass" placeholder="Palavra-passe" value="probatum">
             </div>
             <div class="form-group" id="yubikeyGroup" style="display: none;">
                 <button id="yubikeyBtn" class="elite-btn secondary full-width">
@@ -104,6 +104,48 @@
             <p style="margin-top: 16px; font-size: 0.7rem; color: var(--text-tertiary);" id="loginHint">
                 <i class="fas fa-info-circle"></i> Credenciais de demonstração: admin / probatum
             </p>
+        </div>
+    </div>
+    
+    <!-- ================================================================
+         MODAL DE PEDIDO DE ACESSO
+    ================================================================ -->
+    <div id="accessRequestModal" class="elite-modal" style="display: none;">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3><i class="fas fa-user-plus"></i> <span id="accessRequestTitle">Solicitar Acesso</span></h3>
+                <button class="modal-close">&times;</button>
+            </div>
+            <div class="modal-body">
+                <form id="accessRequestForm">
+                    <div class="form-group">
+                        <label id="requestNameLabel">Nome Completo *</label>
+                        <input type="text" id="requestName" required>
+                    </div>
+                    <div class="form-group">
+                        <label id="requestEmailLabel">E-mail Institucional *</label>
+                        <input type="email" id="requestEmail" required>
+                    </div>
+                    <div class="form-group">
+                        <label id="requestNifLabel">NIF / NIPC *</label>
+                        <input type="text" id="requestNif" required>
+                    </div>
+                    <div class="form-group">
+                        <label id="requestRoleLabel">Cargo / Função</label>
+                        <input type="text" id="requestRole" placeholder="Ex: Sócio, Advogado, Estagiário">
+                    </div>
+                    <div class="form-group">
+                        <label id="requestReasonLabel">Justificação de Acesso</label>
+                        <textarea id="requestReason" rows="3" placeholder="Motivo pelo qual necessita de aceder à metodologia..."></textarea>
+                    </div>
+                    <button type="submit" class="elite-btn primary full-width">
+                        <i class="fas fa-paper-plane"></i> <span id="submitRequestText">Enviar Pedido ao Administrador</span>
+                    </button>
+                    <p style="margin-top: 12px; font-size: 0.7rem; color: var(--text-tertiary); text-align: center;">
+                        <i class="fas fa-shield-alt"></i> O pedido será analisado pelo Master Hash Controller
+                    </p>
+                </form>
+            </div>
         </div>
     </div>
     
@@ -568,51 +610,77 @@
         </div>
     </div>
     
-    <!-- Modal de Pedido de Acesso -->
-    <div id="accessRequestModal" class="elite-modal" style="display: none;">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h3><i class="fas fa-user-plus"></i> <span id="accessRequestTitle">Solicitar Acesso</span></h3>
-                <button class="modal-close">&times;</button>
-            </div>
-            <div class="modal-body">
-                <form id="accessRequestForm">
-                    <div class="form-group">
-                        <label id="requestNameLabel">Nome Completo *</label>
-                        <input type="text" id="requestName" required>
-                    </div>
-                    <div class="form-group">
-                        <label id="requestEmailLabel">E-mail Institucional *</label>
-                        <input type="email" id="requestEmail" required>
-                    </div>
-                    <div class="form-group">
-                        <label id="requestNifLabel">NIF / NIPC *</label>
-                        <input type="text" id="requestNif" required>
-                    </div>
-                    <div class="form-group">
-                        <label id="requestRoleLabel">Cargo / Função</label>
-                        <input type="text" id="requestRole" placeholder="Ex: Sócio, Advogado, Estagiário">
-                    </div>
-                    <div class="form-group">
-                        <label id="requestReasonLabel">Justificação de Acesso</label>
-                        <textarea id="requestReason" rows="3" placeholder="Motivo pelo qual necessita de aceder à metodologia..."></textarea>
-                    </div>
-                    <button type="submit" class="elite-btn primary full-width">
-                        <i class="fas fa-paper-plane"></i> <span id="submitRequestText">Enviar Pedido ao Administrador</span>
-                    </button>
-                    <p style="margin-top: 12px; font-size: 0.7rem; color: var(--text-tertiary); text-align: center;">
-                        <i class="fas fa-shield-alt"></i> O pedido será analisado pelo Master Hash Controller
-                    </p>
-                </form>
-            </div>
-        </div>
-    </div>
-    
     <!-- Toast Container -->
     <div id="toastContainer" class="elite-toast-container"></div>
     
     <!-- Script Principal - APENAS UM FICHEIRO (todos os módulos estão integrados) -->
     <script src="js_core_app.js"></script>
     
+    <!-- Script adicional para garantir que o botão de solicitar acesso funciona -->
+    <script>
+        // Aguardar o carregamento completo do DOM
+        document.addEventListener('DOMContentLoaded', function() {
+            // Botão de solicitar acesso no login
+            const requestAccessBtn = document.getElementById('requestAccessBtn');
+            const accessRequestModal = document.getElementById('accessRequestModal');
+            const loginOverlay = document.getElementById('loginOverlay');
+            
+            if (requestAccessBtn && accessRequestModal) {
+                // Remover event listeners anteriores para evitar duplicação
+                const newBtn = requestAccessBtn.cloneNode(true);
+                requestAccessBtn.parentNode.replaceChild(newBtn, requestAccessBtn);
+                
+                newBtn.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    e.stopPropagation();
+                    if (loginOverlay) loginOverlay.style.display = 'none';
+                    if (accessRequestModal) accessRequestModal.style.display = 'flex';
+                    console.log('Botão Solicitar Acesso clicado - Modal aberto');
+                });
+            }
+            
+            // Fechar modais com o botão X
+            document.querySelectorAll('.modal-close').forEach(btn => {
+                btn.addEventListener('click', function() {
+                    const modal = this.closest('.elite-modal');
+                    if (modal) modal.style.display = 'none';
+                });
+            });
+            
+            // Fechar modais ao clicar fora
+            document.querySelectorAll('.elite-modal').forEach(modal => {
+                modal.addEventListener('click', function(e) {
+                    if (e.target === this) {
+                        this.style.display = 'none';
+                    }
+                });
+            });
+            
+            // Formulário de pedido de acesso
+            const accessForm = document.getElementById('accessRequestForm');
+            if (accessForm) {
+                accessForm.addEventListener('submit', function(e) {
+                    e.preventDefault();
+                    const name = document.getElementById('requestName')?.value || '';
+                    const email = document.getElementById('requestEmail')?.value || '';
+                    const nif = document.getElementById('requestNif')?.value || '';
+                    const role = document.getElementById('requestRole')?.value || '';
+                    const reason = document.getElementById('requestReason')?.value || '';
+                    
+                    if (name && email && nif) {
+                        // Simular envio para o administrador
+                        console.log('Pedido de acesso enviado:', { name, email, nif, role, reason });
+                        alert('Pedido enviado com sucesso! O administrador irá analisar e entrar em contacto.');
+                        accessRequestModal.style.display = 'none';
+                        accessForm.reset();
+                        // Reabrir o login
+                        if (loginOverlay) loginOverlay.style.display = 'flex';
+                    } else {
+                        alert('Por favor, preencha todos os campos obrigatórios.');
+                    }
+                });
+            }
+        });
+    </script>
 </body>
 </html>
