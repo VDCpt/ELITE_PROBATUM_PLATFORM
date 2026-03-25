@@ -23,6 +23,7 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.29.4/moment.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/crypto-js/4.1.1/crypto-js.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
 </head>
 <body>
@@ -49,6 +50,30 @@
         </div>
         <div class="elite-laser-h"></div>
         <div class="elite-laser-v"></div>
+    </div>
+    
+    <!-- ================================================================
+         MODAL DE LOGIN PERSISTENTE
+    ================================================================ -->
+    <div id="loginOverlay" class="login-overlay" style="display: none;">
+        <div class="login-modal">
+            <i class="fas fa-shield-alt" style="font-size: 3rem; color: var(--elite-primary); margin-bottom: 16px;"></i>
+            <h2>ELITE PROBATUM</h2>
+            <p>Autenticação necessária para aceder à plataforma</p>
+            <div class="form-group">
+                <input type="text" id="loginUser" placeholder="Utilizador" autocomplete="off">
+            </div>
+            <div class="form-group">
+                <input type="password" id="loginPass" placeholder="Palavra-passe">
+            </div>
+            <div id="loginError" class="login-error">Credenciais inválidas</div>
+            <button id="loginBtn" class="elite-btn primary full-width">
+                <i class="fas fa-key"></i> Autenticar
+            </button>
+            <p style="margin-top: 16px; font-size: 0.7rem; color: var(--text-tertiary);">
+                <i class="fas fa-info-circle"></i> Credenciais: admin / probatum
+            </p>
+        </div>
     </div>
     
     <!-- ================================================================
@@ -82,6 +107,14 @@
                     <i class="fas fa-gavel"></i>
                     <span>Perfil de Magistrados</span>
                 </a>
+                <a href="#" class="nav-item" data-view="adversary">
+                    <i class="fas fa-users"></i>
+                    <span>Perfil de Oposição</span>
+                </a>
+                <a href="#" class="nav-item" data-view="heatmap">
+                    <i class="fas fa-fire"></i>
+                    <span>Juris-Heatmap</span>
+                </a>
                 <a href="#" class="nav-item" data-view="clients">
                     <i class="fas fa-users"></i>
                     <span>Clientes</span>
@@ -97,8 +130,8 @@
                 <div class="lawyer-info" id="lawyerInfo">
                     <i class="fas fa-user-shield"></i>
                     <div>
-                        <strong>Dra. Ana Silva</strong>
-                        <small>Sócia · Litígio Estratégico</small>
+                        <strong id="userName">Dra. Ana Silva</strong>
+                        <small id="userRole">Sócia · Litígio Estratégico</small>
                     </div>
                 </div>
                 <button class="logout-btn" id="logoutBtn">
@@ -134,6 +167,12 @@
                         </div>
                     </div>
                     <div class="header-actions">
+                        <button id="integrityCheckBtn" class="icon-btn" title="Integrity Check - Verificar Cadeia de Custódia">
+                            <i class="fas fa-shield-hooded"></i>
+                        </button>
+                        <button id="exportReportBtn" class="icon-btn" title="Exportar Relatório Pericial">
+                            <i class="fas fa-file-pdf"></i>
+                        </button>
                         <button id="notificationsBtn" class="icon-btn">
                             <i class="fas fa-bell"></i>
                             <span class="notification-dot" style="display: none;"></span>
@@ -192,8 +231,8 @@
                         <span>Perfil de magistrados</span>
                     </label>
                     <label class="setting-item">
-                        <input type="checkbox" id="enableMarketIntel" checked>
-                        <span>Inteligência de mercado</span>
+                        <input type="checkbox" id="enableAdversaryProfiling" checked>
+                        <span>Perfil de escritórios de oposição</span>
                     </label>
                 </div>
                 <div class="settings-group">
@@ -207,6 +246,101 @@
                         <span>Prazos processuais</span>
                     </label>
                 </div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Modal de Detalhes do Caso -->
+    <div id="caseDetailModal" class="elite-modal" style="display: none;">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3><i class="fas fa-folder-open"></i> Detalhes do Caso</h3>
+                <button class="modal-close">&times;</button>
+            </div>
+            <div class="modal-body" id="caseDetailBody">
+                <!-- Conteúdo dinâmico -->
+            </div>
+        </div>
+    </div>
+    
+    <!-- Modal de Novo Cliente -->
+    <div id="newClientModal" class="elite-modal" style="display: none;">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3><i class="fas fa-user-plus"></i> Novo Cliente</h3>
+                <button class="modal-close">&times;</button>
+            </div>
+            <div class="modal-body">
+                <form id="newClientForm">
+                    <div class="form-group">
+                        <label>Nome do Cliente *</label>
+                        <input type="text" id="clientName" required>
+                    </div>
+                    <div class="form-group">
+                        <label>NIF / VATIN *</label>
+                        <input type="text" id="clientNif" required>
+                    </div>
+                    <div class="form-group">
+                        <label>Valor da Causa (€) *</label>
+                        <input type="number" id="clientCaseValue" required>
+                    </div>
+                    <div class="form-group">
+                        <label>Jurisdição / Tribunal</label>
+                        <select id="clientCourt">
+                            <option value="lisboa">Lisboa</option>
+                            <option value="porto">Porto</option>
+                            <option value="braga">Braga</option>
+                            <option value="coimbra">Coimbra</option>
+                            <option value="faro">Faro</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label>Área do Direito</label>
+                        <select id="clientCategory">
+                            <option value="civil">Direito Civil</option>
+                            <option value="criminal">Direito Penal</option>
+                            <option value="labor">Direito do Trabalho</option>
+                            <option value="commercial">Direito Comercial</option>
+                            <option value="tax">Direito Fiscal</option>
+                        </select>
+                    </div>
+                    <button type="submit" class="elite-btn primary full-width">
+                        <i class="fas fa-save"></i> Criar Cliente
+                    </button>
+                </form>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Modal de Notas Estratégicas -->
+    <div id="notesModal" class="elite-modal" style="display: none;">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3><i class="fas fa-pen"></i> Notas Estratégicas</h3>
+                <button class="modal-close">&times;</button>
+            </div>
+            <div class="modal-body">
+                <textarea id="strategicNote" rows="4" placeholder="Escreva uma nota estratégica... (com hash SHA-256 para integridade)"></textarea>
+                <button id="saveNoteBtn" class="elite-btn primary full-width" style="margin-top: 12px;">
+                    <i class="fas fa-lock"></i> Guardar Nota (com hash)
+                </button>
+                <div id="notesList" class="notes-container" style="margin-top: 20px;">
+                    <h4>Notas Anteriores</h4>
+                    <div id="notesItems"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Modal de Integrity Check -->
+    <div id="integrityModal" class="elite-modal" style="display: none;">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3><i class="fas fa-shield-hooded"></i> Integrity Check - Cadeia de Custódia</h3>
+                <button class="modal-close">&times;</button>
+            </div>
+            <div class="modal-body" id="integrityBody">
+                <div class="integrity-loading">A verificar integridade dos dados...</div>
             </div>
         </div>
     </div>

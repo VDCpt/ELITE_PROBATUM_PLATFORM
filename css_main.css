@@ -75,7 +75,7 @@ body {
 }
 
 /* ============================================================================
-   SPLASH SCREEN ELITE PROBATUM
+   SPLASH SCREEN ELITE PROBATUM - ANIMAÇÃO OTIMIZADA
    ============================================================================ */
 .elite-splash {
     position: fixed;
@@ -94,7 +94,7 @@ body {
 .elite-splash-content {
     text-align: center;
     z-index: 10;
-    animation: fadeInUp 1s ease;
+    animation: fadeInUp 1s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
 .elite-logo {
@@ -163,7 +163,7 @@ body {
     width: 0%;
     height: 100%;
     background: linear-gradient(90deg, var(--elite-primary), var(--elite-secondary));
-    animation: loading 2s ease infinite;
+    animation: loading 2s cubic-bezier(0.4, 0, 0.2, 1) infinite;
 }
 
 .loader-text {
@@ -187,7 +187,7 @@ body {
     display: inline-flex;
     align-items: center;
     gap: 8px;
-    transition: all 0.3s ease;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
 .elite-enter-btn:hover {
@@ -202,7 +202,8 @@ body {
     width: 100%;
     height: 1px;
     background: linear-gradient(90deg, transparent, var(--elite-primary), transparent);
-    animation: laserH 4s linear infinite;
+    animation: laserH 3s cubic-bezier(0.4, 0, 0.2, 1) infinite;
+    z-index: 1;
 }
 
 .elite-laser-v {
@@ -212,7 +213,8 @@ body {
     width: 1px;
     height: 100%;
     background: linear-gradient(180deg, transparent, var(--elite-primary), transparent);
-    animation: laserV 4s linear infinite;
+    animation: laserV 3s cubic-bezier(0.4, 0, 0.2, 1) infinite;
+    z-index: 1;
 }
 
 @keyframes loading {
@@ -258,6 +260,72 @@ body {
 
 .elite-app.visible {
     opacity: 1;
+}
+
+/* ============================================================================
+   MODAL DE LOGIN PERSISTENTE
+   ============================================================================ */
+.login-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.95);
+    backdrop-filter: blur(12px);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 20000;
+}
+
+.login-modal {
+    background: var(--bg-card);
+    border: 1px solid var(--border-color);
+    border-radius: 24px;
+    padding: 40px;
+    width: 90%;
+    max-width: 400px;
+    text-align: center;
+    animation: modalFadeIn 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.login-modal h2 {
+    margin-bottom: 8px;
+    font-size: 1.5rem;
+}
+
+.login-modal p {
+    color: var(--text-tertiary);
+    margin-bottom: 24px;
+    font-size: 0.85rem;
+}
+
+.login-modal .form-group {
+    margin-bottom: 20px;
+}
+
+.login-modal input {
+    width: 100%;
+    padding: 12px;
+    background: rgba(255, 255, 255, 0.05);
+    border: 1px solid var(--border-color);
+    border-radius: 8px;
+    color: var(--text-primary);
+    font-size: 0.9rem;
+}
+
+.login-modal input:focus {
+    outline: none;
+    border-color: var(--elite-primary);
+    box-shadow: 0 0 0 2px rgba(0, 229, 255, 0.2);
+}
+
+.login-error {
+    color: var(--elite-danger);
+    font-size: 0.75rem;
+    margin-top: 8px;
+    display: none;
 }
 
 /* ============================================================================
@@ -573,7 +641,7 @@ body {
 }
 
 /* ============================================================================
-   CHARTS - TAMANHOS REDUZIDOS
+   CHARTS
    ============================================================================ */
 .charts-dashboard {
     display: grid;
@@ -598,6 +666,140 @@ body {
 .chart-container canvas {
     max-height: 250px;
     width: 100%;
+}
+
+/* ============================================================================
+   ADVERSARY PROFILING - PERFIL DE OPOSIÇÃO
+   ============================================================================ */
+.adversary-card {
+    background: var(--bg-card);
+    border: 1px solid var(--border-color);
+    border-radius: 12px;
+    padding: 20px;
+    margin-bottom: 16px;
+}
+
+.adversary-header {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin-bottom: 16px;
+    padding-bottom: 12px;
+    border-bottom: 1px solid var(--border-color);
+}
+
+.adversary-header i {
+    font-size: 1.5rem;
+    color: var(--elite-warning);
+}
+
+.adversary-stats {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 16px;
+    margin-bottom: 16px;
+}
+
+.adversary-pattern {
+    background: rgba(0, 0, 0, 0.3);
+    padding: 12px;
+    border-radius: 8px;
+    margin-top: 12px;
+}
+
+.adversary-pattern .alert {
+    color: var(--elite-warning);
+    font-weight: 600;
+    margin-bottom: 8px;
+}
+
+/* ============================================================================
+   JURIS-HEATMAP - MAPA DE CALOR DE SENTENÇAS
+   ============================================================================ */
+.heatmap-container {
+    background: var(--bg-card);
+    border: 1px solid var(--border-color);
+    border-radius: 12px;
+    padding: 20px;
+    margin-bottom: 24px;
+}
+
+.heatmap-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 16px;
+    margin-top: 20px;
+}
+
+.heatmap-cell {
+    text-align: center;
+    padding: 12px;
+    border-radius: 8px;
+    transition: all var(--transition-fast);
+}
+
+.heatmap-cell.high {
+    background: rgba(16, 185, 129, 0.3);
+    border: 1px solid var(--elite-success);
+}
+
+.heatmap-cell.medium {
+    background: rgba(245, 158, 11, 0.3);
+    border: 1px solid var(--elite-warning);
+}
+
+.heatmap-cell.low {
+    background: rgba(239, 68, 68, 0.3);
+    border: 1px solid var(--elite-danger);
+}
+
+/* ============================================================================
+   STRATEGIC NOTES - NOTAS COM HASH SHA-256
+   ============================================================================ */
+.notes-container {
+    background: var(--bg-card);
+    border: 1px solid var(--border-color);
+    border-radius: 12px;
+    padding: 20px;
+}
+
+.note-item {
+    background: rgba(0, 0, 0, 0.2);
+    border-left: 3px solid var(--elite-primary);
+    padding: 16px;
+    margin-bottom: 12px;
+    border-radius: 8px;
+}
+
+.note-header {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 8px;
+    font-size: 0.7rem;
+    color: var(--text-tertiary);
+}
+
+.note-content {
+    font-size: 0.85rem;
+    line-height: 1.5;
+}
+
+.note-hash {
+    font-family: var(--font-mono);
+    font-size: 0.65rem;
+    color: var(--text-tertiary);
+    margin-top: 8px;
+    word-break: break-all;
+}
+
+.integrity-badge {
+    display: inline-block;
+    background: var(--elite-success);
+    color: #000;
+    font-size: 0.6rem;
+    padding: 2px 6px;
+    border-radius: 4px;
+    margin-left: 8px;
 }
 
 /* ============================================================================
@@ -631,29 +833,6 @@ body {
     background: rgba(0, 229, 255, 0.05);
 }
 
-.status-badge {
-    display: inline-block;
-    padding: 4px 8px;
-    border-radius: 20px;
-    font-size: 0.7rem;
-    font-weight: 600;
-}
-
-.status-active {
-    background: rgba(16, 185, 129, 0.2);
-    color: var(--elite-success);
-}
-
-.status-pending {
-    background: rgba(245, 158, 11, 0.2);
-    color: var(--elite-warning);
-}
-
-.status-closed {
-    background: rgba(100, 116, 139, 0.2);
-    color: var(--text-tertiary);
-}
-
 /* ============================================================================
    MODALS
    ============================================================================ */
@@ -676,10 +855,10 @@ body {
     border: 1px solid var(--border-color);
     border-radius: 16px;
     width: 90%;
-    max-width: 500px;
+    max-width: 600px;
     max-height: 80vh;
     overflow: hidden;
-    animation: modalFadeIn 0.3s ease;
+    animation: modalFadeIn 0.3s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
 @keyframes modalFadeIn {
@@ -743,7 +922,7 @@ body {
     display: flex;
     align-items: center;
     gap: 12px;
-    animation: slideInRight 0.3s ease;
+    animation: slideInRight 0.3s cubic-bezier(0.4, 0, 0.2, 1);
     box-shadow: var(--shadow-lg);
 }
 
@@ -771,66 +950,53 @@ body {
 }
 
 /* ============================================================================
-   CASOS GERAIS - TAGS E CATEGORIAS
+   PRINT MEDIA QUERIES - RELATÓRIOS
    ============================================================================ */
-.case-tag {
-    display: inline-block;
-    padding: 4px 8px;
-    border-radius: 4px;
-    font-size: 0.7rem;
-    font-weight: 500;
-    margin-right: 4px;
-    margin-bottom: 4px;
-}
-
-.tag-civil {
-    background: rgba(59, 130, 246, 0.2);
-    color: #3B82F6;
-}
-
-.tag-criminal {
-    background: rgba(239, 68, 68, 0.2);
-    color: #EF4444;
-}
-
-.tag-labor {
-    background: rgba(16, 185, 129, 0.2);
-    color: #10B981;
-}
-
-.tag-commercial {
-    background: rgba(245, 158, 11, 0.2);
-    color: #F59E0B;
-}
-
-.tag-administrative {
-    background: rgba(139, 92, 246, 0.2);
-    color: #8B5CF6;
-}
-
-.category-selector {
-    display: flex;
-    gap: 8px;
-    flex-wrap: wrap;
-    margin-bottom: 20px;
-}
-
-.category-btn {
-    padding: 6px 16px;
-    background: rgba(255, 255, 255, 0.05);
-    border: 1px solid var(--border-color);
-    border-radius: 20px;
-    color: var(--text-secondary);
-    font-size: 0.8rem;
-    cursor: pointer;
-    transition: all var(--transition-fast);
-}
-
-.category-btn:hover,
-.category-btn.active {
-    background: var(--elite-primary);
-    color: #000;
-    border-color: var(--elite-primary);
+@media print {
+    .elite-sidebar,
+    .menu-toggle,
+    .header-actions,
+    .logout-btn,
+    .category-selector,
+    .cases-actions,
+    .prediction-actions,
+    .elite-toast-container,
+    .icon-btn {
+        display: none !important;
+    }
+    
+    .elite-main {
+        margin-left: 0 !important;
+        padding: 0 !important;
+    }
+    
+    .view-container {
+        padding: 0 !important;
+    }
+    
+    .dashboard-card,
+    .chart-container,
+    .data-table {
+        break-inside: avoid;
+        page-break-inside: avoid;
+    }
+    
+    body {
+        background: white;
+        color: black;
+    }
+    
+    .data-table td,
+    .data-table th {
+        border: 1px solid #ccc;
+    }
+    
+    .status-badge,
+    .case-badge {
+        border: 1px solid #ccc;
+        background: #f0f0f0 !important;
+        color: black !important;
+    }
 }
 
 /* ============================================================================
@@ -878,5 +1044,24 @@ body {
     .data-table th,
     .data-table td {
         padding: 8px 12px;
+    }
+}
+
+@media (min-width: 2560px) {
+    .elite-sidebar {
+        width: 320px;
+    }
+    
+    .view-container {
+        padding: 32px;
+    }
+    
+    .dashboard-card,
+    .chart-container {
+        padding: 28px;
+    }
+    
+    .card-value {
+        font-size: 2.5rem;
     }
 }
