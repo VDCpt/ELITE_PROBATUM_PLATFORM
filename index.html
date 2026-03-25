@@ -1,0 +1,240 @@
+<!DOCTYPE html>
+<html lang="pt-PT">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+    <meta name="description" content="UNIFED-ELITE Platform v1.0 — Inteligência Forense e Estratégica para Escritórios de Elite">
+    <meta name="author" content="UNIFED-ELITE">
+    <title>UNIFED-ELITE | Plataforma de Inteligência Forense</title>
+    
+    <!-- Favicon -->
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>⚖️</text></svg>">
+    
+    <!-- Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=JetBrains+Mono:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <!-- CSS -->
+    <link rel="stylesheet" href="css/main.css">
+    <link rel="stylesheet" href="css/components.css">
+    <link rel="stylesheet" href="css/themes/dark-forensic.css">
+    
+    <!-- Vendors -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.29.4/moment.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/crypto-js/4.1.1/crypto-js.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
+</head>
+<body>
+    
+    <!-- ================================================================
+         SPLASH SCREEN ELITE
+    ================================================================= -->
+    <div id="splashScreen" class="elite-splash">
+        <div class="elite-splash-content">
+            <div class="elite-logo">
+                <i class="fas fa-crown"></i>
+                <span>UNIFED</span>
+                <span class="elite-badge">ELITE</span>
+            </div>
+            <div class="elite-version">v1.0 · Estratégia Forense Avançada</div>
+            <div class="elite-tagline">Inteligência que vence casos</div>
+            <div class="elite-loader">
+                <div class="loader-bar"></div>
+                <div class="loader-text">Carregando ecossistema estratégico...</div>
+            </div>
+            <button id="enterPlatformBtn" class="elite-enter-btn" style="display: none;">
+                <i class="fas fa-arrow-right"></i> ENTRAR NA PLATAFORMA
+            </button>
+        </div>
+        <div class="elite-laser-h"></div>
+        <div class="elite-laser-v"></div>
+    </div>
+    
+    <!-- ================================================================
+         MAIN APP CONTAINER
+    ================================================================= -->
+    <div id="appContainer" class="elite-app" style="display: none;">
+        
+        <!-- SIDEBAR NAVEGAÇÃO -->
+        <aside class="elite-sidebar">
+            <div class="sidebar-logo">
+                <i class="fas fa-crown"></i>
+                <span>UNIFED<span class="elite-light">ELITE</span></span>
+            </div>
+            
+            <nav class="sidebar-nav">
+                <a href="#" class="nav-item active" data-view="dashboard">
+                    <i class="fas fa-chart-pie"></i>
+                    <span>Dashboard</span>
+                    <span class="nav-badge" id="dashboardBadge"></span>
+                </a>
+                <a href="#" class="nav-item" data-view="cases">
+                    <i class="fas fa-folder-open"></i>
+                    <span>Casos</span>
+                    <span class="nav-badge" id="casesBadge">0</span>
+                </a>
+                <a href="#" class="nav-item" data-view="litigation">
+                    <i class="fas fa-brain"></i>
+                    <span>Inteligência de Litígio</span>
+                </a>
+                <a href="#" class="nav-item" data-view="judges">
+                    <i class="fas fa-gavel"></i>
+                    <span>Perfil de Magistrados</span>
+                </a>
+                <a href="#" class="nav-item" data-view="platforms">
+                    <i class="fas fa-building"></i>
+                    <span>Inteligência de Plataformas</span>
+                </a>
+                <a href="#" class="nav-item" data-view="clients">
+                    <i class="fas fa-users"></i>
+                    <span>Clientes</span>
+                    <span class="nav-badge" id="clientsBadge"></span>
+                </a>
+                <a href="#" class="nav-item" data-view="reports">
+                    <i class="fas fa-file-alt"></i>
+                    <span>Relatórios</span>
+                </a>
+            </nav>
+            
+            <div class="sidebar-footer">
+                <div class="lawyer-info" id="lawyerInfo">
+                    <i class="fas fa-user-shield"></i>
+                    <div>
+                        <strong>Dra. Ana Silva</strong>
+                        <small>Sócia · Litígio Estratégico</small>
+                    </div>
+                </div>
+                <button class="logout-btn" id="logoutBtn">
+                    <i class="fas fa-sign-out-alt"></i>
+                </button>
+            </div>
+        </aside>
+        
+        <!-- MAIN CONTENT -->
+        <main class="elite-main">
+            
+            <!-- HEADER -->
+            <header class="elite-header">
+                <div class="header-left">
+                    <button id="mobileMenuToggle" class="menu-toggle">
+                        <i class="fas fa-bars"></i>
+                    </button>
+                    <h1 id="pageTitle">Dashboard Estratégico</h1>
+                </div>
+                <div class="header-right">
+                    <div class="header-stats">
+                        <div class="stat-item">
+                            <span class="stat-label">Casos Ativos</span>
+                            <span class="stat-value" id="headerActiveCases">0</span>
+                        </div>
+                        <div class="stat-item">
+                            <span class="stat-label">Valor em Disputa</span>
+                            <span class="stat-value" id="headerDisputeValue">€0</span>
+                        </div>
+                        <div class="stat-item">
+                            <span class="stat-label">Taxa Sucesso</span>
+                            <span class="stat-value" id="headerSuccessRate">0%</span>
+                        </div>
+                    </div>
+                    <div class="header-actions">
+                        <button id="notificationsBtn" class="icon-btn">
+                            <i class="fas fa-bell"></i>
+                            <span class="notification-dot" style="display: none;"></span>
+                        </button>
+                        <button id="settingsBtn" class="icon-btn">
+                            <i class="fas fa-cog"></i>
+                        </button>
+                    </div>
+                </div>
+            </header>
+            
+            <!-- VIEW CONTAINER -->
+            <div id="viewContainer" class="view-container">
+                <!-- Os conteúdos das views serão injetados dinamicamente -->
+            </div>
+            
+        </main>
+    </div>
+    
+    <!-- ================================================================
+         MODAIS GLOBAIS
+    ================================================================= -->
+    
+    <!-- Modal de Notificações -->
+    <div id="notificationsModal" class="elite-modal" style="display: none;">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3><i class="fas fa-bell"></i> Alertas Estratégicos</h3>
+                <button class="modal-close">&times;</button>
+            </div>
+            <div class="modal-body" id="notificationsList">
+                <div class="notification-empty">
+                    <i class="fas fa-check-circle"></i>
+                    <p>Nenhum alerta no momento</p>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Modal de Configurações -->
+    <div id="settingsModal" class="elite-modal" style="display: none;">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3><i class="fas fa-cog"></i> Configurações</h3>
+                <button class="modal-close">&times;</button>
+            </div>
+            <div class="modal-body">
+                <div class="settings-group">
+                    <h4>Preferências de IA</h4>
+                    <label class="setting-item">
+                        <input type="checkbox" id="enablePredictiveAI" checked>
+                        <span>Previsão automática de êxito</span>
+                    </label>
+                    <label class="setting-item">
+                        <input type="checkbox" id="enableJudgeProfiling" checked>
+                        <span>Perfil de magistrados</span>
+                    </label>
+                    <label class="setting-item">
+                        <input type="checkbox" id="enableMarketIntel" checked>
+                        <span>Inteligência de mercado</span>
+                    </label>
+                </div>
+                <div class="settings-group">
+                    <h4>Notificações</h4>
+                    <label class="setting-item">
+                        <input type="checkbox" id="notifyNewDecisions" checked>
+                        <span>Novas decisões relevantes</span>
+                    </label>
+                    <label class="setting-item">
+                        <input type="checkbox" id="notifyDeadlines" checked>
+                        <span>Prazos processuais</span>
+                    </label>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Toast Container -->
+    <div id="toastContainer" class="elite-toast-container"></div>
+    
+    <!-- Scripts -->
+    <script src="js/core/utils.js"></script>
+    <script src="js/core/state.js"></script>
+    <script src="js/core/api.js"></script>
+    <script src="js/components/charts.js"></script>
+    <script src="js/components/tables.js"></script>
+    <script src="js/components/modals.js"></script>
+    <script src="js/modules/predictive-litigation.js"></script>
+    <script src="js/modules/mass-litigation.js"></script>
+    <script src="js/modules/judicial-analytics.js"></script>
+    <script src="js/modules/fee-optimizer.js"></script>
+    <script src="js/modules/platform-intel.js"></script>
+    <script src="js/modules/practice-dashboard.js"></script>
+    <script src="js/modules/client-experience.js"></script>
+    <script src="js/modules/market-intelligence.js"></script>
+    <script src="js/core/app.js"></script>
+    
+</body>
+</html>
