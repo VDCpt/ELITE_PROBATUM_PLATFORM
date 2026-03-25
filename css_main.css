@@ -1,6 +1,6 @@
 /* ============================================================================
    ELITE PROBATUM v2.0 — CSS PRINCIPAL
-   UI RECONSTRUÍDA - Botões 40% maiores, Neon Cyan, Carbon Black
+   CORREÇÃO: Centralização Absoluta do Login
    ============================================================================ */
 
 :root {
@@ -33,16 +33,19 @@
     --border-neon-glow: rgba(0, 229, 255, 0.8);
     
     /* Layout - Botões maiores */
-    --btn-height-large: 52px;
-    --btn-padding-large: 16px 32px;
+    --btn-height-large: 56px;
+    --btn-padding-large: 18px 36px;
     --btn-font-large: 1rem;
     
     --sidebar-width: 320px;
     --header-height: 80px;
 }
 
-/* Reset e Base */
-* { margin: 0; padding: 0; box-sizing: border-box; }
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
 
 body {
     font-family: 'Inter', sans-serif;
@@ -50,10 +53,156 @@ body {
     color: var(--text-primary);
     line-height: 1.5;
     min-height: 100vh;
+    overflow-x: hidden;
 }
 
 /* ============================================================================
-   BOTÕES - 40% MAIORES, NEON CYAN
+   LOGIN OVERLAY - CENTRALIZAÇÃO ABSOLUTA
+   ============================================================================ */
+
+.login-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    background: var(--bg-carbon-dark);
+    display: flex !important;
+    justify-content: center;
+    align-items: center;
+    z-index: 9999;
+    padding: 20px;
+}
+
+.login-card {
+    width: 100%;
+    max-width: 440px;
+    background: var(--bg-carbon-card);
+    border: 1px solid var(--border-neon);
+    padding: 48px 40px;
+    border-radius: 28px;
+    box-shadow: 0 0 60px rgba(0, 229, 255, 0.2);
+    text-align: center;
+    animation: fadeInUp 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.login-card h2 {
+    font-size: 1.8rem;
+    margin-bottom: 8px;
+    background: linear-gradient(135deg, var(--elite-primary), var(--elite-secondary));
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+}
+
+.login-card .version {
+    color: var(--text-tertiary);
+    font-size: 0.7rem;
+    margin-bottom: 24px;
+    font-family: 'JetBrains Mono', monospace;
+}
+
+.login-card .subtitle {
+    color: var(--text-secondary);
+    margin-bottom: 32px;
+    font-size: 0.9rem;
+}
+
+.login-card .form-group {
+    margin-bottom: 20px;
+    text-align: left;
+}
+
+.login-card .form-group label {
+    display: block;
+    font-size: 0.7rem;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    color: var(--text-tertiary);
+    margin-bottom: 8px;
+}
+
+.login-card input {
+    width: 100%;
+    padding: 14px 16px;
+    background: rgba(255, 255, 255, 0.05);
+    border: 1px solid var(--border-neon);
+    border-radius: 12px;
+    color: var(--text-primary);
+    font-size: 0.95rem;
+    transition: all 0.2s;
+}
+
+.login-card input:focus {
+    outline: none;
+    border-color: var(--elite-primary);
+    box-shadow: 0 0 0 3px rgba(0, 229, 255, 0.2);
+}
+
+.login-card .elite-btn {
+    margin-top: 8px;
+    width: 100%;
+    height: 52px;
+    font-size: 1rem;
+    font-weight: 700;
+}
+
+.login-card .request-access {
+    margin-top: 24px;
+    padding-top: 24px;
+    border-top: 1px solid var(--border-neon);
+}
+
+.login-card .request-access-btn {
+    background: transparent;
+    border: 1px solid var(--border-neon);
+    color: var(--text-secondary);
+}
+
+.login-card .request-access-btn:hover {
+    border-color: var(--elite-primary);
+    color: var(--elite-primary);
+    background: rgba(0, 229, 255, 0.1);
+}
+
+.login-card .language-selector {
+    margin-top: 24px;
+    display: flex;
+    justify-content: center;
+    gap: 12px;
+}
+
+.lang-btn {
+    background: rgba(255, 255, 255, 0.05);
+    border: 1px solid var(--border-neon);
+    color: var(--text-secondary);
+    padding: 8px 16px;
+    border-radius: 40px;
+    cursor: pointer;
+    font-size: 0.75rem;
+    transition: all 0.2s;
+}
+
+.lang-btn:hover,
+.lang-btn.active {
+    background: var(--elite-primary);
+    color: #000;
+    border-color: var(--elite-primary);
+}
+
+@keyframes fadeInUp {
+    from {
+        opacity: 0;
+        transform: translateY(30px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* ============================================================================
+   BOTÕES - 40% MAIORES
    ============================================================================ */
 
 .elite-btn {
@@ -63,7 +212,7 @@ body {
     gap: 12px;
     height: var(--btn-height-large);
     padding: var(--btn-padding-large);
-    border-radius: 12px;
+    border-radius: 14px;
     font-family: 'Inter', sans-serif;
     font-size: var(--btn-font-large);
     font-weight: 700;
@@ -126,16 +275,17 @@ body {
     width: 100%;
 }
 
-/* Botões de Ação - Icones */
+/* Botões de Ação do Header - Aumentados */
 .icon-btn {
     background: rgba(255, 255, 255, 0.08);
     border: 1px solid var(--border-neon);
     color: var(--text-secondary);
-    width: 48px;
-    height: 48px;
-    border-radius: 12px;
+    width: 52px;
+    height: 52px;
+    border-radius: 14px;
     cursor: pointer;
     transition: all 0.2s ease;
+    font-size: 1.2rem;
 }
 
 .icon-btn:hover {
@@ -145,17 +295,61 @@ body {
     transform: scale(1.05);
 }
 
-/* Botões de Navegação */
+/* ============================================================================
+   SIDEBAR E HEADER
+   ============================================================================ */
+
+.elite-sidebar {
+    width: var(--sidebar-width);
+    background: var(--bg-carbon-sidebar);
+    border-right: 1px solid var(--border-neon);
+    display: flex;
+    flex-direction: column;
+    position: fixed;
+    left: 0;
+    top: 0;
+    bottom: 0;
+    z-index: 100;
+    transition: transform var(--transition-normal);
+}
+
+.sidebar-logo {
+    padding: 28px 24px;
+    border-bottom: 1px solid var(--border-neon);
+    margin-bottom: 24px;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    font-size: 1.3rem;
+    font-weight: 800;
+    font-family: 'JetBrains Mono', monospace;
+}
+
+.sidebar-logo i {
+    color: var(--elite-primary);
+    font-size: 1.8rem;
+}
+
+.version-badge {
+    margin-left: auto;
+    font-size: 0.6rem;
+    color: var(--text-tertiary);
+    background: rgba(0, 229, 255, 0.1);
+    padding: 4px 8px;
+    border-radius: 20px;
+}
+
 .nav-item {
     display: flex;
     align-items: center;
     gap: 14px;
-    padding: 14px 18px;
+    padding: 14px 20px;
+    margin: 4px 12px;
     color: var(--text-secondary);
     text-decoration: none;
-    border-radius: 12px;
+    border-radius: 14px;
     transition: all 0.2s ease;
-    font-size: 0.95rem;
+    font-size: 0.9rem;
     font-weight: 500;
 }
 
@@ -176,15 +370,81 @@ body {
     border-left: 3px solid var(--elite-primary);
 }
 
+.nav-badge {
+    margin-left: auto;
+    background: var(--elite-danger);
+    color: white;
+    font-size: 0.65rem;
+    padding: 2px 8px;
+    border-radius: 20px;
+    font-weight: 700;
+}
+
+.elite-header {
+    height: var(--header-height);
+    background: rgba(10, 12, 18, 0.95);
+    backdrop-filter: blur(12px);
+    border-bottom: 1px solid var(--border-neon);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0 32px;
+    position: sticky;
+    top: 0;
+    z-index: 90;
+}
+
+.header-left h1 {
+    font-size: 1.3rem;
+    font-weight: 600;
+    color: var(--elite-primary);
+}
+
+.header-stats {
+    display: flex;
+    gap: 32px;
+}
+
+.stat-item {
+    text-align: right;
+}
+
+.stat-label {
+    display: block;
+    font-size: 0.7rem;
+    color: var(--text-tertiary);
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+.stat-value {
+    display: block;
+    font-size: 1.1rem;
+    font-weight: 700;
+    color: var(--elite-primary);
+}
+
+.view-container {
+    flex: 1;
+    padding: 28px;
+    overflow-y: auto;
+}
+
 /* ============================================================================
-   CARDS - EFEITO GLASSMORPHISM COM NEON
+   CARDS DASHBOARD
    ============================================================================ */
+
+.dashboard-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 24px;
+    margin-bottom: 28px;
+}
 
 .dashboard-card {
     background: var(--bg-carbon-card);
-    backdrop-filter: blur(10px);
     border: 1px solid var(--border-neon);
-    border-radius: 20px;
+    border-radius: 24px;
     padding: 24px;
     transition: all 0.3s ease;
 }
@@ -195,16 +455,65 @@ body {
     box-shadow: 0 0 30px rgba(0, 229, 255, 0.2);
 }
 
+.card-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 16px;
+}
+
+.card-header h3 {
+    font-size: 0.85rem;
+    color: var(--text-tertiary);
+    text-transform: uppercase;
+    letter-spacing: 1px;
+}
+
+.card-header i {
+    font-size: 1.4rem;
+    color: var(--elite-primary);
+}
+
 .card-value {
     font-size: 2.5rem;
     font-weight: 800;
     font-family: 'JetBrains Mono', monospace;
     color: var(--elite-primary);
     text-shadow: 0 0 10px rgba(0, 229, 255, 0.5);
+    margin-bottom: 8px;
 }
 
 /* ============================================================================
-   ALERTAS DE BURN-RATE (PROCESSOS CRÍTICOS)
+   GRÁFICOS DINÂMICOS
+   ============================================================================ */
+
+.charts-dashboard {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 24px;
+    margin-bottom: 28px;
+}
+
+.chart-container {
+    background: var(--bg-carbon-card);
+    border: 1px solid var(--border-neon);
+    border-radius: 20px;
+    padding: 20px;
+}
+
+.chart-container h3 {
+    margin-bottom: 16px;
+    font-size: 0.9rem;
+    color: var(--text-secondary);
+}
+
+.chart-container canvas {
+    max-height: 280px;
+    width: 100%;
+}
+
+/* ============================================================================
+   ALERTAS CRÍTICOS (BURN-RATE)
    ============================================================================ */
 
 .process-critical {
@@ -213,15 +522,15 @@ body {
     animation: pulseRed 1.5s infinite;
 }
 
+.process-warning {
+    border-left: 4px solid var(--elite-warning);
+    background: rgba(245, 158, 11, 0.08);
+}
+
 @keyframes pulseRed {
     0% { box-shadow: 0 0 0 0 rgba(239, 68, 68, 0.4); }
     70% { box-shadow: 0 0 0 10px rgba(239, 68, 68, 0); }
     100% { box-shadow: 0 0 0 0 rgba(239, 68, 68, 0); }
-}
-
-.process-warning {
-    border-left: 4px solid var(--elite-warning);
-    background: rgba(245, 158, 11, 0.08);
 }
 
 .burn-rate-badge {
@@ -244,132 +553,50 @@ body {
 }
 
 /* ============================================================================
-   QUESTIONÁRIOS ESTRATÉGICOS
-   ============================================================================ */
-
-.questionnaire-panel {
-    background: var(--bg-carbon-card);
-    border-radius: 20px;
-    padding: 24px;
-    margin-bottom: 24px;
-}
-
-.question-item {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    padding: 16px;
-    border-bottom: 1px solid var(--border-neon);
-}
-
-.question-item:hover {
-    background: rgba(0, 229, 255, 0.05);
-}
-
-.question-status {
-    padding: 6px 16px;
-    border-radius: 20px;
-    font-weight: 600;
-}
-
-.question-status.positive {
-    background: rgba(16, 185, 129, 0.2);
-    color: var(--elite-success);
-}
-
-.question-status.negative {
-    background: rgba(239, 68, 68, 0.2);
-    color: var(--elite-danger);
-}
-
-/* ============================================================================
-   CADEIA DE CUSTÓDIA
-   ============================================================================ */
-
-.evidence-panel {
-    background: var(--bg-carbon-card);
-    border-radius: 20px;
-    padding: 24px;
-}
-
-.evidence-item {
-    background: rgba(0, 0, 0, 0.3);
-    border-radius: 12px;
-    padding: 16px;
-    margin-bottom: 12px;
-    border-left: 3px solid var(--elite-primary);
-}
-
-.evidence-hash {
-    font-family: 'JetBrains Mono', monospace;
-    font-size: 0.7rem;
-    color: var(--text-tertiary);
-}
-
-/* ============================================================================
-   SIMULADOR DE CONTRA-PERÍCIA
-   ============================================================================ */
-
-.simulator-panel {
-    background: var(--bg-carbon-card);
-    border-radius: 20px;
-    padding: 24px;
-}
-
-.simulation-result {
-    background: linear-gradient(135deg, rgba(0, 229, 255, 0.1), rgba(124, 58, 237, 0.1));
-    border-radius: 16px;
-    padding: 20px;
-    border: 1px solid var(--border-neon);
-}
-
-/* ============================================================================
-   ADMIN PURGE PANEL
-   ============================================================================ */
-
-.admin-purge-panel {
-    background: rgba(239, 68, 68, 0.1);
-    border: 2px solid var(--elite-danger);
-    border-radius: 20px;
-    padding: 24px;
-    margin-top: 32px;
-}
-
-.warning-text {
-    color: var(--elite-danger);
-    font-weight: 600;
-    margin-bottom: 20px;
-}
-
-/* ============================================================================
    RESPONSIVIDADE
    ============================================================================ */
 
 @media (max-width: 1024px) {
-    :root {
-        --sidebar-width: 280px;
-        --btn-height-large: 48px;
-        --btn-padding-large: 12px 24px;
-        --btn-font-large: 0.9rem;
+    .elite-sidebar {
+        transform: translateX(-100%);
     }
     
-    .dashboard-card .card-value {
-        font-size: 1.8rem;
+    .elite-sidebar.open {
+        transform: translateX(0);
     }
-}
-
-@media (max-width: 768px) {
-    .dashboard-grid {
-        grid-template-columns: 1fr;
+    
+    .elite-main {
+        margin-left: 0;
+    }
+    
+    .menu-toggle {
+        display: block;
+    }
+    
+    .header-stats {
+        display: none;
     }
     
     .charts-dashboard {
         grid-template-columns: 1fr;
     }
+}
+
+@media (max-width: 768px) {
+    .view-container {
+        padding: 16px;
+    }
     
-    .question-item {
-        flex-direction: column;
-        align-items: flex-start;
-        gap: 12px;
+    .dashboard-grid {
+        grid-template-columns: 1fr;
+    }
+    
+    .login-card {
+        padding: 32px 24px;
+        margin: 16px;
+    }
+    
+    .login-card h2 {
+        font-size: 1.5rem;
     }
 }

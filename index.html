@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
-    <meta name="description" content="ELITE PROBATUM v2.0 — Metodologia de Inteligência Forense e Estratégica para Escritórios de Elite">
+    <meta name="description" content="ELITE PROBATUM v2.0 — Metodologia de Inteligência Forense e Estratégica">
     <meta name="author" content="ELITE PROBATUM">
     <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline' https://cdn.jsdelivr.net https://cdnjs.cloudflare.com https://fonts.googleapis.com; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com https://cdnjs.cloudflare.com; font-src 'self' https://fonts.gstatic.com https://cdnjs.cloudflare.com data:; connect-src 'self' https://cdn.jsdelivr.net https://cdnjs.cloudflare.com https://fonts.googleapis.com; img-src 'self' data: blob:; base-uri 'self'; form-action 'self';">
     <meta name="referrer" content="strict-origin-when-cross-origin">
@@ -32,33 +32,54 @@
 </head>
 <body>
     
-    <!-- SPLASH SCREEN - OCULTA -->
-    <div id="splashScreen" class="elite-splash" style="display: none;">...</div>
-    
-    <!-- MODAL DE LOGIN -->
-    <div id="loginOverlay" class="login-overlay" style="display: flex;">
-        <div class="login-modal">
-            <i class="fas fa-shield-hooded" style="font-size: 3rem; color: var(--elite-primary); margin-bottom: 16px;"></i>
-            <h2>ELITE PROBATUM v2.0</h2>
-            <p>Metodologia de Inteligência Forense Avançada</p>
+    <!-- ================================================================
+         LOGIN OVERLAY - CENTRALIZADO
+    ================================================================ -->
+    <div id="loginOverlay" class="login-overlay">
+        <div class="login-card">
+            <i class="fas fa-crown" style="font-size: 3rem; color: var(--elite-primary); margin-bottom: 16px;"></i>
+            <h2>ELITE PROBATUM</h2>
+            <div class="version">v2.0 · Metodologia Forense Avançada</div>
+            <div class="subtitle">Inteligência que vence causas</div>
+            
             <div class="form-group">
-                <input type="text" id="loginUser" placeholder="Utilizador" value="admin">
+                <label>UTILIZADOR</label>
+                <input type="text" id="loginUser" placeholder="Utilizador" value="">
             </div>
             <div class="form-group">
-                <input type="password" id="loginPass" placeholder="Palavra-passe" value="probatum">
+                <label>PALAVRA-PASSE</label>
+                <input type="password" id="loginPass" placeholder="Palavra-passe" value="">
             </div>
-            <button id="loginBtn" class="elite-btn primary full-width">AUTENTICAR</button>
+            
+            <div id="loginError" class="login-error" style="display: none; color: var(--elite-danger); margin-bottom: 16px;">Credenciais inválidas</div>
+            
+            <button id="loginBtn" class="elite-btn primary full-width">
+                <i class="fas fa-key"></i> AUTENTICAR
+            </button>
+            
             <div class="request-access">
-                <button id="requestAccessBtn" class="elite-btn secondary full-width">SOLICITAR ACESSO</button>
+                <button id="requestAccessBtn" class="elite-btn secondary full-width request-access-btn">
+                    <i class="fas fa-user-plus"></i> SOLICITAR ACESSO
+                </button>
+                <p style="margin-top: 12px; font-size: 0.65rem; color: var(--text-tertiary);">
+                    O pedido será enviado ao Master Hash Controller
+                </p>
             </div>
+            
             <div class="language-selector">
-                <button id="langPT" class="lang-btn active">🇵🇹 PT</button>
-                <button id="langEN" class="lang-btn">🇬🇧 EN</button>
+                <button id="langPT" class="lang-btn active">🇵🇹 PORTUGUÊS</button>
+                <button id="langEN" class="lang-btn">🇬🇧 ENGLISH</button>
             </div>
+            
+            <p style="margin-top: 20px; font-size: 0.65rem; color: var(--text-tertiary);">
+                <i class="fas fa-shield-alt"></i> Ambiente seguro com encriptação AES-256
+            </p>
         </div>
     </div>
     
-    <!-- MODAL DE PEDIDO DE ACESSO -->
+    <!-- ================================================================
+         MODAL DE PEDIDO DE ACESSO
+    ================================================================ -->
     <div id="accessRequestModal" class="elite-modal" style="display: none;">
         <div class="modal-content">
             <div class="modal-header">
@@ -67,18 +88,37 @@
             </div>
             <div class="modal-body">
                 <form id="accessRequestForm">
-                    <div class="form-group"><label>Nome Completo *</label><input type="text" id="requestName" required></div>
-                    <div class="form-group"><label>E-mail Institucional *</label><input type="email" id="requestEmail" required></div>
-                    <div class="form-group"><label>NIF / NIPC *</label><input type="text" id="requestNif" required></div>
-                    <div class="form-group"><label>Cargo / Função</label><input type="text" id="requestRole"></div>
-                    <div class="form-group"><label>Justificação de Acesso</label><textarea id="requestReason" rows="3"></textarea></div>
-                    <button type="submit" class="elite-btn primary full-width">ENVIAR PEDIDO</button>
+                    <div class="form-group">
+                        <label>Nome Completo *</label>
+                        <input type="text" id="requestName" required>
+                    </div>
+                    <div class="form-group">
+                        <label>E-mail Institucional *</label>
+                        <input type="email" id="requestEmail" required>
+                    </div>
+                    <div class="form-group">
+                        <label>NIF / NIPC *</label>
+                        <input type="text" id="requestNif" required>
+                    </div>
+                    <div class="form-group">
+                        <label>Cargo / Função</label>
+                        <input type="text" id="requestRole" placeholder="Ex: Sócio, Advogado, Estagiário">
+                    </div>
+                    <div class="form-group">
+                        <label>Justificação de Acesso</label>
+                        <textarea id="requestReason" rows="3" placeholder="Motivo pelo qual necessita de aceder à metodologia..."></textarea>
+                    </div>
+                    <button type="submit" class="elite-btn primary full-width">
+                        <i class="fas fa-paper-plane"></i> ENVIAR PEDIDO
+                    </button>
                 </form>
             </div>
         </div>
     </div>
     
-    <!-- MAIN APP CONTAINER -->
+    <!-- ================================================================
+         MAIN APP CONTAINER
+    ================================================================ -->
     <div id="appContainer" class="elite-app" style="display: none;">
         
         <!-- SIDEBAR -->
@@ -86,8 +126,9 @@
             <div class="sidebar-logo">
                 <i class="fas fa-crown"></i>
                 <span>ELITE<span class="elite-light">PROBATUM</span></span>
-                <small class="version-badge">v2.0</small>
+                <span class="version-badge">v2.0</span>
             </div>
+            
             <nav class="sidebar-nav">
                 <a href="#" class="nav-item active" data-view="dashboard"><i class="fas fa-chart-pie"></i><span>Painel de Controlo</span></a>
                 <a href="#" class="nav-item" data-view="cases"><i class="fas fa-folder-open"></i><span>Processos</span><span class="nav-badge" id="casesBadge">0</span></a>
@@ -102,8 +143,15 @@
                 <a href="#" class="nav-item" data-view="reports"><i class="fas fa-file-alt"></i><span>Relatórios</span></a>
                 <a href="#" class="nav-item" data-view="admin"><i class="fas fa-skull"></i><span>Administração</span></a>
             </nav>
+            
             <div class="sidebar-footer">
-                <div class="lawyer-info"><i class="fas fa-user-shield"></i><div><strong id="userName">Dr. Administrador</strong><small id="userRole">Super Utilizador</small></div></div>
+                <div class="lawyer-info">
+                    <i class="fas fa-user-shield"></i>
+                    <div>
+                        <strong id="userName">Dr. Administrador</strong>
+                        <small id="userRole">Super Utilizador</small>
+                    </div>
+                </div>
                 <button class="logout-btn" id="logoutBtn"><i class="fas fa-sign-out-alt"></i></button>
             </div>
         </aside>
@@ -111,17 +159,29 @@
         <!-- MAIN CONTENT -->
         <main class="elite-main">
             <header class="elite-header">
-                <div class="header-left"><button id="mobileMenuToggle" class="menu-toggle"><i class="fas fa-bars"></i></button><h1 id="pageTitle">Painel de Controlo Estratégico</h1></div>
+                <div class="header-left">
+                    <button id="mobileMenuToggle" class="menu-toggle"><i class="fas fa-bars"></i></button>
+                    <h1 id="pageTitle">Painel de Controlo Estratégico</h1>
+                </div>
                 <div class="header-right">
                     <div class="header-stats">
-                        <div class="stat-item"><span class="stat-label">Processos Ativos</span><span class="stat-value" id="headerActiveCases">0</span></div>
-                        <div class="stat-item"><span class="stat-label">Valor em Disputa</span><span class="stat-value" id="headerDisputeValue">€0</span></div>
-                        <div class="stat-item"><span class="stat-label">Taxa Sucesso</span><span class="stat-value" id="headerSuccessRate">0%</span></div>
+                        <div class="stat-item">
+                            <span class="stat-label">Processos Ativos</span>
+                            <span class="stat-value" id="headerActiveCases">0</span>
+                        </div>
+                        <div class="stat-item">
+                            <span class="stat-label">Valor em Disputa</span>
+                            <span class="stat-value" id="headerDisputeValue">€0</span>
+                        </div>
+                        <div class="stat-item">
+                            <span class="stat-label">Taxa Sucesso</span>
+                            <span class="stat-value" id="headerSuccessRate">0%</span>
+                        </div>
                     </div>
                     <div class="header-actions">
-                        <button id="langToggle" class="icon-btn"><i class="fas fa-language"></i></button>
-                        <button id="integrityCheckBtn" class="icon-btn"><i class="fas fa-shield-hooded"></i></button>
-                        <button id="exportReportBtn" class="icon-btn"><i class="fas fa-file-pdf"></i></button>
+                        <button id="langToggle" class="icon-btn" title="PT/EN"><i class="fas fa-language"></i></button>
+                        <button id="integrityCheckBtn" class="icon-btn" title="Verificação de Integridade"><i class="fas fa-shield-hooded"></i></button>
+                        <button id="exportReportBtn" class="icon-btn" title="Exportar Relatório"><i class="fas fa-file-pdf"></i></button>
                         <button id="settingsBtn" class="icon-btn"><i class="fas fa-cog"></i></button>
                     </div>
                 </div>
@@ -130,36 +190,125 @@
         </main>
     </div>
     
-    <!-- MODAIS ADICIONAIS -->
-    <div id="caseDetailModal" class="elite-modal" style="display: none;"><div class="modal-content"><div class="modal-header"><h3>Detalhes do Processo</h3><button class="modal-close">&times;</button></div><div class="modal-body" id="caseDetailBody"></div></div></div>
-    <div id="newClientModal" class="elite-modal" style="display: none;"><div class="modal-content"><div class="modal-header"><h3>Novo Cliente</h3><button class="modal-close">&times;</button></div><div class="modal-body"><form id="newClientForm">...</form></div></div></div>
-    <div id="notesModal" class="elite-modal" style="display: none;"><div class="modal-content"><div class="modal-header"><h3>Notas Estratégicas</h3><button class="modal-close">&times;</button></div><div class="modal-body"><textarea id="strategicNote" rows="4"></textarea><button id="saveNoteBtn" class="elite-btn primary">Guardar Nota</button><div id="notesList"></div></div></div></div>
-    <div id="integrityModal" class="elite-modal" style="display: none;"><div class="modal-content"><div class="modal-header"><h3>Verificação de Integridade</h3><button class="modal-close">&times;</button></div><div class="modal-body" id="integrityBody"></div></div></div>
+    <!-- ================================================================
+         MODAIS GLOBAIS
+    ================================================================ -->
+    <div id="caseDetailModal" class="elite-modal" style="display: none;">
+        <div class="modal-content">
+            <div class="modal-header"><h3>Detalhes do Processo</h3><button class="modal-close">&times;</button></div>
+            <div class="modal-body" id="caseDetailBody"></div>
+        </div>
+    </div>
+    
+    <div id="newClientModal" class="elite-modal" style="display: none;">
+        <div class="modal-content">
+            <div class="modal-header"><h3>Novo Cliente</h3><button class="modal-close">&times;</button></div>
+            <div class="modal-body">
+                <form id="newClientForm">
+                    <div class="form-group"><label>Nome do Cliente *</label><input type="text" id="clientName" required></div>
+                    <div class="form-group"><label>NIF / NIPC *</label><input type="text" id="clientNif" required></div>
+                    <div class="form-group"><label>Valor da Causa (€) *</label><input type="number" id="clientCaseValue" required></div>
+                    <button type="submit" class="elite-btn primary full-width">Criar Cliente</button>
+                </form>
+            </div>
+        </div>
+    </div>
+    
+    <div id="notesModal" class="elite-modal" style="display: none;">
+        <div class="modal-content">
+            <div class="modal-header"><h3>Notas Estratégicas</h3><button class="modal-close">&times;</button></div>
+            <div class="modal-body">
+                <textarea id="strategicNote" rows="4" placeholder="Escreva uma nota estratégica... (com hash SHA-256)"></textarea>
+                <button id="saveNoteBtn" class="elite-btn primary full-width">Guardar Nota</button>
+                <div id="notesList" style="margin-top: 20px;"></div>
+            </div>
+        </div>
+    </div>
+    
+    <div id="integrityModal" class="elite-modal" style="display: none;">
+        <div class="modal-content">
+            <div class="modal-header"><h3>Verificação de Integridade</h3><button class="modal-close">&times;</button></div>
+            <div class="modal-body" id="integrityBody"></div>
+        </div>
+    </div>
+    
     <div id="toastContainer" class="elite-toast-container"></div>
     
     <!-- SCRIPT PRINCIPAL -->
     <script src="js_core_app.js"></script>
     
+    <!-- SCRIPT DE INICIALIZAÇÃO -->
     <script>
-        // Inicialização e eventos
-        document.addEventListener('DOMContentLoaded', function() {
-            // Login
-            const loginBtn = document.getElementById('loginBtn');
+        (function() {
+            // Credenciais válidas (simulação)
+            const VALID_CREDENTIALS = {
+                admin: { password: 'probatum', role: 'SUPER_USER', name: 'Dr. Administrador' }
+            };
+            
+            // Elementos
             const loginOverlay = document.getElementById('loginOverlay');
             const appContainer = document.getElementById('appContainer');
+            const loginBtn = document.getElementById('loginBtn');
+            const loginUser = document.getElementById('loginUser');
+            const loginPass = document.getElementById('loginPass');
+            const loginError = document.getElementById('loginError');
             
-            if (loginBtn && loginOverlay && appContainer) {
-                loginBtn.addEventListener('click', function() {
+            // Função de autenticação
+            function authenticate() {
+                const username = loginUser.value.trim();
+                const password = loginPass.value.trim();
+                
+                if (username === 'admin' && password === 'probatum') {
+                    // Autenticação bem-sucedida
+                    loginError.style.display = 'none';
                     loginOverlay.style.display = 'none';
                     appContainer.style.display = 'flex';
-                    setTimeout(() => appContainer.classList.add('visible'), 50);
+                    
+                    // Atualizar dados do utilizador
+                    document.getElementById('userName').textContent = 'Dr. Administrador';
+                    document.getElementById('userRole').textContent = 'Super Utilizador · Acesso Total';
                     
                     // Atualizar métricas
                     document.getElementById('headerActiveCases').textContent = '27';
                     document.getElementById('headerDisputeValue').textContent = '€1.247.500';
                     document.getElementById('headerSuccessRate').textContent = '68%';
                     document.getElementById('casesBadge').textContent = '27';
-                });
+                    
+                    // Inicializar Dashboard
+                    if (window.EliteProbatum && typeof window.EliteProbatum.initDashboard === 'function') {
+                        window.EliteProbatum.initDashboard();
+                    } else {
+                        console.log('Dashboard inicializado manualmente');
+                        if (typeof renderDashboard === 'function') renderDashboard();
+                    }
+                    
+                    // Mostrar toast de boas-vindas
+                    if (window.EliteUtils && typeof window.EliteUtils.showToast === 'function') {
+                        window.EliteUtils.showToast('Ecossistema Estratégico Ativo', 'success');
+                    } else {
+                        alert('Bem-vindo à ELITE PROBATUM v2.0');
+                    }
+                    
+                    return true;
+                } else {
+                    loginError.style.display = 'block';
+                    loginError.textContent = 'Credenciais inválidas. Utilize admin / probatum';
+                    return false;
+                }
+            }
+            
+            // Evento de login
+            if (loginBtn) {
+                loginBtn.addEventListener('click', authenticate);
+            }
+            
+            // Evento de tecla Enter
+            if (loginUser && loginPass) {
+                const handleEnter = (e) => {
+                    if (e.key === 'Enter') authenticate();
+                };
+                loginUser.addEventListener('keypress', handleEnter);
+                loginPass.addEventListener('keypress', handleEnter);
             }
             
             // Botão de solicitar acesso
@@ -167,16 +316,43 @@
             const accessModal = document.getElementById('accessRequestModal');
             if (requestBtn && accessModal) {
                 requestBtn.addEventListener('click', () => {
-                    loginOverlay.style.display = 'none';
                     accessModal.style.display = 'flex';
                 });
             }
             
             // Fechar modais
             document.querySelectorAll('.modal-close').forEach(btn => {
-                btn.addEventListener('click', () => btn.closest('.elite-modal').style.display = 'none');
+                btn.addEventListener('click', () => {
+                    const modal = btn.closest('.elite-modal');
+                    if (modal) modal.style.display = 'none';
+                });
             });
-        });
+            
+            // Clique fora do modal
+            document.querySelectorAll('.elite-modal').forEach(modal => {
+                modal.addEventListener('click', (e) => {
+                    if (e.target === modal) modal.style.display = 'none';
+                });
+            });
+            
+            // Formulário de pedido de acesso
+            const accessForm = document.getElementById('accessRequestForm');
+            if (accessForm) {
+                accessForm.addEventListener('submit', (e) => {
+                    e.preventDefault();
+                    const name = document.getElementById('requestName')?.value || '';
+                    const email = document.getElementById('requestEmail')?.value || '';
+                    
+                    if (name && email) {
+                        alert(`Pedido de acesso enviado para ${email}. O Master Hash Controller irá analisar.`);
+                        accessModal.style.display = 'none';
+                        accessForm.reset();
+                    } else {
+                        alert('Por favor, preencha todos os campos obrigatórios.');
+                    }
+                });
+            }
+        })();
     </script>
 </body>
 </html>
