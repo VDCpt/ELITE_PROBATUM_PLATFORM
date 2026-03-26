@@ -644,23 +644,23 @@ class GamificationSystem {
                         <tbody>
                             ${topUsers.map(user => `
                                 <tr class="${user.rank === 1 ? 'rank-first' : user.rank <= 3 ? 'rank-top' : ''}">
-                                    <td><strong>${user.rank}º</strong> ${user.rank === 1 ? '👑' : ''}</td>
-                                    <td><strong>${user.name}</strong></td>
-                                    <td><span class="badge badge-primary">${user.team}</span></td>
-                                    <td>${user.level}</td>
-                                    <td>${user.points}</td>
-                                    <td>${user.casesWon}</td>
+                                    <td><strong>${user.rank}º</strong> ${user.rank === 1 ? '👑' : ''} </div>
+                                    <td><strong>${user.name}</strong> </div>
+                                    <td><span class="badge badge-primary">${user.team}</span> </div>
+                                    <td>${user.level}</div>
+                                    <td>${user.points}</div>
+                                    <td>${user.casesWon}</div>
                                     <td>
                                         <div class="progress-bar" style="width: 80px;">
                                             <div class="progress-fill" style="width: ${user.efficiency * 100}%"></div>
                                             <span class="progress-text">${(user.efficiency * 100).toFixed(0)}%</span>
                                         </div>
-                                    </td>
+                                     </div>
                                     <td>${user.badges.slice(0, 3).map(b => {
                                         const badge = this.badges.find(bdg => bdg.id === b);
                                         return badge ? `<span class="badge-tooltip" title="${badge.description}"><i class="fas ${badge.icon}" style="color: ${badge.color}"></i></span>` : '';
-                                    }).join('')}</td>
-                                </tr>
+                                    }).join('')}</div>
+                                 </tr>
                             `).join('')}
                         </tbody>
                     </table>
