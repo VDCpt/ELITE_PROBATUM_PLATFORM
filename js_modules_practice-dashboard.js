@@ -787,27 +787,27 @@ class PracticeDashboard {
         return `
             <table class="data-table">
                 <thead>
-                    <tr><th>Processo</th><th>Advogado</th><th>Equipa</th><th>Valor</th><th>Probabilidade</th><th>Horas</th><th>Status</th> </tr>
+                    <tr><th>Processo</th><th>Advogado</th><th>Equipa</th><th>Valor</th><th>Probabilidade</th><th>Horas</th><th>Status</th></tr>
                 </thead>
                 <tbody>
                     ${priorityCases.map(c => `
                         <tr>
-                            <td><strong>${c.id}</strong> </tr>
-                            <td>${c.lawyer} </tr>
-                            <td><span class="badge badge-primary">${c.team}</span> </tr>
-                            <td>${this.formatCurrency(c.value)} </tr>
+                            <td><strong>${c.id}</strong></td>
+                            <td>${c.lawyer}</td>
+                            <td><span class="badge badge-primary">${c.team}</span></td>
+                            <td>${this.formatCurrency(c.value)}</td>
                             <td>
                                 <div class="progress-bar">
                                     <div class="progress-fill" style="width: ${c.probability * 100}%"></div>
                                     <span class="progress-text">${(c.probability * 100).toFixed(0)}%</span>
                                 </div>
                             </td>
-                            <td>${c.hoursSpent}h</td>
-                            <td><span class="status-badge status-${c.status === 'active' ? 'active' : 'closed'}">${c.status === 'active' ? 'Ativo' : 'Concluído'}</span></td>
-                        </tr>
+                            <td>${c.hoursSpent}h</div>
+                            <td><span class="status-badge status-${c.status === 'active' ? 'active' : 'closed'}">${c.status === 'active' ? 'Ativo' : 'Concluído'}</span>
+                        </div>
                     `).join('')}
                 </tbody>
-            </table>
+            </div>
         `;
     }
     

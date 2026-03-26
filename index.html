@@ -35,6 +35,7 @@
     
     <!-- ================================================================
          GATEKEEPER SECURE - LOGIN TÁTICO
+         CORREÇÃO: IDs únicos para botões de idioma com event listeners
     ================================================================ -->
     <div id="loginOverlay" class="gatekeeper-secure">
         <div class="login-card">
@@ -43,37 +44,38 @@
                 <span>ELITE <span class="logo-highlight">PROBATUM</span></span>
             </div>
             <div class="version-badge">v2.0 · UNIDADE DE COMANDO FORENSE</div>
-            <p class="subtitle">Acesso restrito a pessoal autorizado</p>
+            <p class="subtitle" data-i18n="login_subtitle">Acesso restrito a pessoal autorizado</p>
             
             <div class="form-group">
-                <label>UTILIZADOR</label>
+                <label data-i18n="login_user">UTILIZADOR</label>
                 <input type="text" id="username" placeholder="admin" value="">
             </div>
             <div class="form-group">
-                <label>PALAVRA-PASSE</label>
+                <label data-i18n="login_password">PALAVRA-PASSE</label>
                 <input type="password" id="password" placeholder="••••••••" value="">
             </div>
             
-            <div id="loginError" class="login-error" style="display: none;">ACESSO NEGADO — Credenciais inválidas</div>
+            <div id="loginError" class="login-error" style="display: none;" data-i18n="login_error">ACESSO NEGADO — Credenciais inválidas</div>
             
             <button id="authBtn" class="elite-btn primary full-width">
-                <i class="fas fa-key"></i> AUTENTICAR
+                <i class="fas fa-key"></i> <span data-i18n="login_button">AUTENTICAR</span>
             </button>
             
             <div class="request-access">
                 <button id="requestAccessBtn" class="elite-btn secondary full-width request-access-btn">
-                    <i class="fas fa-user-plus"></i> SOLICITAR ACESSO
+                    <i class="fas fa-user-plus"></i> <span data-i18n="login_request">SOLICITAR ACESSO</span>
                 </button>
                 <p class="access-hint">O pedido será enviado ao Master Hash Controller</p>
             </div>
             
+            <!-- CORREÇÃO: Botões de idioma com IDs únicos e data-i18n para texto -->
             <div class="language-selector">
-                <button id="langPT" class="lang-btn active">🇵🇹 PORTUGUÊS</button>
-                <button id="langEN" class="lang-btn">🇬🇧 ENGLISH</button>
+                <button id="langPT" class="lang-btn active" data-locale="pt">🇵🇹 PORTUGUÊS</button>
+                <button id="langEN" class="lang-btn" data-locale="en">🇬🇧 ENGLISH</button>
             </div>
             
             <div class="security-badge">
-                <i class="fas fa-shield-alt"></i> ENCRIPTADO AES-256 · CANAL SEGURO
+                <i class="fas fa-shield-alt"></i> <span data-i18n="login_security">ENCRIPTADO AES-256 · CANAL SEGURO</span>
             </div>
         </div>
     </div>
@@ -157,56 +159,56 @@
             </div>
             
             <nav class="sidebar-nav">
-                <a href="#" class="nav-item active" data-view="dashboard">
+                <a href="#" class="nav-item active" data-view="dashboard" data-i18n="nav_dashboard">
                     <i class="fas fa-chart-pie"></i>
                     <span>PAINEL DE COMANDO</span>
                 </a>
-                <a href="#" class="nav-item" data-view="cases">
+                <a href="#" class="nav-item" data-view="cases" data-i18n="nav_cases">
                     <i class="fas fa-folder-open"></i>
                     <span>PROCESSOS</span>
                     <span class="nav-badge" id="casesBadge">0</span>
                 </a>
-                <a href="#" class="nav-item" data-view="insolvency">
+                <a href="#" class="nav-item" data-view="insolvency" data-i18n="nav_insolvency">
                     <i class="fas fa-chart-line"></i>
                     <span>INSOLVÊNCIAS (CIRE)</span>
                 </a>
-                <a href="#" class="nav-item" data-view="labor">
+                <a href="#" class="nav-item" data-view="labor" data-i18n="nav_labor">
                     <i class="fas fa-briefcase"></i>
                     <span>CONTENCIOSO LABORAL</span>
                 </a>
-                <a href="#" class="nav-item" data-view="litigation">
+                <a href="#" class="nav-item" data-view="litigation" data-i18n="nav_litigation">
                     <i class="fas fa-brain"></i>
                     <span>INTELIGÊNCIA DE LITÍGIO</span>
                 </a>
-                <a href="#" class="nav-item" data-view="questionnaire">
+                <a href="#" class="nav-item" data-view="questionnaire" data-i18n="nav_questionnaire">
                     <i class="fas fa-question-circle"></i>
                     <span>QUESTIONÁRIOS ESTRATÉGICOS</span>
                 </a>
-                <a href="#" class="nav-item" data-view="evidence">
+                <a href="#" class="nav-item" data-view="evidence" data-i18n="nav_evidence">
                     <i class="fas fa-link"></i>
                     <span>CADEIA DE CUSTÓDIA</span>
                 </a>
-                <a href="#" class="nav-item" data-view="adversary">
+                <a href="#" class="nav-item" data-view="adversary" data-i18n="nav_adversary">
                     <i class="fas fa-users"></i>
                     <span>ANÁLISE DE OPOSIÇÃO</span>
                 </a>
-                <a href="#" class="nav-item" data-view="simulator">
+                <a href="#" class="nav-item" data-view="simulator" data-i18n="nav_simulator">
                     <i class="fas fa-flask"></i>
                     <span>SIMULADOR DE CONTRA-PERÍCIA</span>
                 </a>
-                <a href="#" class="nav-item" data-view="deadlines">
+                <a href="#" class="nav-item" data-view="deadlines" data-i18n="nav_deadlines">
                     <i class="fas fa-calendar-alt"></i>
                     <span>PRAZOS JUDICIAIS</span>
                 </a>
-                <a href="#" class="nav-item" data-view="activitylog">
+                <a href="#" class="nav-item" data-view="activitylog" data-i18n="nav_activitylog">
                     <i class="fas fa-history"></i>
                     <span>REGISTOS RGPD</span>
                 </a>
-                <a href="#" class="nav-item" data-view="reports">
+                <a href="#" class="nav-item" data-view="reports" data-i18n="nav_reports">
                     <i class="fas fa-file-alt"></i>
                     <span>RELATÓRIOS</span>
                 </a>
-                <a href="#" class="nav-item" data-view="admin">
+                <a href="#" class="nav-item" data-view="admin" data-i18n="nav_admin">
                     <i class="fas fa-skull"></i>
                     <span>ADMINISTRAÇÃO</span>
                 </a>
@@ -238,19 +240,20 @@
                 <div class="header-right">
                     <div class="header-stats">
                         <div class="stat-item">
-                            <span class="stat-label">PROCESSOS ATIVOS</span>
+                            <span class="stat-label" data-i18n="dashboard_active_cases">PROCESSOS ATIVOS</span>
                             <span class="stat-value" id="headerActiveCases">0</span>
                         </div>
                         <div class="stat-item">
-                            <span class="stat-label">VALOR EM DISPUTA</span>
+                            <span class="stat-label" data-i18n="dashboard_dispute_value">VALOR EM DISPUTA</span>
                             <span class="stat-value" id="headerDisputeValue">€0</span>
                         </div>
                         <div class="stat-item">
-                            <span class="stat-label">TAXA SUCESSO</span>
+                            <span class="stat-label" data-i18n="dashboard_avg_prob">TAXA SUCESSO</span>
                             <span class="stat-value" id="headerSuccessRate">0%</span>
                         </div>
                     </div>
                     <div class="header-actions">
+                        <!-- CORREÇÃO: Botão de idioma com ID único para toggle -->
                         <button id="langToggle" class="icon-btn" title="PT/EN">
                             <i class="fas fa-language"></i>
                         </button>
@@ -413,6 +416,11 @@
                 const usernameInput = document.getElementById('username');
                 const passwordInput = document.getElementById('password');
                 
+                // CORREÇÃO: Referências aos botões de idioma do login
+                const langPTBtn = document.getElementById('langPT');
+                const langENBtn = document.getElementById('langEN');
+                const langToggleHeader = document.getElementById('langToggle');
+                
                 let sessionId = null;
                 
                 function generateSessionId() {
@@ -497,11 +505,55 @@
                     } else {
                         if (loginError) {
                             loginError.style.display = 'block';
-                            loginError.textContent = 'ACESSO NEGADO — Credenciais inválidas. Utilize admin / probatum';
+                            loginError.textContent = window.EliteUtils && window.EliteUtils.t ? 
+                                window.EliteUtils.t('login_error') : 
+                                'ACESSO NEGADO — Credenciais inválidas. Utilize admin / probatum';
                         }
                         console.log('[ELITE PROBATUM] Falha na autenticação');
                         return false;
                     }
+                }
+                
+                // CORREÇÃO: Event listeners para botões de idioma do login
+                if (langPTBtn) {
+                    langPTBtn.addEventListener('click', function() {
+                        if (window.EliteProbatum && typeof window.EliteProbatum.setLocale === 'function') {
+                            window.EliteProbatum.setLocale('pt');
+                        } else if (window.EliteUtils && typeof window.EliteUtils.setLocale === 'function') {
+                            window.EliteUtils.setLocale('pt');
+                        }
+                        // Atualizar classes visuais
+                        langPTBtn.classList.add('active');
+                        langENBtn.classList.remove('active');
+                    });
+                }
+                
+                if (langENBtn) {
+                    langENBtn.addEventListener('click', function() {
+                        if (window.EliteProbatum && typeof window.EliteProbatum.setLocale === 'function') {
+                            window.EliteProbatum.setLocale('en');
+                        } else if (window.EliteUtils && typeof window.EliteUtils.setLocale === 'function') {
+                            window.EliteUtils.setLocale('en');
+                        }
+                        // Atualizar classes visuais
+                        langENBtn.classList.add('active');
+                        langPTBtn.classList.remove('active');
+                    });
+                }
+                
+                // CORREÇÃO: Event listener para toggle de idioma no header (pós-login)
+                if (langToggleHeader) {
+                    langToggleHeader.addEventListener('click', function() {
+                        if (window.EliteProbatum && typeof window.EliteProbatum.getLocale === 'function') {
+                            const currentLocale = window.EliteProbatum.getLocale();
+                            const newLocale = currentLocale === 'pt' ? 'en' : 'pt';
+                            window.EliteProbatum.setLocale(newLocale);
+                        } else if (window.EliteUtils && typeof window.EliteUtils.getLocale === 'function') {
+                            const currentLocale = window.EliteUtils.getLocale();
+                            const newLocale = currentLocale === 'pt' ? 'en' : 'pt';
+                            window.EliteUtils.setLocale(newLocale);
+                        }
+                    });
                 }
                 
                 if (authBtn) {

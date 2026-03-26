@@ -1155,8 +1155,7 @@ class MarketIntelligence {
                     <h3><i class="fas fa-gavel"></i> Decisões Recentes</h3>
                     <table class="data-table">
                         <thead>
-                            <tr><th>Data</th><th>Tribunal</th><th>Resumo</th><th>Área</th><th>Impacto</th> </tr>
-                        </thead>
+                            <tr><th>Data</th><th>Tribunal</th><th>Resumo</th><th>Área</th><th>Impacto</th>  </thead>
                         <tbody>
                             ${this.courtDecisions.slice(0, 5).map(d => `
                                 <tr>
@@ -1165,7 +1164,7 @@ class MarketIntelligence {
                                     <td>${d.summary.substring(0, 60)}...</td>
                                     <td><span class="badge badge-primary">${d.area}</span></td>
                                     <td><span class="status-badge ${d.impact === 'high' ? 'status-critical' : 'status-pending'}">${d.impact === 'high' ? 'ALTO' : 'MÉDIO'}</span></td>
-                                 </tr>
+                                </tr>
                             `).join('')}
                         </tbody>
                     </table>

@@ -694,7 +694,7 @@ class JudicialAnalytics {
                     <h3><i class="fas fa-building"></i> ESTATÍSTICAS POR TRIBUNAL</h3>
                     <table class="data-table">
                         <thead>
-                            <tr><th>Tribunal</th><th>Taxa Sucesso</th><th>Duração Média</th><th>Magistrados</th><th>Volume</th></tr>
+                            <tr><th>Tribunal</th><th>Taxa Sucesso</th><th>Duração Média</th><th>Magistrados</th><th>Volume</th> </tr>
                         </thead>
                         <tbody>
                             ${Object.values(this.courts).map(court => `
