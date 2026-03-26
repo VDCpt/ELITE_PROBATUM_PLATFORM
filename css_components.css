@@ -78,6 +78,12 @@
     justify-content: center;
 }
 
+.elite-btn:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+    transform: none;
+}
+
 /* ============================================================================
    LAYOUTS TÁTICOS
    ============================================================================ */
@@ -347,12 +353,691 @@
 }
 
 /* ============================================================================
-   RESPONSIVIDADE TÁTICA
+   KPIs E MÉTRICAS
    ============================================================================ */
 
-@media (max-width: 768px) {
-    .form-row {
+.kpi-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+    gap: 20px;
+    margin-bottom: 24px;
+}
+
+.kpi-card {
+    background: #0a0c10;
+    border: 1px solid #1f2937;
+    border-radius: 16px;
+    padding: 20px;
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    transition: all 0.2s ease;
+}
+
+.kpi-card:hover {
+    border-color: #00e5ff;
+    transform: translateY(-2px);
+}
+
+.kpi-icon {
+    width: 48px;
+    height: 48px;
+    background: rgba(0, 229, 255, 0.1);
+    border-radius: 12px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.kpi-icon i {
+    font-size: 1.5rem;
+    color: #00e5ff;
+}
+
+.kpi-content {
+    flex: 1;
+}
+
+.kpi-label {
+    font-size: 0.7rem;
+    color: #64748b;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    margin-bottom: 4px;
+}
+
+.kpi-value {
+    font-size: 1.5rem;
+    font-weight: 800;
+    font-family: 'JetBrains Mono', monospace;
+    color: #00e5ff;
+}
+
+.kpi-trend {
+    font-size: 0.65rem;
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    margin-top: 4px;
+}
+
+/* ============================================================================
+   CHARTS CONTAINER
+   ============================================================================ */
+
+.charts-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(400px, 1fr));
+    gap: 20px;
+    margin-bottom: 24px;
+}
+
+.chart-card {
+    background: #0a0c10;
+    border: 1px solid #1f2937;
+    border-radius: 16px;
+    padding: 20px;
+}
+
+.chart-card h3 {
+    font-size: 0.8rem;
+    color: #94a3b8;
+    margin-bottom: 16px;
+    font-family: 'JetBrains Mono', monospace;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+}
+
+.chart-card.full-width {
+    grid-column: 1 / -1;
+}
+
+/* ============================================================================
+   ALERTS PANEL
+   ============================================================================ */
+
+.alerts-panel {
+    background: #0a0c10;
+    border: 1px solid #1f2937;
+    border-radius: 16px;
+    padding: 20px;
+    margin-bottom: 24px;
+}
+
+.alerts-panel h3 {
+    font-size: 0.9rem;
+    color: #00e5ff;
+    margin-bottom: 16px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-family: 'JetBrains Mono', monospace;
+}
+
+/* ============================================================================
+   PORTAL DO CLIENTE
+   ============================================================================ */
+
+.client-portal {
+    background: #0a0c10;
+    border-radius: 16px;
+    padding: 24px;
+    border: 1px solid #1f2937;
+}
+
+.portal-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 32px;
+    flex-wrap: wrap;
+    gap: 20px;
+}
+
+.client-welcome {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+}
+
+.client-avatar {
+    width: 64px;
+    height: 64px;
+    background: linear-gradient(135deg, #00e5ff, #0099cc);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.5rem;
+    font-weight: 800;
+    font-family: 'JetBrains Mono', monospace;
+    color: #000000;
+}
+
+.client-welcome h2 {
+    font-size: 1.2rem;
+    margin-bottom: 4px;
+}
+
+.client-welcome p {
+    font-size: 0.7rem;
+    color: #94a3b8;
+}
+
+.portal-stats {
+    display: flex;
+    gap: 24px;
+}
+
+.portal-stats .stat {
+    text-align: center;
+}
+
+.portal-cases {
+    margin-bottom: 32px;
+}
+
+.portal-cases h3 {
+    font-size: 0.9rem;
+    color: #00e5ff;
+    margin-bottom: 16px;
+    font-family: 'JetBrains Mono', monospace;
+}
+
+.cases-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 20px;
+}
+
+.case-card {
+    background: var(--bg-terminal);
+    border: 1px solid var(--border-tactic);
+    border-radius: 12px;
+    padding: 16px;
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+.case-card:hover {
+    border-color: #00e5ff;
+    transform: translateY(-2px);
+}
+
+.case-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 12px;
+}
+
+.case-id {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.7rem;
+    color: #00e5ff;
+}
+
+.case-status {
+    font-size: 0.6rem;
+    padding: 2px 8px;
+    border-radius: 12px;
+    font-weight: 700;
+}
+
+.case-status.status-active {
+    background: #00e676;
+    color: #000;
+}
+
+.case-status.status-pending {
+    background: #ffc107;
+    color: #000;
+}
+
+.case-status.status-closed {
+    background: #64748b;
+    color: #fff;
+}
+
+.case-details {
+    display: flex;
+    gap: 16px;
+    margin-bottom: 12px;
+    font-size: 0.75rem;
+    color: #94a3b8;
+}
+
+.case-progress {
+    margin-bottom: 12px;
+}
+
+.progress-label {
+    font-size: 0.6rem;
+    color: #64748b;
+    margin-bottom: 4px;
+}
+
+.case-footer {
+    display: flex;
+    justify-content: space-between;
+    font-size: 0.65rem;
+    color: #64748b;
+}
+
+/* ============================================================================
+   MESSAGES (PORTAL DO CLIENTE)
+   ============================================================================ */
+
+.portal-communication {
+    margin-bottom: 32px;
+}
+
+.portal-communication h3 {
+    font-size: 0.9rem;
+    color: #00e5ff;
+    margin-bottom: 16px;
+    font-family: 'JetBrains Mono', monospace;
+}
+
+.messages-container {
+    background: var(--bg-terminal);
+    border-radius: 12px;
+    border: 1px solid var(--border-tactic);
+    overflow: hidden;
+}
+
+.messages-list {
+    max-height: 300px;
+    overflow-y: auto;
+    padding: 16px;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+
+.message {
+    max-width: 80%;
+    padding: 10px 14px;
+    border-radius: 12px;
+    position: relative;
+}
+
+.message.sent {
+    background: #00e5ff;
+    color: #000;
+    align-self: flex-end;
+    border-bottom-right-radius: 4px;
+}
+
+.message.received {
+    background: rgba(255, 255, 255, 0.1);
+    color: #fff;
+    align-self: flex-start;
+    border-bottom-left-radius: 4px;
+}
+
+.message-header {
+    display: flex;
+    justify-content: space-between;
+    gap: 16px;
+    margin-bottom: 4px;
+    font-size: 0.65rem;
+}
+
+.message-header strong {
+    font-weight: 700;
+}
+
+.message-body {
+    font-size: 0.8rem;
+    word-break: break-word;
+}
+
+.message-read,
+.message-pending {
+    font-size: 0.55rem;
+    margin-top: 4px;
+    display: block;
+    text-align: right;
+}
+
+.message-read {
+    color: #00e676;
+}
+
+.message-pending {
+    color: #ffc107;
+}
+
+.message-input {
+    padding: 16px;
+    border-top: 1px solid var(--border-tactic);
+    display: flex;
+    gap: 12px;
+}
+
+.message-input textarea {
+    flex: 1;
+    background: rgba(0, 0, 0, 0.6);
+    border: 1px solid var(--border-tactic);
+    border-radius: 8px;
+    padding: 10px;
+    color: #fff;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.75rem;
+    resize: vertical;
+}
+
+.message-input button {
+    background: #00e5ff;
+    border: none;
+    border-radius: 8px;
+    padding: 0 20px;
+    color: #000;
+    font-weight: 700;
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+.message-input button:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 0 15px rgba(0, 229, 255, 0.5);
+}
+
+/* ============================================================================
+   DOCUMENTS (PORTAL DO CLIENTE)
+   ============================================================================ */
+
+.portal-documents h3 {
+    font-size: 0.9rem;
+    color: #00e5ff;
+    margin-bottom: 16px;
+    font-family: 'JetBrains Mono', monospace;
+}
+
+.documents-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+    gap: 12px;
+}
+
+.document-card {
+    background: var(--bg-terminal);
+    border: 1px solid var(--border-tactic);
+    border-radius: 10px;
+    padding: 12px;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+.document-card:hover {
+    border-color: #00e5ff;
+    transform: translateX(4px);
+}
+
+.document-card i:first-child {
+    font-size: 1.5rem;
+    color: #00e5ff;
+}
+
+.document-card div {
+    flex: 1;
+}
+
+.doc-name {
+    font-size: 0.8rem;
+    font-weight: 500;
+}
+
+.doc-meta {
+    font-size: 0.6rem;
+    color: #64748b;
+}
+
+.document-card i:last-child {
+    color: #64748b;
+    font-size: 0.9rem;
+}
+
+/* ============================================================================
+   SIMULATOR SCENARIO
+   ============================================================================ */
+
+.scenario-controls {
+    display: flex;
+    gap: 16px;
+    margin: 16px 0;
+}
+
+.scenario-controls label {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    cursor: pointer;
+    font-size: 0.8rem;
+}
+
+.scenario-details {
+    background: rgba(0, 0, 0, 0.3);
+    border-radius: 8px;
+    padding: 12px;
+    margin: 12px 0;
+}
+
+.scenario-details div {
+    margin-bottom: 6px;
+    font-size: 0.75rem;
+}
+
+/* ============================================================================
+   TIMELINE
+   ============================================================================ */
+
+.timeline {
+    margin-top: 16px;
+}
+
+.timeline h4 {
+    font-size: 0.8rem;
+    color: #00e5ff;
+    margin-bottom: 12px;
+}
+
+.timeline-event {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 8px 0;
+    border-left: 2px solid var(--border-tactic);
+    margin-left: 12px;
+    padding-left: 20px;
+    position: relative;
+}
+
+.timeline-event::before {
+    content: '';
+    position: absolute;
+    left: -6px;
+    top: 12px;
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+    background: var(--border-tactic);
+}
+
+.timeline-event.completed::before {
+    background: #00e676;
+}
+
+.timeline-event.pending::before {
+    background: #ffc107;
+}
+
+.timeline-event.upcoming::before {
+    background: #00e5ff;
+}
+
+.event-date {
+    font-size: 0.7rem;
+    color: #64748b;
+    min-width: 80px;
+}
+
+.event-description {
+    font-size: 0.8rem;
+    flex: 1;
+}
+
+.event-status {
+    font-size: 0.7rem;
+}
+
+/* ============================================================================
+   CASES HEADER
+   ============================================================================ */
+
+.cases-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 20px;
+    flex-wrap: wrap;
+    gap: 16px;
+}
+
+.cases-actions {
+    display: flex;
+    gap: 12px;
+}
+
+.cases-search {
+    position: relative;
+}
+
+.cases-search .search-input {
+    width: 280px;
+    padding: 10px 16px;
+    background: rgba(0, 0, 0, 0.6);
+    border: 1px solid #1f2937;
+    border-radius: 10px;
+    color: #ffffff;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.8rem;
+}
+
+.cases-search .search-input:focus {
+    outline: none;
+    border-color: #00e5ff;
+}
+
+/* ============================================================================
+   LOG HASH
+   ============================================================================ */
+
+.log-hash {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.65rem;
+    color: #00e676;
+}
+
+/* ============================================================================
+   ACTIVITY LOG
+   ============================================================================ */
+
+.activity-log-container {
+    background: var(--bg-command);
+    border-radius: 16px;
+    padding: 24px;
+    border: 1px solid var(--border-tactic);
+}
+
+.activity-log-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 20px;
+    flex-wrap: wrap;
+    gap: 16px;
+}
+
+.activity-log-header h2 {
+    font-size: 1rem;
+    font-family: 'JetBrains Mono', monospace;
+    color: #00e5ff;
+}
+
+/* ============================================================================
+   DASHBOARD CONTROLS
+   ============================================================================ */
+
+.dashboard-controls {
+    display: flex;
+    gap: 12px;
+    align-items: center;
+}
+
+.dashboard-controls select {
+    background: rgba(0, 0, 0, 0.6);
+    border: 1px solid var(--border-tactic);
+    border-radius: 8px;
+    padding: 8px 12px;
+    color: #fff;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.7rem;
+}
+
+/* ============================================================================
+   RESPONSIVIDADE TÁTICA - COMPONENTES
+   ============================================================================ */
+
+@media (max-width: 1024px) {
+    .kpi-grid {
+        grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    }
+    
+    .charts-grid {
         grid-template-columns: 1fr;
+    }
+    
+    .cases-header {
+        flex-direction: column;
+        align-items: stretch;
+    }
+    
+    .cases-search .search-input {
+        width: 100%;
+    }
+    
+    .portal-header {
+        flex-direction: column;
+        align-items: flex-start;
+    }
+    
+    .client-welcome {
+        width: 100%;
+    }
+    
+    .portal-stats {
+        width: 100%;
+        justify-content: space-between;
+    }
+    
+    .messages-list {
+        max-height: 250px;
+    }
+    
+    .message {
+        max-width: 90%;
+    }
+}
+
+@media (max-width: 768px) {
+    .elite-btn {
+        padding: 12px 20px;
+        font-size: 0.75rem;
     }
     
     .judges-grid {
@@ -367,8 +1052,235 @@
         grid-template-columns: 1fr;
     }
     
-    .elite-btn {
-        padding: 12px 20px;
-        font-size: 0.75rem;
+    .form-row {
+        grid-template-columns: 1fr;
     }
+    
+    .kpi-grid {
+        grid-template-columns: 1fr;
+    }
+    
+    .kpi-card {
+        padding: 16px;
+    }
+    
+    .kpi-value {
+        font-size: 1.2rem;
+    }
+    
+    .cases-grid {
+        grid-template-columns: 1fr;
+    }
+    
+    .documents-grid {
+        grid-template-columns: 1fr;
+    }
+    
+    .message-input {
+        flex-direction: column;
+    }
+    
+    .message-input button {
+        padding: 10px;
+    }
+    
+    .timeline-event {
+        flex-wrap: wrap;
+    }
+    
+    .event-date {
+        min-width: 100%;
+    }
+    
+    .activity-log-header {
+        flex-direction: column;
+        align-items: stretch;
+    }
+    
+    .dashboard-controls {
+        justify-content: space-between;
+    }
+}
+
+@media (max-width: 480px) {
+    .elite-btn.small {
+        padding: 6px 12px;
+        font-size: 0.65rem;
+    }
+    
+    .report-card {
+        padding: 16px;
+    }
+    
+    .report-card i {
+        font-size: 1.5rem;
+    }
+    
+    .judge-stats {
+        flex-direction: column;
+        gap: 8px;
+    }
+    
+    .alert-item {
+        flex-direction: column;
+    }
+    
+    .alert-item i {
+        align-self: flex-start;
+    }
+    
+    .portal-stats {
+        flex-direction: column;
+        gap: 12px;
+        align-items: flex-start;
+    }
+    
+    .case-card {
+        padding: 12px;
+    }
+    
+    .document-card {
+        padding: 10px;
+    }
+    
+    .kpi-icon {
+        width: 40px;
+        height: 40px;
+    }
+    
+    .kpi-icon i {
+        font-size: 1.2rem;
+    }
+}
+
+@media (min-width: 2560px) {
+    .judges-grid {
+        grid-template-columns: repeat(auto-fit, minmax(400px, 1fr));
+        gap: 28px;
+    }
+    
+    .reports-grid {
+        grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+    }
+    
+    .charts-grid {
+        gap: 28px;
+    }
+    
+    .kpi-grid {
+        gap: 28px;
+    }
+    
+    .cases-grid {
+        grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+    }
+    
+    .documents-grid {
+        grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+    }
+}
+
+/* ============================================================================
+   ANIMAÇÕES ADICIONAIS PARA COMPONENTES
+   ============================================================================ */
+
+@keyframes shimmer {
+    0% {
+        background-position: -1000px 0;
+    }
+    100% {
+        background-position: 1000px 0;
+    }
+}
+
+.loading-shimmer {
+    background: linear-gradient(90deg, #1f2937 25%, #2d3748 50%, #1f2937 75%);
+    background-size: 1000px 100%;
+    animation: shimmer 2s infinite;
+}
+
+@keyframes rotate {
+    from {
+        transform: rotate(0deg);
+    }
+    to {
+        transform: rotate(360deg);
+    }
+}
+
+.spinner {
+    animation: rotate 1s linear infinite;
+}
+
+/* ============================================================================
+   TOOLTIPS TÁTICOS
+   ============================================================================ */
+
+[data-tooltip] {
+    position: relative;
+    cursor: help;
+}
+
+[data-tooltip]:before {
+    content: attr(data-tooltip);
+    position: absolute;
+    bottom: 100%;
+    left: 50%;
+    transform: translateX(-50%);
+    padding: 6px 12px;
+    background: var(--bg-command);
+    border: 1px solid var(--elite-primary);
+    border-radius: 8px;
+    color: var(--elite-primary);
+    font-size: 0.7rem;
+    font-family: 'JetBrains Mono', monospace;
+    white-space: nowrap;
+    z-index: 1000;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.2s ease;
+    margin-bottom: 8px;
+}
+
+[data-tooltip]:hover:before {
+    opacity: 1;
+}
+
+/* ============================================================================
+   BADGES ADICIONAIS
+   ============================================================================ */
+
+.badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    padding: 2px 8px;
+    border-radius: 12px;
+    font-size: 0.6rem;
+    font-weight: 600;
+    font-family: 'JetBrains Mono', monospace;
+}
+
+.badge-primary {
+    background: var(--elite-primary-dim);
+    color: var(--elite-primary);
+    border: 1px solid var(--elite-primary);
+}
+
+.badge-success {
+    background: var(--elite-success-dim);
+    color: var(--elite-success);
+    border: 1px solid var(--elite-success);
+}
+
+.badge-danger {
+    background: var(--elite-danger-dim);
+    color: var(--elite-danger);
+    border: 1px solid var(--elite-danger);
+}
+
+.badge-warning {
+    background: var(--elite-warning-dim);
+    color: var(--elite-warning);
+    border: 1px solid var(--elite-warning);
 }
