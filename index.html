@@ -15,6 +15,7 @@
     <!-- Fonts -->
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=JetBrains+Mono:wght@400;500;600;700;800&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
     
     <!-- CSS -->
     <link rel="stylesheet" href="css_main.css">
@@ -28,7 +29,7 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.5.25/jspdf.plugin.autotable.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/pouchdb@8.0.1/dist/pouchdb.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
 </head>
 <body>
     
@@ -117,6 +118,32 @@
     </div>
     
     <!-- ================================================================
+         MODAL DE PREVISÃO IA
+    ================================================================ -->
+    <div id="aiPredictionModal" class="elite-modal" style="display: none;">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3><i class="fas fa-brain"></i> ANÁLISE PREDITIVA AVANÇADA</h3>
+                <button class="modal-close">&times;</button>
+            </div>
+            <div class="modal-body" id="aiPredictionBody"></div>
+        </div>
+    </div>
+    
+    <!-- ================================================================
+         MODAL DE CAPTAÇÃO DE LEADS
+    ================================================================ -->
+    <div id="leadCaptureModal" class="elite-modal" style="display: none;">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3><i class="fas fa-chart-line"></i> INTELIGÊNCIA DE MERCADO · LEADS QUENTES</h3>
+                <button class="modal-close">&times;</button>
+            </div>
+            <div class="modal-body" id="leadCaptureBody"></div>
+        </div>
+    </div>
+    
+    <!-- ================================================================
          MAIN APP CONTAINER - TERMINAL DE OPERAÇÕES
     ================================================================ -->
     <div id="appContainer" class="elite-app" style="display: none;">
@@ -166,6 +193,10 @@
                 <a href="#" class="nav-item" data-view="simulator">
                     <i class="fas fa-flask"></i>
                     <span>SIMULADOR DE CONTRA-PERÍCIA</span>
+                </a>
+                <a href="#" class="nav-item" data-view="deadlines">
+                    <i class="fas fa-calendar-alt"></i>
+                    <span>PRAZOS JUDICIAIS</span>
                 </a>
                 <a href="#" class="nav-item" data-view="activitylog">
                     <i class="fas fa-history"></i>
@@ -228,6 +259,9 @@
                         </button>
                         <button id="exportReportBtn" class="icon-btn" title="Exportar Relatório">
                             <i class="fas fa-file-pdf"></i>
+                        </button>
+                        <button id="mobileExportBtn" class="icon-btn" title="Exportar para Móvel">
+                            <i class="fas fa-mobile-alt"></i>
                         </button>
                         <button id="settingsBtn" class="icon-btn">
                             <i class="fas fa-cog"></i>
@@ -302,14 +336,73 @@
         </div>
     </div>
     
+    <div id="deadlineModal" class="elite-modal" style="display: none;">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3><i class="fas fa-calendar-plus"></i> NOVO PRAZO JUDICIAL</h3>
+                <button class="modal-close">&times;</button>
+            </div>
+            <div class="modal-body">
+                <form id="newDeadlineForm">
+                    <div class="form-group">
+                        <label>Processo</label>
+                        <select id="deadlineCaseId" required></select>
+                    </div>
+                    <div class="form-group">
+                        <label>Descrição do Prazo *</label>
+                        <input type="text" id="deadlineDescription" required placeholder="Ex: Contestação, Recurso, Alegações">
+                    </div>
+                    <div class="form-group">
+                        <label>Data Limite *</label>
+                        <input type="text" id="deadlineDate" class="datepicker" placeholder="DD/MM/YYYY" required>
+                    </div>
+                    <div class="form-group">
+                        <label>Tipo de Prazo</label>
+                        <select id="deadlineType">
+                            <option value="judicial">Judicial (dias úteis)</option>
+                            <option value="civil">Civil (dias corridos)</option>
+                            <option value="procedural">Procedimental</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label>Notas Adicionais</label>
+                        <textarea id="deadlineNotes" rows="2"></textarea>
+                    </div>
+                    <button type="submit" class="elite-btn primary full-width">
+                        <i class="fas fa-save"></i> REGISTAR PRAZO
+                    </button>
+                </form>
+            </div>
+        </div>
+    </div>
+    
     <div id="toastContainer" class="elite-toast-container"></div>
     
-    <!-- SCRIPT PRINCIPAL -->
+    <!-- ================================================================
+         SCRIPTS - TODOS OS MÓDULOS
+    ================================================================ -->
     <script src="js_core_app.js"></script>
+    <script src="js_components_charts.js"></script>
+    <script src="js_components_tables.js"></script>
+    <script src="js_modules_predictive-litigation.js"></script>
+    <script src="js_modules_mass-litigation.js"></script>
+    <script src="js_modules_judicial-analytics.js"></script>
+    <script src="js_modules_fee-optimizer.js"></script>
+    <script src="js_modules_platform-intel.js"></script>
+    <script src="js_modules_practice-dashboard.js"></script>
+    <script src="js_modules_client-experience.js"></script>
+    <script src="js_modules_market-intelligence.js"></script>
+    <script src="js_modules_court-deadlines.js"></script>
+    <script src="js_modules_ai-assistant.js"></script>
+    <script src="js_modules_forensic-vault.js"></script>
+    <script src="js_modules_lead-intelligence.js"></script>
+    <script src="js_modules_gamification.js"></script>
     
-    <!-- SCRIPT DE INTEGRAÇÃO FINAL -->
+    <!-- SCRIPT DE INICIALIZAÇÃO -->
     <script>
         (function() {
+            'use strict';
+            
             document.addEventListener('DOMContentLoaded', function() {
                 console.log('[ELITE PROBATUM] Unidade de Comando Forense Digital — Inicializando');
                 
@@ -320,6 +413,12 @@
                 const usernameInput = document.getElementById('username');
                 const passwordInput = document.getElementById('password');
                 
+                let sessionId = null;
+                
+                function generateSessionId() {
+                    return Date.now().toString(36) + Math.random().toString(36).substr(2, 16);
+                }
+                
                 function authenticate() {
                     const username = usernameInput ? usernameInput.value.trim() : '';
                     const password = passwordInput ? passwordInput.value.trim() : '';
@@ -328,6 +427,12 @@
                     
                     if (username === 'admin' && password === 'probatum') {
                         if (loginError) loginError.style.display = 'none';
+                        
+                        sessionId = generateSessionId();
+                        window.ELITE_SESSION_ID = sessionId;
+                        
+                        const secureHash = CryptoJS.SHA256(sessionId + password).toString();
+                        window.ELITE_SECURE_HASH = secureHash;
                         
                         loginOverlay.style.transition = 'opacity 0.3s ease';
                         loginOverlay.style.opacity = '0';
@@ -351,6 +456,26 @@
                                         window.EliteProbatum.injectTacticalAlerts();
                                     }, 500);
                                 }
+                            }
+                            
+                            if (window.CourtDeadlines && typeof window.CourtDeadlines.initialize === 'function') {
+                                window.CourtDeadlines.initialize();
+                            }
+                            
+                            if (window.AIAssistant && typeof window.AIAssistant.initialize === 'function') {
+                                window.AIAssistant.initialize();
+                            }
+                            
+                            if (window.ForensicVault && typeof window.ForensicVault.initialize === 'function') {
+                                window.ForensicVault.initialize();
+                            }
+                            
+                            if (window.LeadIntelligence && typeof window.LeadIntelligence.initialize === 'function') {
+                                window.LeadIntelligence.initialize();
+                            }
+                            
+                            if (window.GamificationSystem && typeof window.GamificationSystem.initialize === 'function') {
+                                window.GamificationSystem.initialize();
                             }
                             
                             const activeCasesSpan = document.getElementById('headerActiveCases');
@@ -426,15 +551,33 @@
                         e.preventDefault();
                         const name = document.getElementById('requestName')?.value || '';
                         const email = document.getElementById('requestEmail')?.value || '';
+                        const nif = document.getElementById('requestNif')?.value || '';
+                        const role = document.getElementById('requestRole')?.value || '';
+                        const reason = document.getElementById('requestReason')?.value || '';
                         
-                        if (name && email) {
-                            alert(`[COMANDO] Pedido de acesso enviado para ${email}.\n\nO Master Hash Controller irá analisar.`);
+                        if (name && email && nif) {
+                            const requestData = {
+                                id: Date.now(),
+                                name: name,
+                                email: email,
+                                nif: nif,
+                                role: role,
+                                reason: reason,
+                                timestamp: new Date().toISOString(),
+                                status: 'pending'
+                            };
+                            
+                            const requests = JSON.parse(localStorage.getItem('elite_access_requests') || '[]');
+                            requests.push(requestData);
+                            localStorage.setItem('elite_access_requests', JSON.stringify(requests));
+                            
+                            alert(`[COMANDO] Pedido de acesso registado.\n\nID: ${requestData.id}\nNome: ${name}\nE-mail: ${email}\n\nO Master Hash Controller irá analisar e responder em até 48h.`);
                             accessModal.style.display = 'none';
                             accessForm.reset();
                             loginOverlay.style.display = 'flex';
                             loginOverlay.style.opacity = '1';
                         } else {
-                            alert('[COMANDO] Preencha todos os campos obrigatórios.');
+                            alert('[COMANDO] Preencha todos os campos obrigatórios (Nome, E-mail, NIF).');
                         }
                     });
                 }
@@ -443,11 +586,40 @@
                 if (logoutBtn) {
                     logoutBtn.addEventListener('click', () => {
                         if (confirm('[COMANDO] Terminar sessão?')) {
+                            sessionId = null;
+                            window.ELITE_SESSION_ID = null;
+                            window.ELITE_SECURE_HASH = null;
                             appContainer.style.display = 'none';
                             loginOverlay.style.display = 'flex';
                             loginOverlay.style.opacity = '1';
                             if (usernameInput) usernameInput.value = '';
                             if (passwordInput) passwordInput.value = '';
+                            
+                            if (window.CourtDeadlines && typeof window.CourtDeadlines.stopMonitoring === 'function') {
+                                window.CourtDeadlines.stopMonitoring();
+                            }
+                        }
+                    });
+                }
+                
+                const mobileExportBtn = document.getElementById('mobileExportBtn');
+                if (mobileExportBtn) {
+                    mobileExportBtn.addEventListener('click', () => {
+                        if (window.EliteProbatum && typeof window.EliteProbatum.exportCurrentViewToMobile === 'function') {
+                            window.EliteProbatum.exportCurrentViewToMobile();
+                        } else {
+                            alert('[COMANDO] Funcionalidade de exportação para móvel em desenvolvimento.');
+                        }
+                    });
+                }
+                
+                const integrityCheckBtn = document.getElementById('integrityCheckBtn');
+                if (integrityCheckBtn) {
+                    integrityCheckBtn.addEventListener('click', () => {
+                        if (window.ForensicVault && typeof window.ForensicVault.verifySystemIntegrity === 'function') {
+                            window.ForensicVault.verifySystemIntegrity();
+                        } else {
+                            alert('[COMANDO] Módulo de verificação de integridade não disponível.');
                         }
                     });
                 }
