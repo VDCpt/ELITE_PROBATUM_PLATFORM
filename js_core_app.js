@@ -340,16 +340,18 @@
     };
     
     // =========================================================================
-    // MOCK DATA
+    // MOCK DATA (EXPANDIDO PARA DEMONSTRAÇÃO)
     // =========================================================================
     
     const MOCK_CASES = [
-        { id: 'INS001', client: 'Construtora ABC, SA', nif_devedor: '123456789', category: 'insolvency', categoryName: 'Insolvência (CIRE)', value: 2450000, successProbability: 0.52, status: 'active', court: 'Lisboa', startDate: '2022-08-15', hoursSpent: 320, resourceLevel: 'senior', evidence: ['Insolvência culposa', 'Lista de credores extensa'], adversary: 'PLMJ', judge: 'Dr. António Costa', riskLevel: 'critical', fase_processual: 'Reclamação de Créditos', administrador_insolvencia: 'Dr. José Silva', data_sentenca_declarativa: '2022-10-15' },
-        { id: 'INS002', client: 'Retail Solutions, SA', nif_devedor: '987654321', category: 'insolvency', categoryName: 'Insolvência (CIRE)', value: 875000, successProbability: 0.58, status: 'active', court: 'Porto', startDate: '2023-02-10', hoursSpent: 185, resourceLevel: 'associate', evidence: ['Exoneração passivo', 'Ativo remanescente'], adversary: 'VdA', judge: 'Dra. Sofia Mendes', riskLevel: 'warning', fase_processual: 'Exoneração do Passivo Restante', administrador_insolvencia: 'Dra. Ana Costa', data_sentenca_declarativa: '2023-04-20' },
-        { id: 'BNK001', client: 'Banco Internacional, SA', nif_devedor: '111222333', category: 'banking', categoryName: 'Contencioso Bancário', value: 12500000, successProbability: 0.68, status: 'active', court: 'Lisboa', startDate: '2023-03-01', hoursSpent: 420, resourceLevel: 'senior', evidence: ['Contrato de crédito', 'Garantias reais'], adversary: 'Cuatrecasas', judge: 'Dr. António Costa', riskLevel: 'normal' },
-        { id: 'MNA001', client: 'Grupo Energia, SA', nif_devedor: '777888999', category: 'ma', categoryName: 'Fusões e Aquisições', value: 45000000, successProbability: 0.82, status: 'active', court: 'Arbitragem', startDate: '2023-10-01', hoursSpent: 520, resourceLevel: 'senior', evidence: ['Contrato de compra e venda', 'Due diligence'], adversary: 'PLMJ', judge: 'Dr. Pedro Santos', riskLevel: 'normal' },
-        { id: 'MASS001', client: 'Consumidores União', nif_devedor: '456456456', category: 'mass', categoryName: 'Litigância de Massa', value: 15200000, successProbability: 0.85, status: 'active', court: 'Lisboa', startDate: '2023-06-10', hoursSpent: 420, resourceLevel: 'senior', evidence: ['Prova documental coletiva', 'Jurisprudência favorável'], adversary: 'VdA', judge: 'Dra. Teresa Lopes', riskLevel: 'normal' },
-        { id: 'TAX001', client: 'Grupo Industrial, SA', nif_devedor: '321321321', category: 'tax', categoryName: 'Direito Fiscal', value: 12500000, successProbability: 0.68, status: 'active', court: 'CAAD', startDate: '2022-11-10', hoursSpent: 485, resourceLevel: 'senior', evidence: ['Notificação prévia AT', 'Prova digital com hash'], adversary: 'VdA', judge: 'Dr. Pedro Santos', riskLevel: 'warning' }
+        { id: 'INS001', client: 'Construtora ABC, SA', nif_devedor: '123456789', category: 'insolvency', categoryName: 'Insolvência (CIRE)', value: 2450000, successProbability: 0.52, status: 'active', court: 'Lisboa', startDate: '2022-08-15', hoursSpent: 320, resourceLevel: 'senior', evidence: ['Insolvência culposa', 'Lista de credores extensa'], adversary: 'PLMJ', judge: 'Dr. António Costa', riskLevel: 'critical', fase_processual: 'Reclamação de Créditos', administrador_insolvencia: 'Dr. José Silva', data_sentenca_declarativa: '2022-10-15', hasDocumentaryEvidence: true, hasDigitalEvidence: false, platform: 'unknown' },
+        { id: 'INS002', client: 'Retail Solutions, SA', nif_devedor: '987654321', category: 'insolvency', categoryName: 'Insolvência (CIRE)', value: 875000, successProbability: 0.58, status: 'active', court: 'Porto', startDate: '2023-02-10', hoursSpent: 185, resourceLevel: 'associate', evidence: ['Exoneração passivo', 'Ativo remanescente'], adversary: 'VdA', judge: 'Dra. Sofia Mendes', riskLevel: 'warning', fase_processual: 'Exoneração do Passivo Restante', administrador_insolvencia: 'Dra. Ana Costa', data_sentenca_declarativa: '2023-04-20', hasDocumentaryEvidence: true, hasDigitalEvidence: true, platform: 'unknown' },
+        { id: 'BNK001', client: 'Banco Internacional, SA', nif_devedor: '111222333', category: 'banking', categoryName: 'Contencioso Bancário', value: 12500000, successProbability: 0.68, status: 'active', court: 'Lisboa', startDate: '2023-03-01', hoursSpent: 420, resourceLevel: 'senior', evidence: ['Contrato de crédito', 'Garantias reais'], adversary: 'Cuatrecasas', judge: 'Dr. António Costa', riskLevel: 'normal', hasDocumentaryEvidence: true, hasDigitalEvidence: true, platform: 'unknown' },
+        { id: 'MNA001', client: 'Grupo Energia, SA', nif_devedor: '777888999', category: 'ma', categoryName: 'Fusões e Aquisições', value: 45000000, successProbability: 0.82, status: 'active', court: 'Arbitragem', startDate: '2023-10-01', hoursSpent: 520, resourceLevel: 'senior', evidence: ['Contrato de compra e venda', 'Due diligence'], adversary: 'PLMJ', judge: 'Dr. Pedro Santos', riskLevel: 'normal', hasDocumentaryEvidence: true, hasDigitalEvidence: true, platform: 'unknown' },
+        { id: 'MASS001', client: 'Consumidores União', nif_devedor: '456456456', category: 'mass', categoryName: 'Litigância de Massa', value: 15200000, successProbability: 0.85, status: 'active', court: 'Lisboa', startDate: '2023-06-10', hoursSpent: 420, resourceLevel: 'senior', evidence: ['Prova documental coletiva', 'Jurisprudência favorável'], adversary: 'VdA', judge: 'Dra. Teresa Lopes', riskLevel: 'normal', hasDocumentaryEvidence: true, hasDigitalEvidence: false, platform: 'unknown' },
+        { id: 'TAX001', client: 'Grupo Industrial, SA', nif_devedor: '321321321', category: 'tax', categoryName: 'Direito Fiscal', value: 12500000, successProbability: 0.68, status: 'active', court: 'CAAD', startDate: '2022-11-10', hoursSpent: 485, resourceLevel: 'senior', evidence: ['Notificação prévia AT', 'Prova digital com hash'], adversary: 'VdA', judge: 'Dr. Pedro Santos', riskLevel: 'warning', hasDocumentaryEvidence: true, hasDigitalEvidence: true, platform: 'unknown' },
+        { id: 'LAB001', client: 'Maria Rodrigues', nif_devedor: '654321987', category: 'labor', categoryName: 'Direito do Trabalho', value: 28900, successProbability: 0.78, status: 'active', court: 'Porto', startDate: '2024-01-15', hoursSpent: 85, resourceLevel: 'junior', evidence: ['Contrato de trabalho', 'Recibos de vencimento'], adversary: 'Garrigues', judge: 'Dra. Sofia Mendes', riskLevel: 'normal', hasDocumentaryEvidence: true, hasDigitalEvidence: false, platform: 'unknown' },
+        { id: 'CIV001', client: 'António Almeida', nif_devedor: '147258369', category: 'civil', categoryName: 'Direito Civil', value: 125000, successProbability: 0.72, status: 'active', court: 'Coimbra', startDate: '2023-11-01', hoursSpent: 120, resourceLevel: 'associate', evidence: ['Contrato promessa compra e venda'], adversary: 'Abreu', judge: 'Dr. Rui Silva', riskLevel: 'normal', hasDocumentaryEvidence: true, hasDigitalEvidence: false, platform: 'unknown' }
     ];
     
     // =========================================================================
@@ -652,39 +654,16 @@
                 </div>
             </div>
             
-            <div class="chart-container">
-                <h3>${t('dashboard_alerts_title')}</h3>
-                <div class="alerts-list" id="alertsList">
-                    <div class="alert-item critical">
-                        <i class="fas fa-exclamation-triangle"></i>
-                        <div>
-                            <strong>Processo INS001 em risco crítico</strong>
-                            <p>+24 meses sem resolução - Burn-rate negativo (€12.500/mês)</p>
-                            <small>Revisão de estratégia recomendada</small>
-                        </div>
-                    </div>
-                    <div class="alert-item warning">
-                        <i class="fas fa-gavel"></i>
-                        <div>
-                            <strong>Nova jurisprudência do STA</strong>
-                            <p>Acórdão favorável à tese de inversão do ónus da prova</p>
-                            <small>Aplicável aos processos fiscais ativos</small>
-                        </div>
-                    </div>
-                    <div class="alert-item info">
-                        <i class="fas fa-chart-line"></i>
-                        <div>
-                            <strong>Oportunidade: Contencioso Bancário</strong>
-                            <p>Aumento de 23% nos casos de crédito ao consumo</p>
-                            <small>Reforçar equipa especializada</small>
-                        </div>
-                    </div>
-                </div>
+            <!-- BLACK SWAN PANEL - Simulação de Monte Carlo -->
+            <div id="blackSwanPanel" class="chart-container" style="margin-top: 20px;">
+                <h3><i class="fas fa-chart-line"></i> ANÁLISE DE CISNE NEGRO (VAR JURÍDICO)</h3>
+                <div id="monteCarloResults" style="min-height: 300px;"></div>
             </div>
         `;
         
         initPortfolioChart();
         initCategoryChart(categoryCount);
+        initBlackSwanPanel();
         startTacticalAlertsTicker();
     }
     
@@ -761,6 +740,18 @@
         });
     }
     
+    function initBlackSwanPanel() {
+        const resultsContainer = document.getElementById('monteCarloResults');
+        if (!resultsContainer) return;
+        
+        if (window.BlackSwan && typeof window.BlackSwan.renderBlackSwanPanel === 'function') {
+            const sampleCase = { id: 'MOCK_CASE', value: 12500000, successProbability: 68 };
+            window.BlackSwan.renderBlackSwanPanel('monteCarloResults', sampleCase);
+        } else {
+            resultsContainer.innerHTML = '<div class="loading-shimmer" style="height: 200px; border-radius: 12px;"></div><p class="text-muted" style="text-align: center; margin-top: 16px;">A carregar motor de simulação estocástica...</p>';
+        }
+    }
+    
     function startTacticalAlertsTicker() {
         if (alertInterval) clearInterval(alertInterval);
         
@@ -797,7 +788,7 @@
     }
     
     // =========================================================================
-    // RENDERIZAÇÃO DOS PROCESSOS
+    // RENDERIZAÇÃO DOS PROCESSOS (COM FUNCIONALIDADE DE CRIAÇÃO/ELIMINAÇÃO)
     // =========================================================================
     
     function renderCases() {
@@ -867,6 +858,7 @@
                             <div class="detail-row"><span>Probabilidade:</span><strong>${EliteUtils.formatPercentage(caseData.successProbability * 100)}</strong></div>
                             <div class="detail-row"><span>Tribunal:</span><strong>${caseData.court}</strong></div>
                             <div class="detail-row"><span>Juiz:</span><strong>${caseData.judge}</strong></div>
+                            <div class="detail-row"><span>Área:</span><strong>${caseData.categoryName}</strong></div>
                             <div class="detail-actions" style="margin-top: 20px;">
                                 <button id="deleteCaseFromModal" class="elite-btn danger" data-id="${caseData.id}"><i class="fas fa-trash"></i> ELIMINAR PROCESSO</button>
                             </div>
@@ -915,24 +907,294 @@
         });
         
         document.getElementById('newCaseBtn')?.addEventListener('click', () => {
-            EliteUtils.showToast('Funcionalidade de novo processo em desenvolvimento', 'info');
+            showNewCaseModal();
         });
+    }
+    
+    function showNewCaseModal() {
+        const modalBody = document.getElementById('caseDetailBody');
+        if (!modalBody) return;
+        
+        modalBody.innerHTML = `
+            <form id="newCaseForm">
+                <div class="form-group">
+                    <label>ID do Processo *</label>
+                    <input type="text" id="newCaseId" placeholder="Ex: TAX002" required>
+                </div>
+                <div class="form-group">
+                    <label>Cliente *</label>
+                    <input type="text" id="newClientName" required>
+                </div>
+                <div class="form-group">
+                    <label>NIF/NIPC</label>
+                    <input type="text" id="newClientNif">
+                </div>
+                <div class="form-group">
+                    <label>Valor da Causa (€) *</label>
+                    <input type="number" id="newCaseValue" required>
+                </div>
+                <div class="form-group">
+                    <label>Área do Direito</label>
+                    <select id="newCaseCategory">
+                        <option value="insolvency">Insolvência (CIRE)</option>
+                        <option value="labor">Direito do Trabalho</option>
+                        <option value="civil">Direito Civil</option>
+                        <option value="tax">Direito Fiscal</option>
+                        <option value="commercial">Direito Comercial</option>
+                        <option value="criminal">Direito Penal</option>
+                        <option value="family">Direito da Família</option>
+                        <option value="banking">Contencioso Bancário</option>
+                        <option value="ma">Fusões e Aquisições</option>
+                        <option value="mass">Litigância de Massa</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label>Tribunal</label>
+                    <input type="text" id="newCaseCourt" placeholder="Ex: Lisboa">
+                </div>
+                <div class="form-group">
+                    <label>Juiz</label>
+                    <input type="text" id="newCaseJudge" placeholder="Ex: Dr. António Costa">
+                </div>
+                <button type="submit" class="elite-btn primary full-width">CRIAR PROCESSO</button>
+            </form>
+        `;
+        
+        document.getElementById('newCaseForm')?.addEventListener('submit', (e) => {
+            e.preventDefault();
+            const newCase = {
+                id: document.getElementById('newCaseId')?.value || `NEW_${Date.now()}`,
+                client: document.getElementById('newClientName')?.value || 'Cliente',
+                nif_devedor: document.getElementById('newClientNif')?.value || '000000000',
+                category: document.getElementById('newCaseCategory')?.value || 'civil',
+                categoryName: getCategoryName(document.getElementById('newCaseCategory')?.value),
+                value: parseFloat(document.getElementById('newCaseValue')?.value) || 0,
+                successProbability: 0.65,
+                status: 'active',
+                court: document.getElementById('newCaseCourt')?.value || 'Lisboa',
+                startDate: new Date().toISOString().split('T')[0],
+                hoursSpent: 0,
+                resourceLevel: 'junior',
+                evidence: [],
+                adversary: 'A designar',
+                judge: document.getElementById('newCaseJudge')?.value || 'A designar',
+                riskLevel: 'normal',
+                hasDocumentaryEvidence: false,
+                hasDigitalEvidence: false,
+                platform: 'unknown'
+            };
+            
+            MOCK_CASES.push(newCase);
+            EliteUtils.showToast(`Processo ${newCase.id} criado com sucesso!`, 'success');
+            document.getElementById('caseDetailModal').style.display = 'none';
+            navigateTo('cases');
+        });
+        
+        document.getElementById('caseDetailModal').style.display = 'flex';
     }
     
     // =========================================================================
     // FUNÇÕES DE RENDERIZAÇÃO DAS DEMAIS VIEWS
     // =========================================================================
     
-    function renderInsolvency() { const container = document.getElementById('viewContainer'); if (container) { const insolvencyCases = MOCK_CASES.filter(c => c.category === 'insolvency' || c.category === 'banking'); container.innerHTML = `<h2>${t('nav_insolvency')}</h2><table class="data-table"><thead> <th>ID</th><th>CLIENTE</th><th>VALOR</th><th>PROBABILIDADE</th><th>FASE</th> </thead><tbody>${insolvencyCases.map(c => ` <td><strong>${c.id}</strong> </div><td>${c.client}</td><td>${EliteUtils.formatCurrency(c.value)}</td><td><div class="progress-bar"><div class="progress-fill" style="width: ${c.successProbability * 100}%"></div><span class="progress-text">${EliteUtils.formatPercentage(c.successProbability * 100)}</span></div></td><td>${c.fase_processual || 'Em curso'}</td> </div`).join('')}</tbody> </div>`; } }
-    function renderLabor() { const container = document.getElementById('viewContainer'); if (container) container.innerHTML = `<h2>${t('nav_labor')}</h2><p>Contencioso Laboral - Módulo em desenvolvimento</p>`; }
-    function renderLitigation() { const container = document.getElementById('viewContainer'); if (container) container.innerHTML = `<h2>${t('nav_litigation')}</h2><p>Inteligência de Litígio - Análise preditiva disponível no dashboard</p>`; }
-    function renderQuestionnaire() { const container = document.getElementById('viewContainer'); if (container) container.innerHTML = `<h2>${t('nav_questionnaire')}</h2><p>Questionários estratégicos em desenvolvimento</p>`; }
-    function renderEvidence() { const container = document.getElementById('viewContainer'); if (container) container.innerHTML = `<h2>${t('nav_evidence')}</h2><p>Cadeia de Custódia - Utilize o Forensic Vault para registo de provas</p>`; }
-    function renderAdversary() { const container = document.getElementById('viewContainer'); if (container) container.innerHTML = `<h2>${t('nav_adversary')}</h2><p>Análise de Oposição - Módulo em desenvolvimento</p>`; }
-    function renderSimulator() { const container = document.getElementById('viewContainer'); if (container) container.innerHTML = `<h2>${t('nav_simulator')}</h2><p>Simulador de Contra-Perícia - Utilize o módulo Wargaming Engine</p>`; }
-    function renderDeadlines() { const container = document.getElementById('viewContainer'); if (container) container.innerHTML = `<h2>${t('nav_deadlines')}</h2><p>Prazos Judiciais - Utilize o módulo de calendário integrado</p>`; }
-    function renderActivityLog() { const container = document.getElementById('viewContainer'); if (container) container.innerHTML = `<h2>${t('nav_activitylog')}</h2><p>Registos RGPD - Logs de acesso disponíveis</p>`; }
-    function renderAdmin() { const container = document.getElementById('viewContainer'); if (container) container.innerHTML = `<h2>${t('nav_admin')}</h2><p>Administração - Acesso restrito a super utilizadores</p>`; }
+    function renderInsolvency() { 
+        const container = document.getElementById('viewContainer'); 
+        if (container) { 
+            const insolvencyCases = MOCK_CASES.filter(c => c.category === 'insolvency' || c.category === 'banking'); 
+            container.innerHTML = `
+                <div class="cases-header">
+                    <h2>${t('nav_insolvency')}</h2>
+                    <div class="cases-actions">
+                        <button id="newInsolvencyBtn" class="elite-btn primary"><i class="fas fa-plus"></i> NOVO PROCESSO INSOLVÊNCIA</button>
+                    </div>
+                </div>
+                <table class="data-table">
+                    <thead>
+                        <tr><th>ID</th><th>CLIENTE</th><th>VALOR</th><th>PROBABILIDADE</th><th>FASE</th><th>AÇÕES</th> </thead>
+                    <tbody>
+                        ${insolvencyCases.map(c => `
+                            <tr>
+                                <td><strong>${c.id}</strong> </div>
+                                <td>${c.client} </div>
+                                <td>${EliteUtils.formatCurrency(c.value)} </div>
+                                <td><div class="progress-bar"><div class="progress-fill" style="width: ${c.successProbability * 100}%"></div><span class="progress-text">${EliteUtils.formatPercentage(c.successProbability * 100)}</span></div> </div>
+                                <td>${c.fase_processual || 'Em curso'} </div>
+                                <td><button class="action-btn delete-case" data-id="${c.id}"><i class="fas fa-trash"></i></button> </div>
+                             </div>
+                        `).join('')}
+                        ${insolvencyCases.length === 0 ? '专业<td colspan="6" class="empty-state">Nenhum processo de insolvência</td>' : ''}
+                    </tbody>
+                 </div>
+            `;
+            attachDeleteEvents();
+            document.getElementById('newInsolvencyBtn')?.addEventListener('click', showNewCaseModal);
+        } 
+    }
+    
+    function renderLabor() { 
+        const container = document.getElementById('viewContainer'); 
+        if (container) {
+            const laborCases = MOCK_CASES.filter(c => c.category === 'labor');
+            container.innerHTML = `
+                <div class="cases-header">
+                    <h2>${t('nav_labor')}</h2>
+                    <div class="cases-actions">
+                        <button id="newLaborBtn" class="elite-btn primary"><i class="fas fa-plus"></i> NOVO PROCESSO LABORAL</button>
+                    </div>
+                </div>
+                <table class="data-table">
+                    <thead> <th>ID</th><th>CLIENTE</th><th>VALOR</th><th>PROBABILIDADE</th><th>JUIZ</th><th>AÇÕES</th> </thead>
+                    <tbody>
+                        ${laborCases.map(c => `
+                             <td><strong>${c.id}</strong></td>
+                             <td>${c.client}</td>
+                             <td>${EliteUtils.formatCurrency(c.value)}</td>
+                             <td><div class="progress-bar"><div class="progress-fill" style="width: ${c.successProbability * 100}%"></div><span class="progress-text">${EliteUtils.formatPercentage(c.successProbability * 100)}</span></div></td>
+                             <td>${c.judge || 'N/A'}</td>
+                             <td><button class="action-btn delete-case" data-id="${c.id}"><i class="fas fa-trash"></i></button></td>
+                        `).join('')}
+                        ${laborCases.length === 0 ? '<tr><td colspan="6" class="empty-state">Nenhum processo laboral</td></tr>' : ''}
+                    </tbody>
+                </table>
+            `;
+            attachDeleteEvents();
+            document.getElementById('newLaborBtn')?.addEventListener('click', showNewCaseModal);
+        }
+    }
+    
+    function renderLitigation() { 
+        const container = document.getElementById('viewContainer'); 
+        if (container) {
+            container.innerHTML = `
+                <h2>${t('nav_litigation')}</h2>
+                <div class="alerts-panel">
+                    <h3><i class="fas fa-brain"></i> INTELIGÊNCIA DE LITÍGIO - ANÁLISE PREDITIVA</h3>
+                    <div class="kpi-grid">
+                        <div class="kpi-card"><div class="kpi-icon"><i class="fas fa-chart-line"></i></div><div class="kpi-content"><div class="kpi-label">Probabilidade Média de Sucesso</div><div class="kpi-value">68.5%</div></div></div>
+                        <div class="kpi-card"><div class="kpi-icon"><i class="fas fa-clock"></i></div><div class="kpi-content"><div class="kpi-label">Tempo Médio de Resolução</div><div class="kpi-value">132 dias</div></div></div>
+                        <div class="kpi-card"><div class="kpi-icon"><i class="fas fa-gavel"></i></div><div class="kpi-content"><div class="kpi-label">Valor Médio por Caso</div><div class="kpi-value">${EliteUtils.formatCurrency(12500000)}</div></div></div>
+                    </div>
+                    <div id="litigationPredictionPanel" style="margin-top: 20px;"></div>
+                </div>
+            `;
+            if (window.AIAssistant && typeof window.AIAssistant.renderDashboard === 'function') {
+                window.AIAssistant.renderDashboard('litigationPredictionPanel', MOCK_CASES[0]);
+            } else {
+                document.getElementById('litigationPredictionPanel').innerHTML = '<div class="loading-shimmer" style="height: 200px;"></div>';
+            }
+        }
+    }
+    
+    function renderQuestionnaire() { 
+        const container = document.getElementById('viewContainer'); 
+        if (container) container.innerHTML = `<h2>${t('nav_questionnaire')}</h2><div class="alert-item info"><i class="fas fa-info-circle"></i><div><strong>Questionários Estratégicos</strong><p>Em desenvolvimento. Em breve disponível para todas as áreas do direito.</p></div></div>`; 
+    }
+    
+    function renderEvidence() { 
+        const container = document.getElementById('viewContainer'); 
+        if (container) {
+            container.innerHTML = `
+                <h2><i class="fas fa-link"></i> ${t('nav_evidence')}</h2>
+                <div id="forensicVaultDashboard"></div>
+            `;
+            if (window.ForensicVault && typeof window.ForensicVault.renderDashboard === 'function') {
+                window.ForensicVault.renderDashboard('forensicVaultDashboard');
+            } else {
+                document.getElementById('forensicVaultDashboard').innerHTML = '<div class="loading-shimmer" style="height: 300px;"></div>';
+            }
+        }
+    }
+    
+    function renderAdversary() { 
+        const container = document.getElementById('viewContainer'); 
+        if (container) {
+            container.innerHTML = `
+                <h2><i class="fas fa-users"></i> ${t('nav_adversary')}</h2>
+                <div id="wargamingDashboard"></div>
+            `;
+            if (window.WargamingEngine && typeof window.WargamingEngine.renderDashboard === 'function') {
+                const sampleCase = MOCK_CASES[0];
+                const sampleEvidence = [{ id: 'EVD001', name: 'Petição Inicial', type: 'documentary', fileType: 'pdf', hash: 'a1b2c3d4' }];
+                window.WargamingEngine.renderDashboard('wargamingDashboard', sampleCase, sampleEvidence);
+            } else {
+                document.getElementById('wargamingDashboard').innerHTML = '<div class="loading-shimmer" style="height: 300px;"></div>';
+            }
+        }
+    }
+    
+    function renderSimulator() { 
+        const container = document.getElementById('viewContainer'); 
+        if (container) container.innerHTML = `<h2><i class="fas fa-flask"></i> ${t('nav_simulator')}</h2><div class="alert-item info"><i class="fas fa-flask"></i><div><strong>Simulador de Contra-Perícia</strong><p>Utilize o módulo Wargaming Engine para simular ataques da oposição.</p><button id="runWargamingSim" class="elite-btn primary" style="margin-top: 16px;">INICIAR SIMULAÇÃO</button></div></div>`;
+        document.getElementById('runWargamingSim')?.addEventListener('click', () => {
+            if (window.WargamingEngine && typeof window.WargamingEngine.renderDashboard === 'function') {
+                window.WargamingEngine.renderDashboard('viewContainer', MOCK_CASES[0], []);
+            }
+        });
+    }
+    
+    function renderDeadlines() { 
+        const container = document.getElementById('viewContainer'); 
+        if (container) {
+            container.innerHTML = `<h2><i class="fas fa-calendar-alt"></i> ${t('nav_deadlines')}</h2><div id="deadlinesCalendar"></div>`;
+            if (window.CourtDeadlines && typeof window.CourtDeadlines.renderCalendar === 'function') {
+                window.CourtDeadlines.renderCalendar('deadlinesCalendar');
+            } else {
+                document.getElementById('deadlinesCalendar').innerHTML = '<div class="loading-shimmer" style="height: 200px;"></div>';
+            }
+        }
+    }
+    
+    function renderActivityLog() { 
+        const container = document.getElementById('viewContainer'); 
+        if (container) {
+            const logs = JSON.parse(localStorage.getItem('elite_activity_log') || '[]');
+            container.innerHTML = `
+                <h2><i class="fas fa-history"></i> ${t('nav_activitylog')}</h2>
+                <div class="activity-log-container">
+                    <div class="activity-log-header"><h2>REGISTO DE ATIVIDADES (RGPD Art. 30.º)</h2><button id="exportLogsBtn" class="elite-btn secondary"><i class="fas fa-download"></i> EXPORTAR CSV</button></div>
+                    <table class="data-table">
+                        <thead> <th>Data/Hora</th><th>Utilizador</th><th>Ação</th><th>Entidade</th><th>Hash</th> </thead>
+                        <tbody>
+                            ${logs.slice(0, 50).map(log => `
+                                <tr><td>${log.timestamp}</td><td>${log.user || 'Sistema'}</td><td>${log.action}</td><td>${log.entity}</td><td class="log-hash">${log.hash ? log.hash.substring(0, 16) + '...' : 'N/A'}</td></tr>
+                            `).join('')}
+                            ${logs.length === 0 ? '<tr><td colspan="5" class="empty-state">Nenhum registo de atividade</td></tr>' : ''}
+                        </tbody>
+                    </table>
+                </div>
+            `;
+            document.getElementById('exportLogsBtn')?.addEventListener('click', () => {
+                const csvRows = [['Data/Hora', 'Utilizador', 'Ação', 'Entidade', 'Hash']];
+                logs.forEach(log => csvRows.push([log.timestamp, log.user || 'Sistema', log.action, log.entity, log.hash || '']));
+                const csvContent = csvRows.map(row => row.map(cell => `"${cell}"`).join(',')).join('\n');
+                const blob = new Blob(["\uFEFF" + csvContent], { type: 'text/csv' });
+                const link = document.createElement('a');
+                link.href = URL.createObjectURL(blob);
+                link.download = `elite_activity_log_${new Date().toISOString().slice(0, 10)}.csv`;
+                link.click();
+                URL.revokeObjectURL(link.href);
+                EliteUtils.showToast('Registos exportados com sucesso', 'success');
+            });
+        }
+    }
+    
+    function renderAdmin() { 
+        const container = document.getElementById('viewContainer'); 
+        if (container) container.innerHTML = `<h2><i class="fas fa-skull"></i> ${t('nav_admin')}</h2><div class="alert-item critical"><i class="fas fa-shield-hooded"></i><div><strong>Área Restrita</strong><p>Acesso reservado a Super Utilizadores e Master Hash Controller.</p></div></div>`; 
+    }
+    
+    function attachDeleteEvents() {
+        document.querySelectorAll('.delete-case').forEach(btn => {
+            btn.addEventListener('click', (e) => {
+                e.stopPropagation();
+                const caseId = btn.dataset.id;
+                if (confirm(t('confirm_delete'))) {
+                    const hash = generateDeleteConfirmationHash(caseId);
+                    deleteCase(caseId, hash);
+                }
+            });
+        });
+    }
     
     // =========================================================================
     // RENDERIZAÇÃO DA ARQUITETURA DE VERDADE
@@ -942,29 +1204,94 @@
         const container = document.getElementById('viewContainer');
         if (!container) return;
         
-        // Tentar usar o módulo PracticeDashboard se disponível e estendido
         if (window.PracticeDashboard && typeof window.PracticeDashboard.renderTruthArchitecture === 'function') {
             window.PracticeDashboard.renderTruthArchitecture();
         } else {
             container.innerHTML = `
-                <div class="truth-architecture-placeholder">
-                    <h2>${t('nav_truth_architecture')}</h2>
-                    <div class="info-card">
-                        <i class="fas fa-chess-queen"></i>
-                        <div>
-                            <strong>Arquitetura de Verdade</strong>
-                            <p>Módulo em fase de ativação. Os seguintes componentes estão disponíveis:</p>
-                            <ul>
-                                <li><strong>Shadow Dossier</strong> - Vínculo com CITIUS/SINOFE</li>
-                                <li><strong>Black Swan Predictor</strong> - Simulação de Monte Carlo</li>
-                                <li><strong>Relatório Executivo</strong> - Bónus Meritocráticos</li>
-                                <li><strong>Decomposição Forense</strong> - Análise de Metadados</li>
-                            </ul>
-                            <p>Para ativar todas as funcionalidades, certifique-se de que os módulos de extensão estão carregados.</p>
+                <div class="truth-architecture-dashboard">
+                    <div class="dashboard-header">
+                        <h2><i class="fas fa-chess-queen"></i> ARQUITETURA DE VERDADE</h2>
+                        <div class="header-badges">
+                            <span class="badge badge-primary"><i class="fas fa-link"></i> Shadow Dossier Ativo</span>
+                            <span class="badge badge-success"><i class="fas fa-chart-line"></i> Monte Carlo Online</span>
+                            <span class="badge badge-info"><i class="fas fa-shield-alt"></i> Forensic Vault</span>
+                        </div>
+                    </div>
+                    
+                    <div class="truth-summary">
+                        <div class="summary-card"><div class="summary-icon"><i class="fas fa-fingerprint"></i></div><div class="summary-content"><div class="summary-value">0</div><div class="summary-label">Vínculos CITIUS</div><div class="summary-trend">0 validados</div></div></div>
+                        <div class="summary-card"><div class="summary-icon"><i class="fas fa-chart-simple"></i></div><div class="summary-content"><div class="summary-value">0</div><div class="summary-label">Simulações Monte Carlo</div><div class="summary-trend">Análise de 0% risco</div></div></div>
+                        <div class="summary-card"><div class="summary-icon"><i class="fas fa-file-alt"></i></div><div class="summary-content"><div class="summary-value">0</div><div class="summary-label">Bónus Meritocráticos</div><div class="summary-trend">Total: €0</div></div></div>
+                    </div>
+                    
+                    <div class="truth-tabs">
+                        <button class="tab-btn active" data-tab="shadow-dossier"><i class="fas fa-link"></i> Shadow Dossier</button>
+                        <button class="tab-btn" data-tab="black-swan"><i class="fas fa-chart-line"></i> Black Swan Predictor</button>
+                        <button class="tab-btn" data-tab="executive-report"><i class="fas fa-crown"></i> Relatório Executivo</button>
+                        <button class="tab-btn" data-tab="forensic-decomposition"><i class="fas fa-microscope"></i> Decomposição Forense</button>
+                    </div>
+                    
+                    <div id="truth-tab-content" class="truth-tab-content">
+                        <div class="shadow-dossier-panel">
+                            <div class="panel-header"><h3><i class="fas fa-link"></i> Shadow Dossier - Vínculo CITIUS/SINOFE</h3><button id="newCitiusBinding" class="elite-btn small primary"><i class="fas fa-plus"></i> NOVO VÍNCULO</button></div>
+                            <div class="empty-state"><i class="fas fa-inbox"></i><p>Nenhum vínculo CITIUS registado</p><small>Utilize o botão acima para vincular recibos oficiais do tribunal</small></div>
                         </div>
                     </div>
                 </div>
+                <style>
+                    .truth-architecture-dashboard { padding: 0; }
+                    .dashboard-header { display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 16px; margin-bottom: 24px; }
+                    .header-badges { display: flex; gap: 8px; }
+                    .badge { display: inline-flex; align-items: center; gap: 6px; padding: 4px 12px; border-radius: 20px; font-size: 0.7rem; font-weight: 600; }
+                    .badge-primary { background: var(--elite-primary-dim); color: var(--elite-primary); border: 1px solid var(--elite-primary); }
+                    .badge-success { background: var(--elite-success-dim); color: var(--elite-success); border: 1px solid var(--elite-success); }
+                    .badge-info { background: var(--elite-info-dim); color: var(--elite-info); border: 1px solid var(--elite-info); }
+                    .truth-summary { display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px; margin-bottom: 24px; }
+                    .summary-card { background: var(--bg-command); border-radius: 16px; padding: 20px; display: flex; align-items: center; gap: 16px; border: 1px solid var(--border-tactic); transition: all 0.2s; }
+                    .summary-card:hover { border-color: var(--elite-primary); transform: translateY(-2px); }
+                    .summary-icon { width: 48px; height: 48px; background: var(--elite-primary-dim); border-radius: 12px; display: flex; align-items: center; justify-content: center; }
+                    .summary-icon i { font-size: 1.5rem; color: var(--elite-primary); }
+                    .summary-value { font-size: 1.8rem; font-weight: 800; font-family: 'JetBrains Mono'; color: var(--elite-primary); }
+                    .summary-label { font-size: 0.7rem; color: #94a3b8; text-transform: uppercase; letter-spacing: 1px; }
+                    .summary-trend { font-size: 0.65rem; color: #64748b; margin-top: 4px; }
+                    .truth-tabs { display: flex; gap: 8px; border-bottom: 1px solid var(--border-tactic); margin-bottom: 24px; padding-bottom: 0; }
+                    .tab-btn { background: transparent; border: none; padding: 12px 24px; color: #94a3b8; cursor: pointer; font-family: 'JetBrains Mono'; font-size: 0.8rem; transition: all 0.2s; border-bottom: 2px solid transparent; }
+                    .tab-btn:hover { color: var(--elite-primary); }
+                    .tab-btn.active { color: var(--elite-primary); border-bottom-color: var(--elite-primary); }
+                    .empty-state { text-align: center; padding: 48px; color: #64748b; background: var(--bg-terminal); border-radius: 16px; border: 1px dashed var(--border-tactic); }
+                    @media (max-width: 768px) { .truth-summary { grid-template-columns: 1fr; } .truth-tabs { flex-wrap: wrap; } .tab-btn { padding: 8px 16px; font-size: 0.7rem; } }
+                </style>
             `;
+            
+            document.querySelectorAll('.tab-btn').forEach(btn => {
+                btn.addEventListener('click', () => {
+                    document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+                    btn.classList.add('active');
+                    const tab = btn.dataset.tab;
+                    const contentDiv = document.getElementById('truth-tab-content');
+                    if (contentDiv) {
+                        if (tab === 'black-swan' && window.BlackSwan && typeof window.BlackSwan.renderBlackSwanPanel === 'function') {
+                            contentDiv.innerHTML = '<div id="monteCarloPanel"></div>';
+                            window.BlackSwan.renderBlackSwanPanel('monteCarloPanel', MOCK_CASES[0]);
+                        } else if (tab === 'executive-report' && window.FeeOptimizer && typeof window.FeeOptimizer.generateExecutiveReport === 'function') {
+                            const report = window.FeeOptimizer.generateExecutiveReport('quarterly');
+                            contentDiv.innerHTML = `
+                                <div class="executive-report-panel">
+                                    <div class="panel-header"><h3>Relatório de Performance e Meritocracia</h3><button id="exportExecutiveReport" class="elite-btn small secondary">EXPORTAR PDF</button></div>
+                                    <div class="executive-summary"><div class="total-bonus">Total de Bónus: €${report?.executiveSummary.totalBonusPool?.toLocaleString() || '0'}</div></div>
+                                    <table class="data-table"><thead><tr><th>Advogado</th><th>Categoria</th><th>Medalha</th><th>Bónus Sugerido</th><th>Status</th></tr></thead><tbody>${report?.bonusAutomation.map(b => `<tr><td><strong>${b.advogado}</strong></td><td>${b.categoria}</td><td>🏅 ${b.medalha}</td><td>€${b.bonus_sugerido.toLocaleString()}</td><td>${b.status}</td></tr>`).join('') || '<tr><td colspan="5" class="empty-state">Nenhum bónus calculado</td></tr>'}</tbody></table>
+                                </div>
+                            `;
+                        } else {
+                            contentDiv.innerHTML = `<div class="empty-state"><i class="fas fa-cog fa-spin"></i><p>Módulo em desenvolvimento</p></div>`;
+                        }
+                    }
+                });
+            });
+            
+            document.getElementById('newCitiusBinding')?.addEventListener('click', () => {
+                EliteUtils.showToast('Funcionalidade de vínculo CITIUS - Selecione um recibo PDF', 'info');
+            });
         }
     }
     
@@ -1074,30 +1401,17 @@
             secureStorage = new SecureStorage(sessionHash);
             window.SecureStorageInstance = secureStorage;
             
-            // Verificar e inicializar módulos base
+            // Inicializar todos os módulos
             if (window.ForensicVault && typeof window.ForensicVault.initialize === 'function') {
                 window.ForensicVault.initialize(sessionHash);
                 EliteUtils.log('✅ Forensic Vault inicializado');
-            } else {
-                EliteUtils.log('⚠️ Forensic Vault não disponível - aguardando carregamento');
             }
             
-            if (window.FeeOptimizer) {
-                EliteUtils.log('✅ Fee Optimizer disponível');
-            } else {
-                EliteUtils.log('⚠️ Fee Optimizer não disponível - aguardando carregamento');
+            if (window.BlackSwan && typeof window.BlackSwan.initialize === 'function') {
+                window.BlackSwan.initialize();
+                EliteUtils.log('✅ Black Swan Predictor inicializado');
             }
             
-            if (window.PracticeDashboard && typeof window.PracticeDashboard.initialize === 'function') {
-                window.PracticeDashboard.initialize();
-                EliteUtils.log('✅ Practice Dashboard inicializado');
-            } else if (window.PracticeDashboard) {
-                EliteUtils.log('✅ Practice Dashboard disponível');
-            } else {
-                EliteUtils.log('⚠️ Practice Dashboard não disponível - aguardando carregamento');
-            }
-            
-            // Inicializar módulos de inovação
             if (window.WargamingEngine && typeof window.WargamingEngine.initialize === 'function') {
                 window.WargamingEngine.initialize();
                 EliteUtils.log('✅ Wargaming Engine inicializado');
@@ -1118,15 +1432,44 @@
                 EliteUtils.log('✅ Quantum Legal Analytics inicializado');
             }
             
-            // Inicializar módulos da Arquitetura de Verdade
             if (window.ShadowDossier && typeof window.ShadowDossier.initialize === 'function') {
                 window.ShadowDossier.initialize();
                 EliteUtils.log('✅ Shadow Dossier Manager inicializado');
             }
             
-            if (window.BlackSwan && typeof window.BlackSwan.initialize === 'function') {
-                window.BlackSwan.initialize();
-                EliteUtils.log('✅ Black Swan Predictor inicializado');
+            if (window.CourtDeadlines && typeof window.CourtDeadlines.initialize === 'function') {
+                window.CourtDeadlines.initialize();
+                EliteUtils.log('✅ Court Deadlines inicializado');
+            }
+            
+            if (window.GamificationSystem && typeof window.GamificationSystem.initialize === 'function') {
+                window.GamificationSystem.initialize();
+                EliteUtils.log('✅ Gamification System inicializado');
+            }
+            
+            if (window.AIAssistant && typeof window.AIAssistant.initialize === 'function') {
+                window.AIAssistant.initialize();
+                EliteUtils.log('✅ AI Assistant inicializado');
+            }
+            
+            if (window.PredictiveLitigation && typeof window.PredictiveLitigation.initialize === 'function') {
+                window.PredictiveLitigation.initialize();
+                EliteUtils.log('✅ Predictive Litigation inicializado');
+            }
+            
+            if (window.PlatformIntelligence && typeof window.PlatformIntelligence.initialize === 'function') {
+                window.PlatformIntelligence.initialize();
+                EliteUtils.log('✅ Platform Intelligence inicializado');
+            }
+            
+            if (window.MarketIntelligence && typeof window.MarketIntelligence.initialize === 'function') {
+                window.MarketIntelligence.initialize();
+                EliteUtils.log('✅ Market Intelligence inicializado');
+            }
+            
+            if (window.LeadIntelligence && typeof window.LeadIntelligence.initialize === 'function') {
+                window.LeadIntelligence.initialize();
+                EliteUtils.log('✅ Lead Intelligence inicializado');
             }
             
             const savedLocale = localStorage.getItem('elite_locale');
@@ -1144,8 +1487,8 @@
             EliteUtils.log(`📊 Valor total em disputa: ${EliteUtils.formatCurrency(MOCK_CASES.reduce((s,c)=>s+c.value,0))}`);
             EliteUtils.log(`🔐 Storage seguro inicializado com PBKDF2`);
             EliteUtils.log(`🚀 Módulos de inovação disruptiva ativos`);
-            EliteUtils.log(`🎯 ARQUITETURA DE VERDADE: Sistema pronto para simbiose judiciária`);
-            EliteUtils.log(`📌 Nota: Extensões (bonus, dashboard, vault) serão carregadas automaticamente após autenticação`);
+            EliteUtils.log(`🎯 ARQUITETURA DE VERDADE: Shadow Dossier | Black Swan | Decomposição Forense`);
+            EliteUtils.log(`📌 Extensões carregadas dinamicamente após autenticação`);
         },
         
         navigateTo: navigateTo,
@@ -1167,7 +1510,7 @@
     EliteUtils.log(`Master Hash: ${MASTER_HASH.substring(0, 16)}...`);
     EliteUtils.log(`${MOCK_CASES.length} processos estratégicos carregados`);
     EliteUtils.log(`Valor total em disputa: ${EliteUtils.formatCurrency(MOCK_CASES.reduce((s,c)=>s+c.value,0))}`);
-    EliteUtils.log(`🎯 Arquitetura de Verdade: Shadow Dossier | Black Swan | Decomposition`);
+    EliteUtils.log(`🎯 Arquitetura de Verdade: Shadow Dossier | Black Swan | Decomposição Forense`);
     EliteUtils.log(`📌 Extensões carregadas dinamicamente após autenticação`);
     EliteUtils.log(`========================================`);
     
