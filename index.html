@@ -3,11 +3,11 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no, viewport-fit=cover">
-    <meta name="description" content="ELITE PROBATUM v2.0.5 — Unidade de Comando Forense Digital">
+    <meta name="description" content="ELITE PROBATUM v2.0.5 — Unidade de Comando Estratégico">
     <meta name="author" content="ELITE PROBATUM">
     <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline' https://cdn.jsdelivr.net https://cdnjs.cloudflare.com https://fonts.googleapis.com https://unpkg.com; style-src 'self' 'unsafe-inline' https://cdn.jsdelivr.net https://fonts.googleapis.com https://cdnjs.cloudflare.com; font-src 'self' https://fonts.gstatic.com https://cdnjs.cloudflare.com data:; connect-src 'self' https://cdn.jsdelivr.net https://cdnjs.cloudflare.com https://fonts.googleapis.com; img-src 'self' data: blob:; base-uri 'self'; form-action 'self';">
     <meta name="referrer" content="strict-origin-when-cross-origin">
-    <title>ELITE PROBATUM | Unidade de Comando Forense Digital</title>
+    <title>ELITE PROBATUM | Unidade de Comando Estratégico</title>
     
     <!-- Favicon -->
     <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>⚖️</text></svg>">
@@ -33,14 +33,14 @@
 </head>
 <body>
     
-    <!-- GATEKEEPER SECURE - LOGIN TÁTICO -->
+    <!-- GATEKEEPER SECURE - LOGIN ESTRATÉGICO -->
     <div id="loginOverlay" class="gatekeeper-secure">
         <div class="login-card">
             <div class="login-logo">
                 <i class="fas fa-crown"></i>
                 <span>ELITE <span class="logo-highlight">PROBATUM</span></span>
             </div>
-            <div class="version-badge">v2.0.5 · UNIDADE DE COMANDO FORENSE</div>
+            <div class="version-badge">v2.0.5 · UNIDADE DE COMANDO ESTRATÉGICO</div>
             <p class="subtitle" data-i18n="login_subtitle">Acesso restrito a pessoal autorizado</p>
             
             <div class="form-group">
@@ -138,7 +138,7 @@
     <!-- MAIN APP CONTAINER - TERMINAL DE OPERAÇÕES -->
     <div id="appContainer" class="elite-app" style="display: none;">
         
-        <!-- SIDEBAR TÁTICA -->
+        <!-- SIDEBAR ESTRATÉGICA -->
         <aside class="elite-sidebar">
             <div class="sidebar-logo">
                 <i class="fas fa-crown"></i>
@@ -182,7 +182,7 @@
                 </a>
                 <a href="#" class="nav-item" data-view="simulator" data-i18n="nav_simulator">
                     <i class="fas fa-flask"></i>
-                    <span>SIMULADOR DE CONTRA-PERÍCIA</span>
+                    <span>SIMULADOR DE RISCO</span>
                 </a>
                 <a href="#" class="nav-item" data-view="deadlines" data-i18n="nav_deadlines">
                     <i class="fas fa-calendar-alt"></i>
@@ -245,15 +245,15 @@
                             <i class="fas fa-language"></i>
                         </button>
                         <button id="btn-integrity-check" class="icon-btn" title="Verificação de Integridade">
-                            <i class="fas fa-shield-hooded"></i>
+                            <i class="fas fa-shield-alt"></i>
                         </button>
-                        <button id="exportReportBtn" class="icon-btn" title="Exportar Relatório">
+                        <button id="exportReportBtn" class="icon-btn" title="Exportar Relatório Estratégico">
                             <i class="fas fa-file-pdf"></i>
                         </button>
-                        <button id="mobileExportBtn" class="icon-btn" title="Exportar para Móvel">
+                        <button id="mobileExportBtn" class="icon-btn" title="Exportar para Dispositivo Móvel">
                             <i class="fas fa-mobile-alt"></i>
                         </button>
-                        <button id="settingsBtn" class="icon-btn">
+                        <button id="settingsBtn" class="icon-btn" title="Configurações Avançadas">
                             <i class="fas fa-cog"></i>
                         </button>
                     </div>
@@ -317,7 +317,7 @@
     <div id="integrityModal" class="elite-modal" style="display: none;">
         <div class="modal-content">
             <div class="modal-header">
-                <h3><i class="fas fa-shield-hooded"></i> VERIFICAÇÃO DE INTEGRIDADE</h3>
+                <h3><i class="fas fa-shield-alt"></i> VERIFICAÇÃO DE INTEGRIDADE</h3>
                 <button class="modal-close">&times;</button>
             </div>
             <div class="modal-body" id="integrityBody"></div>
@@ -386,7 +386,7 @@
                     <div class="form-group">
                         <label>Modo de Visualização</label>
                         <select id="themeMode">
-                            <option value="dark">Modo Tático (Dark)</option>
+                            <option value="dark">Modo Estratégico (Dark)</option>
                             <option value="light">Modo Claro</option>
                             <option value="auto">Automático</option>
                         </select>
@@ -427,18 +427,17 @@
     <script src="js_modules_lead-intelligence.js"></script>
     <script src="js_modules_gamification.js"></script>
     
-    <!-- 3. MÓDULOS DE INOVAÇÃO DISRUPTIVA (v2.0.4) -->
+    <!-- 3. MÓDULOS DE INOVAÇÃO DISRUPTIVA (v2.0.5) -->
     <script src="js_modules_wargaming-engine.js"></script>
     <script src="js_modules_judge-biometrics.js"></script>
     <script src="js_modules_blockchain-custody.js"></script>
     <script src="js_modules_quantum-analytics.js"></script>
     
-    <!-- 4. EXTENSÕES E MÓDULOS DA ARQUITETURA DE VERDADE (v2.0.5) 
-         NOTA: Estes scripts estendem os módulos base e devem ser carregados APÓS eles -->
+    <!-- 4. EXTENSÕES E MÓDULOS DA ARQUITETURA DE VERDADE (v2.0.5) -->
     <script src="js_modules_shadow-dossier.js"></script>
     <script src="js_modules_black-swan.js"></script>
     
-    <!-- 5. EXTENSÕES QUE DEPENDEM DOS MÓDULOS BASE (carregar por último) -->
+    <!-- 5. EXTENSÕES QUE DEPENDEM DOS MÓDULOS BASE -->
     <script>
         // Aguardar o carregamento completo antes de carregar as extensões
         window.addEventListener('load', function() {
@@ -466,7 +465,7 @@
             'use strict';
             
             document.addEventListener('DOMContentLoaded', function() {
-                console.log('[ELITE PROBATUM] Unidade de Comando Forense Digital — Inicializando v2.0.5');
+                console.log('[ELITE PROBATUM] Unidade de Comando Estratégico — Inicializando v2.0.5');
                 
                 const authBtn = document.getElementById('authBtn');
                 const loginOverlay = document.getElementById('loginOverlay');
@@ -702,7 +701,7 @@
                         } else if (window.EliteProbatum && typeof window.EliteProbatum.exportCurrentViewToMobile === 'function') {
                             window.EliteProbatum.exportCurrentViewToMobile();
                         } else {
-                            alert('[COMANDO] Funcionalidade de exportação para móvel em desenvolvimento.');
+                            alert('[COMANDO] Funcionalidade de exportação para dispositivo móvel em desenvolvimento.');
                         }
                     });
                 }
@@ -754,7 +753,7 @@
                     });
                 }
                 
-                console.log('[ELITE PROBATUM] Unidade de Comando pronta v2.0.5. Aguardando autenticação.');
+                console.log('[ELITE PROBATUM] Unidade de Comando Estratégica pronta v2.0.5. Aguardando autenticação.');
             });
         })();
     </script>
