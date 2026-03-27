@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no, viewport-fit=cover">
-    <meta name="description" content="ELITE PROBATUM v2.0 — Unidade de Comando Forense Digital">
+    <meta name="description" content="ELITE PROBATUM v2.0.5 — Unidade de Comando Forense Digital">
     <meta name="author" content="ELITE PROBATUM">
     <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline' https://cdn.jsdelivr.net https://cdnjs.cloudflare.com https://fonts.googleapis.com https://unpkg.com; style-src 'self' 'unsafe-inline' https://cdn.jsdelivr.net https://fonts.googleapis.com https://cdnjs.cloudflare.com; font-src 'self' https://fonts.gstatic.com https://cdnjs.cloudflare.com data:; connect-src 'self' https://cdn.jsdelivr.net https://cdnjs.cloudflare.com https://fonts.googleapis.com; img-src 'self' data: blob:; base-uri 'self'; form-action 'self';">
     <meta name="referrer" content="strict-origin-when-cross-origin">
@@ -40,7 +40,7 @@
                 <i class="fas fa-crown"></i>
                 <span>ELITE <span class="logo-highlight">PROBATUM</span></span>
             </div>
-            <div class="version-badge">v2.0.4 · UNIDADE DE COMANDO FORENSE</div>
+            <div class="version-badge">v2.0.5 · UNIDADE DE COMANDO FORENSE</div>
             <p class="subtitle" data-i18n="login_subtitle">Acesso restrito a pessoal autorizado</p>
             
             <div class="form-group">
@@ -143,7 +143,7 @@
             <div class="sidebar-logo">
                 <i class="fas fa-crown"></i>
                 <span>ELITE<span class="elite-light">PROBATUM</span></span>
-                <span class="version-tag">v2.0.4</span>
+                <span class="version-tag">v2.0.5</span>
             </div>
             
             <nav class="sidebar-nav">
@@ -192,9 +192,9 @@
                     <i class="fas fa-history"></i>
                     <span>REGISTOS RGPD</span>
                 </a>
-                <a href="#" class="nav-item" data-view="reports" data-i18n="nav_reports">
-                    <i class="fas fa-file-alt"></i>
-                    <span>RELATÓRIOS</span>
+                <a href="#" class="nav-item" data-view="truth_architecture" data-i18n="nav_truth_architecture">
+                    <i class="fas fa-chess-queen"></i>
+                    <span>ARQUITETURA DE VERDADE</span>
                 </a>
                 <a href="#" class="nav-item" data-view="admin" data-i18n="nav_admin">
                     <i class="fas fa-skull"></i>
@@ -403,10 +403,16 @@
     
     <div id="toastContainer" class="elite-toast-container"></div>
     
-    <!-- SCRIPTS - MÓDULOS BASE -->
+    <!-- ================================================================
+         SCRIPTS - ORDEM CORRIGIDA: MÓDULOS BASE PRIMEIRO, DEPOIS EXTENSÕES
+    ================================================================ -->
+    
+    <!-- 1. MÓDULOS BASE (Core e Componentes) -->
     <script src="js_core_app.js"></script>
     <script src="js_components_charts.js"></script>
     <script src="js_components_tables.js"></script>
+    
+    <!-- 2. MÓDULOS DE NEGÓCIO (Base) -->
     <script src="js_modules_predictive-litigation.js"></script>
     <script src="js_modules_mass-litigation.js"></script>
     <script src="js_modules_judicial-analytics.js"></script>
@@ -421,11 +427,38 @@
     <script src="js_modules_lead-intelligence.js"></script>
     <script src="js_modules_gamification.js"></script>
     
-    <!-- SCRIPTS - MÓDULOS DE INOVAÇÃO DISRUPTIVA -->
+    <!-- 3. MÓDULOS DE INOVAÇÃO DISRUPTIVA (v2.0.4) -->
     <script src="js_modules_wargaming-engine.js"></script>
     <script src="js_modules_judge-biometrics.js"></script>
     <script src="js_modules_blockchain-custody.js"></script>
     <script src="js_modules_quantum-analytics.js"></script>
+    
+    <!-- 4. EXTENSÕES E MÓDULOS DA ARQUITETURA DE VERDADE (v2.0.5) 
+         NOTA: Estes scripts estendem os módulos base e devem ser carregados APÓS eles -->
+    <script src="js_modules_shadow-dossier.js"></script>
+    <script src="js_modules_black-swan.js"></script>
+    
+    <!-- 5. EXTENSÕES QUE DEPENDEM DOS MÓDULOS BASE (carregar por último) -->
+    <script>
+        // Aguardar o carregamento completo antes de carregar as extensões
+        window.addEventListener('load', function() {
+            // Carregar extensões dinamicamente após os módulos base estarem prontos
+            const extensions = [
+                'js_modules_fee-optimizer-ext.js',
+                'js_modules_practice-dashboard-ext.js',
+                'js_modules_forensic-vault-ext.js'
+            ];
+            
+            extensions.forEach(function(src) {
+                const script = document.createElement('script');
+                script.src = src;
+                script.onerror = function() {
+                    console.warn('[ELITE] Extensão não encontrada:', src);
+                };
+                document.head.appendChild(script);
+            });
+        });
+    </script>
     
     <!-- SCRIPT DE INICIALIZAÇÃO -->
     <script>
@@ -433,7 +466,7 @@
             'use strict';
             
             document.addEventListener('DOMContentLoaded', function() {
-                console.log('[ELITE PROBATUM] Unidade de Comando Forense Digital — Inicializando v2.0.4');
+                console.log('[ELITE PROBATUM] Unidade de Comando Forense Digital — Inicializando v2.0.5');
                 
                 const authBtn = document.getElementById('authBtn');
                 const loginOverlay = document.getElementById('loginOverlay');
@@ -721,7 +754,7 @@
                     });
                 }
                 
-                console.log('[ELITE PROBATUM] Unidade de Comando pronta v2.0.4. Aguardando autenticação.');
+                console.log('[ELITE PROBATUM] Unidade de Comando pronta v2.0.5. Aguardando autenticação.');
             });
         })();
     </script>

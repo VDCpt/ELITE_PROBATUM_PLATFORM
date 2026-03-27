@@ -4,16 +4,7 @@
  * UNIDADE DE COMANDO FORENSE DIGITAL
  * ARQUITETURA DE VERDADE
  * ============================================================================
- * VERSÃO FINAL: 2.0.5 - INTEGRAÇÃO COMPLETA
- * 
- * Módulos Integrados:
- * - Wargaming Engine (Simulação de Contra-Perícia)
- * - Judge Biometrics (Digital Twin de Magistrados)
- * - Blockchain Custody (Proof-of-Integrity)
- * - Quantum Legal Analytics (Teoria de Jogos)
- * - Shadow Dossier Manager (Simbiose CITIUS)
- * - Black Swan Predictor (Monte Carlo)
- * - Forensic Decomposition (Análise de Metadados)
+ * VERSÃO FINAL: 2.0.5 - CORREÇÃO DE ORDEM DE CARREGAMENTO
  * ============================================================================
  */
 
@@ -130,7 +121,7 @@
     }
     
     // =========================================================================
-    // SISTEMA DE INTERNACIONALIZAÇÃO (I18N) - STRICT MAPPING
+    // SISTEMA DE INTERNACIONALIZAÇÃO (I18N)
     // =========================================================================
     
     const I18N_DICT = {
@@ -349,7 +340,7 @@
     };
     
     // =========================================================================
-    // MOCK DATA - PROCESSOS DE ALTO VALOR
+    // MOCK DATA
     // =========================================================================
     
     const MOCK_CASES = [
@@ -423,7 +414,7 @@
     }
     
     // =========================================================================
-    // EXPORTAÇÃO PARA DISPOSITIVO MÓVEL
+    // FUNÇÕES DE EXPORTAÇÃO
     // =========================================================================
     
     async function exportToRegisteredDevice() {
@@ -932,7 +923,7 @@
     // FUNÇÕES DE RENDERIZAÇÃO DAS DEMAIS VIEWS
     // =========================================================================
     
-    function renderInsolvency() { const container = document.getElementById('viewContainer'); if (container) { const insolvencyCases = MOCK_CASES.filter(c => c.category === 'insolvency' || c.category === 'banking'); container.innerHTML = `<h2>${t('nav_insolvency')}</h2><table class="data-table"><thead> <th>ID</th><th>CLIENTE</th><th>VALOR</th><th>PROBABILIDADE</th><th>FASE</th> </thead><tbody>${insolvencyCases.map(c => ` <td><strong>${c.id}</strong></td><td>${c.client}</td><td>${EliteUtils.formatCurrency(c.value)}</td><td><div class="progress-bar"><div class="progress-fill" style="width: ${c.successProbability * 100}%"></div><span class="progress-text">${EliteUtils.formatPercentage(c.successProbability * 100)}</span></div></td><td>${c.fase_processual || 'Em curso'}</td> `).join('')}</tbody> </div>`; } }
+    function renderInsolvency() { const container = document.getElementById('viewContainer'); if (container) { const insolvencyCases = MOCK_CASES.filter(c => c.category === 'insolvency' || c.category === 'banking'); container.innerHTML = `<h2>${t('nav_insolvency')}</h2><table class="data-table"><thead> <th>ID</th><th>CLIENTE</th><th>VALOR</th><th>PROBABILIDADE</th><th>FASE</th> </thead><tbody>${insolvencyCases.map(c => ` <td><strong>${c.id}</strong> </div><td>${c.client}</td><td>${EliteUtils.formatCurrency(c.value)}</td><td><div class="progress-bar"><div class="progress-fill" style="width: ${c.successProbability * 100}%"></div><span class="progress-text">${EliteUtils.formatPercentage(c.successProbability * 100)}</span></div></td><td>${c.fase_processual || 'Em curso'}</td> </div`).join('')}</tbody> </div>`; } }
     function renderLabor() { const container = document.getElementById('viewContainer'); if (container) container.innerHTML = `<h2>${t('nav_labor')}</h2><p>Contencioso Laboral - Módulo em desenvolvimento</p>`; }
     function renderLitigation() { const container = document.getElementById('viewContainer'); if (container) container.innerHTML = `<h2>${t('nav_litigation')}</h2><p>Inteligência de Litígio - Análise preditiva disponível no dashboard</p>`; }
     function renderQuestionnaire() { const container = document.getElementById('viewContainer'); if (container) container.innerHTML = `<h2>${t('nav_questionnaire')}</h2><p>Questionários estratégicos em desenvolvimento</p>`; }
@@ -951,6 +942,7 @@
         const container = document.getElementById('viewContainer');
         if (!container) return;
         
+        // Tentar usar o módulo PracticeDashboard se disponível e estendido
         if (window.PracticeDashboard && typeof window.PracticeDashboard.renderTruthArchitecture === 'function') {
             window.PracticeDashboard.renderTruthArchitecture();
         } else {
@@ -961,13 +953,14 @@
                         <i class="fas fa-chess-queen"></i>
                         <div>
                             <strong>Arquitetura de Verdade</strong>
-                            <p>Módulo em fase de ativação. Consulte os módulos:</p>
+                            <p>Módulo em fase de ativação. Os seguintes componentes estão disponíveis:</p>
                             <ul>
-                                <li>Shadow Dossier - Vínculo com CITIUS/SINOFE</li>
-                                <li>Black Swan Predictor - Simulação de Monte Carlo</li>
-                                <li>Relatório Executivo - Bónus Meritocráticos</li>
-                                <li>Decomposição Forense - Análise de Metadados</li>
+                                <li><strong>Shadow Dossier</strong> - Vínculo com CITIUS/SINOFE</li>
+                                <li><strong>Black Swan Predictor</strong> - Simulação de Monte Carlo</li>
+                                <li><strong>Relatório Executivo</strong> - Bónus Meritocráticos</li>
+                                <li><strong>Decomposição Forense</strong> - Análise de Metadados</li>
                             </ul>
+                            <p>Para ativar todas as funcionalidades, certifique-se de que os módulos de extensão estão carregados.</p>
                         </div>
                     </div>
                 </div>
@@ -1081,13 +1074,30 @@
             secureStorage = new SecureStorage(sessionHash);
             window.SecureStorageInstance = secureStorage;
             
-            // Inicializar Forensic Vault
+            // Verificar e inicializar módulos base
             if (window.ForensicVault && typeof window.ForensicVault.initialize === 'function') {
                 window.ForensicVault.initialize(sessionHash);
                 EliteUtils.log('✅ Forensic Vault inicializado');
+            } else {
+                EliteUtils.log('⚠️ Forensic Vault não disponível - aguardando carregamento');
             }
             
-            // Inicializar módulos disruptivos
+            if (window.FeeOptimizer) {
+                EliteUtils.log('✅ Fee Optimizer disponível');
+            } else {
+                EliteUtils.log('⚠️ Fee Optimizer não disponível - aguardando carregamento');
+            }
+            
+            if (window.PracticeDashboard && typeof window.PracticeDashboard.initialize === 'function') {
+                window.PracticeDashboard.initialize();
+                EliteUtils.log('✅ Practice Dashboard inicializado');
+            } else if (window.PracticeDashboard) {
+                EliteUtils.log('✅ Practice Dashboard disponível');
+            } else {
+                EliteUtils.log('⚠️ Practice Dashboard não disponível - aguardando carregamento');
+            }
+            
+            // Inicializar módulos de inovação
             if (window.WargamingEngine && typeof window.WargamingEngine.initialize === 'function') {
                 window.WargamingEngine.initialize();
                 EliteUtils.log('✅ Wargaming Engine inicializado');
@@ -1108,7 +1118,7 @@
                 EliteUtils.log('✅ Quantum Legal Analytics inicializado');
             }
             
-            // Inicializar novos módulos v2.0.5
+            // Inicializar módulos da Arquitetura de Verdade
             if (window.ShadowDossier && typeof window.ShadowDossier.initialize === 'function') {
                 window.ShadowDossier.initialize();
                 EliteUtils.log('✅ Shadow Dossier Manager inicializado');
@@ -1133,10 +1143,9 @@
             EliteUtils.log(`✅ ${MOCK_CASES.length} processos estratégicos carregados`);
             EliteUtils.log(`📊 Valor total em disputa: ${EliteUtils.formatCurrency(MOCK_CASES.reduce((s,c)=>s+c.value,0))}`);
             EliteUtils.log(`🔐 Storage seguro inicializado com PBKDF2`);
-            EliteUtils.log(`🚀 Módulos de inovação disruptiva ativos:`);
-            EliteUtils.log(`   - Wargaming Engine | Judge Biometrics | Blockchain Custody`);
-            EliteUtils.log(`   - Quantum Analytics | Shadow Dossier | Black Swan Predictor`);
+            EliteUtils.log(`🚀 Módulos de inovação disruptiva ativos`);
             EliteUtils.log(`🎯 ARQUITETURA DE VERDADE: Sistema pronto para simbiose judiciária`);
+            EliteUtils.log(`📌 Nota: Extensões (bonus, dashboard, vault) serão carregadas automaticamente após autenticação`);
         },
         
         navigateTo: navigateTo,
@@ -1158,8 +1167,8 @@
     EliteUtils.log(`Master Hash: ${MASTER_HASH.substring(0, 16)}...`);
     EliteUtils.log(`${MOCK_CASES.length} processos estratégicos carregados`);
     EliteUtils.log(`Valor total em disputa: ${EliteUtils.formatCurrency(MOCK_CASES.reduce((s,c)=>s+c.value,0))}`);
-    EliteUtils.log(`🚀 Inovações Disruptivas: Wargaming | Biometrics | Blockchain | Quantum`);
     EliteUtils.log(`🎯 Arquitetura de Verdade: Shadow Dossier | Black Swan | Decomposition`);
+    EliteUtils.log(`📌 Extensões carregadas dinamicamente após autenticação`);
     EliteUtils.log(`========================================`);
     
 })();
