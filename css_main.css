@@ -1,25 +1,26 @@
 /**
  * ============================================================================
- * ELITE PROBATUM v2.0 — CSS PRINCIPAL
- * INTERVENÇÃO TÁTICA - UNIDADE DE COMANDO FORENSE DIGITAL
+ * ELITE PROBATUM v2.0.5 — CSS PRINCIPAL
+ * UNIDADE DE COMANDO ESTRATÉGICO
  * ============================================================================
- * CORREÇÕES v2.0.3:
+ * CORREÇÕES v2.0.5:
  * 1. Correção de overflow e scroll no container principal
- * 2. Estilos táticos para filtros de área com cores por categoria
+ * 2. Estilos estratégicos para filtros de área com cores por categoria
  * 3. Ajustes de responsividade para dispositivos móveis
  * 4. Melhorias de acessibilidade visual
+ * 5. Rebranding estratégico (Forensics → Strategic)
  * ============================================================================
  */
 
-/* --- INÍCIO DA INTERVENÇÃO TÁTICA --- */
+/* --- INÍCIO DA INTERVENÇÃO ESTRATÉGICA --- */
 :root {
-    /* Paleta Tática - Fundo Absoluto */
+    /* Paleta Estratégica - Fundo Absoluto */
     --bg-void: #020203;
     --bg-command: #0a0c10;
     --bg-console: #050608;
     --bg-terminal: #000000;
     
-    /* Bordas Táticas */
+    /* Bordas Estratégicas */
     --border-tactic: #1f2937;
     --border-tactic-light: #2d3748;
     --border-tactic-glow: rgba(0, 229, 255, 0.3);
@@ -44,7 +45,7 @@
     --elite-info: #3b82f6;
     --elite-info-dim: rgba(59, 130, 246, 0.1);
     
-    /* Cores por Área do Direito (Filtros Táticos) */
+    /* Cores por Área do Direito (Filtros Estratégicos) */
     --color-insolvency: #ff1744;
     --color-labor: #ffc107;
     --color-civil: #3b82f6;
@@ -64,13 +65,13 @@
     --neon-glow-danger: 0 0 15px var(--elite-danger);
     --neon-glow-success: 0 0 15px var(--elite-success);
     
-    /* Layout Tático */
+    /* Layout Estratégico */
     --sidebar-width: 300px;
     --header-height: 64px;
     --console-padding: 24px;
 }
 
-/* Reset e Base Tática */
+/* Reset e Base Estratégica */
 * {
     margin: 0;
     padding: 0;
@@ -125,7 +126,7 @@ body {
 }
 
 /* ============================================================================
-   CORREÇÃO: FILTROS DE ÁREA COM CORES TÁTICAS
+   CORREÇÃO: FILTROS DE ÁREA COM CORES ESTRATÉGICAS
    ============================================================================ */
 
 .category-selector {
@@ -231,7 +232,7 @@ body {
 .case-badge.administrative { background: var(--color-administrative); color: #fff; }
 
 /* ============================================================================
-   GATEKEEPER SECURE - LOGIN TÁTICO
+   GATEKEEPER SECURE - LOGIN ESTRATÉGICO
    ============================================================================ */
 
 .gatekeeper-secure {
@@ -444,7 +445,7 @@ body {
 }
 
 /* ============================================================================
-   SIDEBAR TÁTICA
+   SIDEBAR ESTRATÉGICA
    ============================================================================ */
 
 .elite-sidebar {
@@ -707,7 +708,7 @@ body {
 }
 
 /* ============================================================================
-   DASHBOARD CARDS TÁTICOS
+   DASHBOARD CARDS ESTRATÉGICOS
    ============================================================================ */
 
 .dashboard-grid {
@@ -811,7 +812,7 @@ body {
 }
 
 /* ============================================================================
-   ALERTAS TÁTICOS
+   ALERTAS ESTRATÉGICOS
    ============================================================================ */
 
 .tactical-alerts-container {
@@ -1209,7 +1210,7 @@ body {
 }
 
 /* ============================================================================
-   RESPONSIVIDADE TÁTICA
+   RESPONSIVIDADE ESTRATÉGICA
    ============================================================================ */
 
 @media (max-width: 1024px) {
@@ -1465,7 +1466,7 @@ body {
 }
 
 /* ============================================================================
-   SCROLLBAR TÁTICA
+   SCROLLBAR ESTRATÉGICA
    ============================================================================ */
 
 ::-webkit-scrollbar {
