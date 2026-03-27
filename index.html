@@ -5,7 +5,6 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no, viewport-fit=cover">
     <meta name="description" content="ELITE PROBATUM v2.0 — Unidade de Comando Forense Digital">
     <meta name="author" content="ELITE PROBATUM">
-    <!-- CORREÇÃO: CSP atualizada para incluir todos os CDNs necessários -->
     <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline' https://cdn.jsdelivr.net https://cdnjs.cloudflare.com https://fonts.googleapis.com https://unpkg.com; style-src 'self' 'unsafe-inline' https://cdn.jsdelivr.net https://fonts.googleapis.com https://cdnjs.cloudflare.com; font-src 'self' https://fonts.gstatic.com https://cdnjs.cloudflare.com data:; connect-src 'self' https://cdn.jsdelivr.net https://cdnjs.cloudflare.com https://fonts.googleapis.com; img-src 'self' data: blob:; base-uri 'self'; form-action 'self';">
     <meta name="referrer" content="strict-origin-when-cross-origin">
     <title>ELITE PROBATUM | Unidade de Comando Forense Digital</title>
@@ -17,11 +16,11 @@
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=JetBrains+Mono:wght@400;500;600;700;800&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     
-    <!-- CSS Locais (prioritários) -->
+    <!-- CSS Locais -->
     <link rel="stylesheet" href="css_main.css">
     <link rel="stylesheet" href="css_components.css">
     
-    <!-- Vendors CDN com fallback local -->
+    <!-- Vendors CDN -->
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
     <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.29.4/moment.min.js"></script>
@@ -31,35 +30,17 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
-    
-    <!-- Fallback local para flatpickr (caso CDN falhe) -->
-    <script>
-        window.addEventListener('load', function() {
-            if (typeof flatpickr === 'undefined') {
-                console.warn('[ELITE] flatpickr CDN falhou, carregando fallback local');
-                var link = document.createElement('link');
-                link.rel = 'stylesheet';
-                link.href = '/vendor/flatpickr.min.css';
-                document.head.appendChild(link);
-                var script = document.createElement('script');
-                script.src = '/vendor/flatpickr.min.js';
-                document.head.appendChild(script);
-            }
-        });
-    </script>
 </head>
 <body>
     
-    <!-- ================================================================
-         GATEKEEPER SECURE - LOGIN TÁTICO
-    ================================================================ -->
+    <!-- GATEKEEPER SECURE - LOGIN TÁTICO -->
     <div id="loginOverlay" class="gatekeeper-secure">
         <div class="login-card">
             <div class="login-logo">
                 <i class="fas fa-crown"></i>
                 <span>ELITE <span class="logo-highlight">PROBATUM</span></span>
             </div>
-            <div class="version-badge">v2.0 · UNIDADE DE COMANDO FORENSE</div>
+            <div class="version-badge">v2.0.4 · UNIDADE DE COMANDO FORENSE</div>
             <p class="subtitle" data-i18n="login_subtitle">Acesso restrito a pessoal autorizado</p>
             
             <div class="form-group">
@@ -95,9 +76,7 @@
         </div>
     </div>
     
-    <!-- ================================================================
-         MODAL DE PEDIDO DE ACESSO
-    ================================================================ -->
+    <!-- MODAL DE PEDIDO DE ACESSO -->
     <div id="accessRequestModal" class="elite-modal" style="display: none;">
         <div class="modal-content">
             <div class="modal-header">
@@ -134,9 +113,7 @@
         </div>
     </div>
     
-    <!-- ================================================================
-         MODAL DE PREVISÃO IA
-    ================================================================ -->
+    <!-- MODAL DE PREVISÃO IA -->
     <div id="aiPredictionModal" class="elite-modal" style="display: none;">
         <div class="modal-content">
             <div class="modal-header">
@@ -147,9 +124,7 @@
         </div>
     </div>
     
-    <!-- ================================================================
-         MODAL DE CAPTAÇÃO DE LEADS
-    ================================================================ -->
+    <!-- MODAL DE CAPTAÇÃO DE LEADS -->
     <div id="leadCaptureModal" class="elite-modal" style="display: none;">
         <div class="modal-content">
             <div class="modal-header">
@@ -160,9 +135,7 @@
         </div>
     </div>
     
-    <!-- ================================================================
-         MAIN APP CONTAINER - TERMINAL DE OPERAÇÕES
-    ================================================================ -->
+    <!-- MAIN APP CONTAINER - TERMINAL DE OPERAÇÕES -->
     <div id="appContainer" class="elite-app" style="display: none;">
         
         <!-- SIDEBAR TÁTICA -->
@@ -170,7 +143,7 @@
             <div class="sidebar-logo">
                 <i class="fas fa-crown"></i>
                 <span>ELITE<span class="elite-light">PROBATUM</span></span>
-                <span class="version-tag">v2.0</span>
+                <span class="version-tag">v2.0.4</span>
             </div>
             
             <nav class="sidebar-nav">
@@ -234,7 +207,7 @@
                     <i class="fas fa-user-shield"></i>
                     <div>
                         <strong id="userName">Dr. Administrador</strong>
-                        <small id="userRole">Super Utilizador</small>
+                        <small id="userRole">Super Utilizador · Acesso Total</small>
                     </div>
                 </div>
                 <button class="logout-btn" id="logoutBtn">
@@ -271,7 +244,6 @@
                         <button id="langToggle" class="icon-btn" title="PT/EN">
                             <i class="fas fa-language"></i>
                         </button>
-                        <!-- CORREÇÃO: ID corrigido para btn-integrity-check -->
                         <button id="btn-integrity-check" class="icon-btn" title="Verificação de Integridade">
                             <i class="fas fa-shield-hooded"></i>
                         </button>
@@ -291,9 +263,7 @@
         </main>
     </div>
     
-    <!-- ================================================================
-         MODAIS GLOBAIS
-    ================================================================ -->
+    <!-- MODAIS GLOBAIS -->
     <div id="caseDetailModal" class="elite-modal" style="display: none;">
         <div class="modal-content">
             <div class="modal-header">
@@ -408,10 +378,6 @@
                         <input type="password" id="apiCourtKey" placeholder="••••••••">
                     </div>
                     <div class="form-group">
-                        <label>Chave API - Geolocalização</label>
-                        <input type="password" id="apiGeoKey" placeholder="••••••••">
-                    </div>
-                    <div class="form-group">
                         <label>Webhook - Notificações</label>
                         <input type="url" id="webhookUrl" placeholder="https://...">
                     </div>
@@ -437,9 +403,7 @@
     
     <div id="toastContainer" class="elite-toast-container"></div>
     
-    <!-- ================================================================
-         SCRIPTS - TODOS OS MÓDULOS
-    ================================================================ -->
+    <!-- SCRIPTS - MÓDULOS BASE -->
     <script src="js_core_app.js"></script>
     <script src="js_components_charts.js"></script>
     <script src="js_components_tables.js"></script>
@@ -457,13 +421,19 @@
     <script src="js_modules_lead-intelligence.js"></script>
     <script src="js_modules_gamification.js"></script>
     
+    <!-- SCRIPTS - MÓDULOS DE INOVAÇÃO DISRUPTIVA -->
+    <script src="js_modules_wargaming-engine.js"></script>
+    <script src="js_modules_judge-biometrics.js"></script>
+    <script src="js_modules_blockchain-custody.js"></script>
+    <script src="js_modules_quantum-analytics.js"></script>
+    
     <!-- SCRIPT DE INICIALIZAÇÃO -->
     <script>
         (function() {
             'use strict';
             
             document.addEventListener('DOMContentLoaded', function() {
-                console.log('[ELITE PROBATUM] Unidade de Comando Forense Digital — Inicializando');
+                console.log('[ELITE PROBATUM] Unidade de Comando Forense Digital — Inicializando v2.0.4');
                 
                 const authBtn = document.getElementById('authBtn');
                 const loginOverlay = document.getElementById('loginOverlay');
@@ -475,8 +445,6 @@
                 const langPTBtn = document.getElementById('langPT');
                 const langENBtn = document.getElementById('langEN');
                 const langToggleHeader = document.getElementById('langToggle');
-                
-                // CORREÇÃO: Botão de integridade com ID corrigido
                 const integrityCheckBtn = document.getElementById('btn-integrity-check');
                 const settingsBtn = document.getElementById('settingsBtn');
                 const settingsModal = document.getElementById('settingsModal');
@@ -528,34 +496,7 @@
                             if (userRoleSpan) userRoleSpan.textContent = 'Super Utilizador · Acesso Total';
                             
                             if (window.EliteProbatum && typeof window.EliteProbatum.initDashboard === 'function') {
-                                console.log('[ELITE PROBATUM] Inicializando Dashboard Tático...');
                                 window.EliteProbatum.initDashboard();
-                                
-                                if (typeof window.EliteProbatum.injectTacticalAlerts === 'function') {
-                                    setTimeout(() => {
-                                        window.EliteProbatum.injectTacticalAlerts();
-                                    }, 500);
-                                }
-                            }
-                            
-                            if (window.CourtDeadlines && typeof window.CourtDeadlines.initialize === 'function') {
-                                window.CourtDeadlines.initialize();
-                            }
-                            
-                            if (window.AIAssistant && typeof window.AIAssistant.initialize === 'function') {
-                                window.AIAssistant.initialize();
-                            }
-                            
-                            if (window.ForensicVault && typeof window.ForensicVault.initialize === 'function') {
-                                window.ForensicVault.initialize(secureHash);
-                            }
-                            
-                            if (window.LeadIntelligence && typeof window.LeadIntelligence.initialize === 'function') {
-                                window.LeadIntelligence.initialize();
-                            }
-                            
-                            if (window.GamificationSystem && typeof window.GamificationSystem.initialize === 'function') {
-                                window.GamificationSystem.initialize();
                             }
                             
                             const activeCasesSpan = document.getElementById('headerActiveCases');
@@ -626,9 +567,6 @@
                 
                 if (authBtn) {
                     authBtn.addEventListener('click', authenticate);
-                    console.log('[ELITE PROBATUM] Evento de autenticação associado');
-                } else {
-                    console.error('[ELITE PROBATUM] Botão authBtn não encontrado!');
                 }
                 
                 if (usernameInput && passwordInput) {
@@ -736,18 +674,18 @@
                     });
                 }
                 
-                // CORREÇÃO: Botão de integridade com ID corrigido
                 if (integrityCheckBtn) {
                     integrityCheckBtn.addEventListener('click', () => {
                         if (window.ForensicVault && typeof window.ForensicVault.verifySystemIntegrity === 'function') {
                             window.ForensicVault.verifySystemIntegrity();
+                        } else if (window.BlockchainCustody && typeof window.BlockchainCustody.verifySystemIntegrity === 'function') {
+                            window.BlockchainCustody.verifySystemIntegrity();
                         } else {
                             alert('[COMANDO] Módulo de verificação de integridade não disponível.');
                         }
                     });
                 }
                 
-                // CORREÇÃO: Botão de configurações com modal funcional
                 if (settingsBtn && settingsModal) {
                     settingsBtn.addEventListener('click', () => {
                         settingsModal.style.display = 'flex';
@@ -758,14 +696,12 @@
                 if (saveSettingsBtn) {
                     saveSettingsBtn.addEventListener('click', () => {
                         const apiCourtKey = document.getElementById('apiCourtKey')?.value;
-                        const apiGeoKey = document.getElementById('apiGeoKey')?.value;
                         const webhookUrl = document.getElementById('webhookUrl')?.value;
                         const themeMode = document.getElementById('themeMode')?.value;
                         const emailNotifications = document.getElementById('emailNotifications')?.checked;
                         
                         const settings = {
                             apiCourtKey: apiCourtKey ? CryptoJS.SHA256(apiCourtKey).toString() : null,
-                            apiGeoKey: apiGeoKey ? CryptoJS.SHA256(apiGeoKey).toString() : null,
                             webhookUrl: webhookUrl,
                             themeMode: themeMode,
                             emailNotifications: emailNotifications,
@@ -785,7 +721,7 @@
                     });
                 }
                 
-                console.log('[ELITE PROBATUM] Unidade de Comando pronta. Aguardando autenticação.');
+                console.log('[ELITE PROBATUM] Unidade de Comando pronta v2.0.4. Aguardando autenticação.');
             });
         })();
     </script>

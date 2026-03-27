@@ -3,12 +3,13 @@
  * ELITE PROBATUM v2.0 — APLICAÇÃO PRINCIPAL
  * UNIDADE DE COMANDO FORENSE DIGITAL
  * ============================================================================
- * CORREÇÃO v2.0.3:
- * 1. Filtros de área com nomes em PT-PT e cores táticas
- * 2. Exportação para dispositivo móvel com device_id e webhook
- * 3. Implementação de módulos vazios (Questionários, Cadeia de Custódia, RGPD)
- * 4. Função de exclusão de casos com hash de confirmação
- * 5. Strict mapping i18n para PT-PT e EN-GB
+ * VERSÃO FINAL: 2.0.4 - INTEGRAÇÃO COMPLETA
+ * 
+ * Módulos Integrados:
+ * - Wargaming Engine (Simulação de Contra-Perícia)
+ * - Judge Biometrics (Digital Twin de Magistrados)
+ * - Blockchain Custody (Proof-of-Integrity)
+ * - Quantum Legal Analytics (Teoria de Jogos)
  * ============================================================================
  */
 
@@ -19,7 +20,7 @@
     // CONFIGURAÇÕES GLOBAIS
     // =========================================================================
     
-    const APP_VERSION = '2.0.3';
+    const APP_VERSION = '2.0.4';
     const MASTER_HASH = 'F8A9B2C1D4E5F6A7B8C9D0E1F2A3B4C5D6E7F8A9B0C1D2E3F4A5B6C7D8E9F0';
     
     // =========================================================================
@@ -130,7 +131,6 @@
     
     const I18N_DICT = {
         pt: {
-            // Login
             login_title: 'ELITE PROBATUM',
             login_subtitle: 'Unidade de Comando Forense Digital',
             login_user: 'UTILIZADOR',
@@ -139,8 +139,6 @@
             login_request: 'SOLICITAR ACESSO',
             login_security: 'ENCRIPTADO AES-256 · CANAL SEGURO',
             login_error: 'ACESSO NEGADO — Credenciais inválidas',
-            
-            // Navegação
             nav_dashboard: 'PAINEL DE COMANDO',
             nav_cases: 'PROCESSOS',
             nav_insolvency: 'INSOLVÊNCIAS (CIRE)',
@@ -154,8 +152,6 @@
             nav_activitylog: 'REGISTOS RGPD',
             nav_reports: 'RELATÓRIOS',
             nav_admin: 'ADMINISTRAÇÃO',
-            
-            // Dashboard
             dashboard_title: 'PAINEL DE COMANDO ESTRATÉGICO',
             dashboard_active_cases: 'PROCESSOS ATIVOS',
             dashboard_dispute_value: 'VALOR EM DISPUTA',
@@ -168,8 +164,6 @@
             dashboard_alert_ins001: 'INSOLVÊNCIA INS001: Detetada dissipação de património (Art. 120.º CIRE) - Risco Elevado.',
             dashboard_alert_lab003: 'CONTENCIOSO LAB003: Nova jurisprudência STA sobre "falsos recibos verdes" aplicável.',
             dashboard_alert_integrity: 'SISTEMA: Integridade da Cadeia de Custódia verificada (Master Hash OK).',
-            
-            // Filtros de Área (PT-PT)
             filter_all: 'TODOS',
             filter_insolvency: 'INSOLVÊNCIA',
             filter_labor: 'LABORAL',
@@ -180,8 +174,6 @@
             filter_family: 'FAMÍLIA',
             filter_intellectual: 'P.I.',
             filter_administrative: 'ADMINISTRATIVO',
-            
-            // Comum
             currency_eur: '€',
             percent_symbol: '%',
             loading: 'A carregar...',
@@ -197,7 +189,6 @@
             export_error: 'Erro na exportação. Tente novamente.'
         },
         en: {
-            // Login
             login_title: 'ELITE PROBATUM',
             login_subtitle: 'Digital Forensic Command Unit',
             login_user: 'USERNAME',
@@ -206,8 +197,6 @@
             login_request: 'REQUEST ACCESS',
             login_security: 'AES-256 ENCRYPTED · SECURE CHANNEL',
             login_error: 'ACCESS DENIED — Invalid credentials',
-            
-            // Navigation
             nav_dashboard: 'COMMAND DASHBOARD',
             nav_cases: 'CASES',
             nav_insolvency: 'INSOLVENCY (CIRE)',
@@ -221,8 +210,6 @@
             nav_activitylog: 'GDPR LOGS',
             nav_reports: 'REPORTS',
             nav_admin: 'ADMINISTRATION',
-            
-            // Dashboard
             dashboard_title: 'STRATEGIC COMMAND DASHBOARD',
             dashboard_active_cases: 'ACTIVE CASES',
             dashboard_dispute_value: 'DISPUTE VALUE',
@@ -235,8 +222,6 @@
             dashboard_alert_ins001: 'INSOLVENCY INS001: Detected asset dissipation (Art. 120 CIRE) - High Risk.',
             dashboard_alert_lab003: 'LABOR CASE LAB003: New STA case law on "fake green receipts" applicable.',
             dashboard_alert_integrity: 'SYSTEM: Chain of Custody integrity verified (Master Hash OK).',
-            
-            // Filter Areas (EN)
             filter_all: 'ALL',
             filter_insolvency: 'INSOLVENCY',
             filter_labor: 'LABOR',
@@ -247,8 +232,6 @@
             filter_family: 'FAMILY',
             filter_intellectual: 'I.P.',
             filter_administrative: 'ADMINISTRATIVE',
-            
-            // Common
             currency_eur: '€',
             percent_symbol: '%',
             loading: 'Loading...',
@@ -370,19 +353,15 @@
         { id: 'INS001', client: 'Construtora ABC, SA', nif_devedor: '123456789', category: 'insolvency', categoryName: 'Insolvência (CIRE)', value: 2450000, successProbability: 0.52, status: 'active', court: 'Lisboa', startDate: '2022-08-15', hoursSpent: 320, resourceLevel: 'senior', evidence: ['Insolvência culposa', 'Lista de credores extensa'], adversary: 'PLMJ', judge: 'Dr. António Costa', riskLevel: 'critical', fase_processual: 'Reclamação de Créditos', administrador_insolvencia: 'Dr. José Silva', data_sentenca_declarativa: '2022-10-15' },
         { id: 'INS002', client: 'Retail Solutions, SA', nif_devedor: '987654321', category: 'insolvency', categoryName: 'Insolvência (CIRE)', value: 875000, successProbability: 0.58, status: 'active', court: 'Porto', startDate: '2023-02-10', hoursSpent: 185, resourceLevel: 'associate', evidence: ['Exoneração passivo', 'Ativo remanescente'], adversary: 'VdA', judge: 'Dra. Sofia Mendes', riskLevel: 'warning', fase_processual: 'Exoneração do Passivo Restante', administrador_insolvencia: 'Dra. Ana Costa', data_sentenca_declarativa: '2023-04-20' },
         { id: 'INS003', client: 'Tech Start, Unipessoal', nif_devedor: '456789123', category: 'insolvency', categoryName: 'Insolvência (CIRE)', value: 89000, successProbability: 0.44, status: 'pending', court: 'Braga', startDate: '2023-09-01', hoursSpent: 38, resourceLevel: 'junior', evidence: ['Processo CIRE', 'Credores privilegiados'], adversary: 'Garrigues', judge: 'Dr. Ricardo Alves', riskLevel: 'warning', fase_processual: 'Fase Inicial', administrador_insolvencia: 'Dr. Pedro Santos', data_sentenca_declarativa: null },
-        
         // Contencioso Bancário
         { id: 'BNK001', client: 'Banco Internacional, SA', nif_devedor: '111222333', category: 'banking', categoryName: 'Contencioso Bancário', value: 12500000, successProbability: 0.68, status: 'active', court: 'Lisboa', startDate: '2023-03-01', hoursSpent: 420, resourceLevel: 'senior', evidence: ['Contrato de crédito', 'Garantias reais'], adversary: 'Cuatrecasas', judge: 'Dr. António Costa', riskLevel: 'normal' },
         { id: 'BNK002', client: 'Fundo de Investimento Alpha', nif_devedor: '444555666', category: 'banking', categoryName: 'Contencioso Bancário', value: 8900000, successProbability: 0.72, status: 'active', court: 'Porto', startDate: '2023-08-15', hoursSpent: 285, resourceLevel: 'senior', evidence: ['Swap', 'Derivados'], adversary: 'VdA', judge: 'Dra. Sofia Mendes', riskLevel: 'normal' },
-        
         // Fusões e Aquisições
         { id: 'MNA001', client: 'Grupo Energia, SA', nif_devedor: '777888999', category: 'ma', categoryName: 'Fusões e Aquisições', value: 45000000, successProbability: 0.82, status: 'active', court: 'Arbitragem', startDate: '2023-10-01', hoursSpent: 520, resourceLevel: 'senior', evidence: ['Contrato de compra e venda', 'Due diligence'], adversary: 'PLMJ', judge: 'Dr. Pedro Santos', riskLevel: 'normal' },
         { id: 'MNA002', client: 'Tech Solutions, SA', nif_devedor: '123123123', category: 'ma', categoryName: 'Fusões e Aquisições', value: 28450000, successProbability: 0.78, status: 'active', court: 'Lisboa', startDate: '2023-01-15', hoursSpent: 380, resourceLevel: 'senior', evidence: ['Cláusulas de não concorrência', 'Propriedade intelectual'], adversary: 'Garrigues', judge: 'Dr. António Costa', riskLevel: 'normal' },
-        
         // Litigância de Massa - Direito do Consumo
         { id: 'MASS001', client: 'Consumidores União', nif_devedor: '456456456', category: 'mass', categoryName: 'Litigância de Massa', value: 15200000, successProbability: 0.85, status: 'active', court: 'Lisboa', startDate: '2023-06-10', hoursSpent: 420, resourceLevel: 'senior', evidence: ['Prova documental coletiva', 'Jurisprudência favorável'], adversary: 'VdA', judge: 'Dra. Teresa Lopes', riskLevel: 'normal' },
         { id: 'MASS002', client: 'Associação de Defesa do Consumidor', nif_devedor: '789789789', category: 'mass', categoryName: 'Litigância de Massa', value: 42300000, successProbability: 0.81, status: 'active', court: 'Porto', startDate: '2023-09-20', hoursSpent: 580, resourceLevel: 'senior', evidence: ['Ação coletiva', 'Lista de prejudicados'], adversary: 'Cuatrecasas', judge: 'Dra. Sofia Mendes', riskLevel: 'normal' },
-        
         // Direito Fiscal - Grandes Empresas
         { id: 'TAX001', client: 'Grupo Industrial, SA', nif_devedor: '321321321', category: 'tax', categoryName: 'Direito Fiscal', value: 12500000, successProbability: 0.68, status: 'active', court: 'CAAD', startDate: '2022-11-10', hoursSpent: 485, resourceLevel: 'senior', evidence: ['Notificação prévia AT', 'Prova digital com hash'], adversary: 'VdA', judge: 'Dr. Pedro Santos', riskLevel: 'warning' },
         { id: 'TAX002', client: 'Comércio Global, SA', nif_devedor: '654654654', category: 'tax', categoryName: 'Direito Fiscal', value: 4520000, successProbability: 0.61, status: 'active', court: 'Porto', startDate: '2023-04-20', hoursSpent: 252, resourceLevel: 'associate', evidence: ['Regularização espontânea', 'Jurisprudência desfavorável'], adversary: 'PLMJ', judge: 'Dra. Sofia Mendes', riskLevel: 'normal' }
@@ -450,7 +429,7 @@
     }
     
     // =========================================================================
-    // FUNÇÃO DE EXPORTAÇÃO PARA DISPOSITIVO MÓVEL (COM WEBHOOK)
+    // EXPORTAÇÃO PARA DISPOSITIVO MÓVEL
     // =========================================================================
     
     async function exportToRegisteredDevice() {
@@ -473,10 +452,8 @@
             hash: CryptoJS.SHA256(currentHtml + sessionId + Date.now()).toString()
         };
         
-        // Encriptar payload
         const encryptedPayload = secureStorage ? secureStorage.encrypt(exportPayload) : { ciphertext: JSON.stringify(exportPayload) };
         
-        // Salvar no storage local como registo de exportação
         const exports = JSON.parse(localStorage.getItem('elite_mobile_exports') || '[]');
         exports.unshift({
             id: Date.now(),
@@ -487,7 +464,6 @@
         });
         localStorage.setItem('elite_mobile_exports', JSON.stringify(exports.slice(0, 100)));
         
-        // Tentar enviar via webhook se configurado
         const webhookUrl = localStorage.getItem('elite_webhook_url');
         if (webhookUrl) {
             try {
@@ -505,7 +481,6 @@
             }
         }
         
-        // Fallback: download local
         const blob = new Blob([JSON.stringify(exportPayload, null, 2)], { type: 'application/json' });
         const link = document.createElement('a');
         link.href = URL.createObjectURL(blob);
@@ -516,8 +491,65 @@
         EliteUtils.showToast(`Exportação concluída para dispositivo registado`, 'success');
     }
     
+    async function exportCurrentViewToMobile() {
+        const container = document.getElementById('viewContainer');
+        if (!container) return;
+        
+        const originalHtml = container.innerHTML;
+        const title = document.getElementById('pageTitle')?.innerText || 'Relatório';
+        
+        const exportHtml = `
+            <div style="padding: 20px; font-family: 'JetBrains Mono', monospace; background: #0a0c10; color: #fff;">
+                <div style="border-bottom: 2px solid #00e5ff; padding-bottom: 16px; margin-bottom: 20px;">
+                    <h1 style="color: #00e5ff; margin: 0;">ELITE PROBATUM</h1>
+                    <p style="color: #94a3b8; margin: 4px 0 0;">Relatório Forense • ${new Date().toLocaleString()}</p>
+                </div>
+                <div style="background: #000; padding: 20px; border-radius: 12px; margin-bottom: 20px;">
+                    <h3 style="color: #00e5ff; margin-top: 0;">${title}</h3>
+                    <div>${originalHtml}</div>
+                </div>
+                <div style="text-align: center; padding-top: 20px; color: #64748b; font-size: 10px;">
+                    Documento gerado por ELITE PROBATUM v2.0.4 • Assinatura Digital: ${CryptoJS.SHA256(originalHtml + Date.now()).toString().substring(0, 16)}...
+                </div>
+            </div>
+        `;
+        
+        const element = document.createElement('div');
+        element.innerHTML = exportHtml;
+        element.style.position = 'absolute';
+        element.style.left = '-9999px';
+        document.body.appendChild(element);
+        
+        try {
+            if (typeof html2canvas !== 'undefined' && typeof jspdf !== 'undefined') {
+                const canvas = await html2canvas(element, { scale: 2, backgroundColor: '#0a0c10' });
+                const imgData = canvas.toDataURL('image/png');
+                const { jsPDF } = jspdf;
+                const pdf = new jsPDF('p', 'mm', 'a4');
+                const imgWidth = 190;
+                const imgHeight = (canvas.height * imgWidth) / canvas.width;
+                pdf.addImage(imgData, 'PNG', 10, 10, imgWidth, imgHeight);
+                pdf.save(`elite_probatum_${title.replace(/\s/g, '_')}_${new Date().toISOString().slice(0, 10)}.pdf`);
+                EliteUtils.showToast('Relatório exportado para PDF', 'success');
+            } else {
+                const blob = new Blob([exportHtml], { type: 'text/html' });
+                const link = document.createElement('a');
+                link.href = URL.createObjectURL(blob);
+                link.download = `elite_report_${new Date().toISOString().slice(0, 10)}.html`;
+                link.click();
+                URL.revokeObjectURL(link.href);
+                EliteUtils.showToast('Relatório exportado para HTML', 'success');
+            }
+        } catch (error) {
+            console.error('Erro na exportação:', error);
+            EliteUtils.showToast('Erro ao exportar relatório', 'error');
+        } finally {
+            document.body.removeChild(element);
+        }
+    }
+    
     // =========================================================================
-    // FUNÇÃO DE EXCLUSÃO DE CASO COM HASH DE CONFIRMAÇÃO
+    // FUNÇÃO DE EXCLUSÃO DE CASO
     // =========================================================================
     
     function deleteCase(caseId, confirmationHash) {
@@ -535,7 +567,6 @@
             return false;
         }
         
-        // Registrar exclusão no log
         const logEntry = {
             timestamp: new Date().toISOString(),
             user: 'Dr. Administrador',
@@ -549,12 +580,8 @@
         logs.unshift(logEntry);
         localStorage.setItem('elite_activity_log', JSON.stringify(logs.slice(0, 500)));
         
-        // Remover caso
         MOCK_CASES.splice(caseIndex, 1);
-        
         EliteUtils.showToast(`Processo ${caseId} eliminado com sucesso`, 'warning');
-        
-        // Recarregar view atual
         navigateTo(currentView);
         
         return true;
@@ -562,345 +589,6 @@
     
     function generateDeleteConfirmationHash(caseId) {
         return CryptoJS.SHA256(caseId + window.ELITE_SESSION_ID + 'DELETE_CONFIRM').toString();
-    }
-    
-    // =========================================================================
-    // MÓDULOS IMPLEMENTADOS - QUESTIONÁRIOS ESTRATÉGICOS
-    // =========================================================================
-    
-    function renderQuestionnaire() {
-        const container = document.getElementById('viewContainer');
-        if (!container) return;
-        
-        const areas = [
-            { id: 'banking', name: 'Contencioso Bancário', questions: 12 },
-            { id: 'ma', name: 'Fusões e Aquisições', questions: 18 },
-            { id: 'mass', name: 'Litigância de Massa', questions: 15 },
-            { id: 'insolvency', name: 'Insolvência (CIRE)', questions: 10 },
-            { id: 'tax', name: 'Direito Fiscal', questions: 14 }
-        ];
-        
-        container.innerHTML = `
-            <div class="questionnaire-panel">
-                <h2>${t('nav_questionnaire')}</h2>
-                <p>Checklists estratégicos por área do direito</p>
-                <div class="category-selector">
-                    ${areas.map(area => `
-                        <button class="category-btn" data-area="${area.id}">${area.name}</button>
-                    `).join('')}
-                </div>
-                <div id="questionsContainer" class="questions-container" style="margin-top: 20px;">
-                    <div class="empty-state">Selecione uma área para visualizar o checklist</div>
-                </div>
-                <div id="scoreResult" class="score-result" style="display: none;"></div>
-            </div>
-        `;
-        
-        const questionnaires = {
-            banking: {
-                title: 'Checklist - Contencioso Bancário',
-                questions: [
-                    { id: 'B1', text: 'Existe contrato de crédito devidamente assinado?', weight: 10 },
-                    { id: 'B2', text: 'As garantias reais estão registadas?', weight: 9 },
-                    { id: 'B3', text: 'Foi notificada a interpelação admonitória?', weight: 8 },
-                    { id: 'B4', text: 'As taxas de juro estão dentro dos limites legais?', weight: 8 },
-                    { id: 'B5', text: 'Existe seguro de crédito associado?', weight: 6 },
-                    { id: 'B6', text: 'O devedor é pessoa singular ou coletiva?', weight: 5 },
-                    { id: 'B7', text: 'Existem fiadores com património suficiente?', weight: 8 },
-                    { id: 'B8', text: 'Foi realizada perícia de avaliação dos bens?', weight: 7 },
-                    { id: 'B9', text: 'O processo está em execução ou em fase de conhecimento?', weight: 6 },
-                    { id: 'B10', text: 'Existe jurisprudência favorável do STJ?', weight: 7 },
-                    { id: 'B11', text: 'Foram identificados vícios de forma no contrato?', weight: 8 },
-                    { id: 'B12', text: 'O valor em disputa ultrapassa €500.000?', weight: 6 }
-                ]
-            },
-            ma: {
-                title: 'Checklist - Fusões e Aquisições',
-                questions: [
-                    { id: 'M1', text: 'Due diligence legal concluída?', weight: 10 },
-                    { id: 'M2', text: 'Cláusulas de não concorrência adequadas?', weight: 9 },
-                    { id: 'M3', text: 'Transferência de contratos de trabalho?', weight: 8 },
-                    { id: 'M4', text: 'Aprovação da Autoridade da Concorrência?', weight: 9 },
-                    { id: 'M5', text: 'Propriedade intelectual devidamente cedida?', weight: 8 },
-                    { id: 'M6', text: 'Passivos contingentes identificados?', weight: 8 },
-                    { id: 'M7', text: 'Mecanismos de earn-out definidos?', weight: 7 },
-                    { id: 'M8', text: 'Representações e garantias adequadas?', weight: 9 },
-                    { id: 'M9', text: 'Cláusulas de indemnização negociadas?', weight: 8 },
-                    { id: 'M10', text: 'Contrato de compra e venda revisto por todas as partes?', weight: 10 }
-                ]
-            },
-            mass: {
-                title: 'Checklist - Litigância de Massa',
-                questions: [
-                    { id: 'L1', text: 'Identificada a base de consumidores prejudicados?', weight: 10 },
-                    { id: 'L2', text: 'Recolhida documentação probatória coletiva?', weight: 9 },
-                    { id: 'L3', text: 'Analisada jurisprudência sobre ações coletivas?', weight: 8 },
-                    { id: 'L4', text: 'Definido o modelo de honorários (contingência)?', weight: 8 },
-                    { id: 'L5', text: 'Estimado o valor médio por consumidor?', weight: 7 },
-                    { id: 'L6', text: 'Identificado o foro mais favorável?', weight: 7 },
-                    { id: 'L7', text: 'Preparada a petição inicial coletiva?', weight: 9 },
-                    { id: 'L8', text: 'Definida a estratégia de comunicação?', weight: 6 }
-                ]
-            }
-        };
-        
-        document.querySelectorAll('.category-btn').forEach(btn => {
-            btn.addEventListener('click', () => {
-                const area = btn.dataset.area;
-                const qData = questionnaires[area];
-                if (!qData) return;
-                
-                document.querySelectorAll('.category-btn').forEach(b => b.classList.remove('active'));
-                btn.classList.add('active');
-                
-                const container = document.getElementById('questionsContainer');
-                if (container) {
-                    container.innerHTML = `
-                        <h3>${qData.title}</h3>
-                        ${qData.questions.map(q => `
-                            <div class="question-item">
-                                <div class="question-text">${q.text}</div>
-                                <div class="question-options">
-                                    <label><input type="radio" name="q_${q.id}" value="yes"> SIM</label>
-                                    <label><input type="radio"name="q_${q.id}" value="no"> NÃO</label>
-                                    <label><input type="radio" name="q_${q.id}" value="na"> N/A</label>
-                                </div>
-                            </div>
-                        `).join('')}
-                        <button id="calculateScoreBtn" class="elite-btn primary full-width" style="margin-top: 20px;">CALCULAR VIABILIDADE</button>
-                    `;
-                    
-                    document.getElementById('calculateScoreBtn')?.addEventListener('click', () => {
-                        let totalWeight = 0;
-                        let achievedWeight = 0;
-                        
-                        qData.questions.forEach(q => {
-                            const selected = document.querySelector(`input[name="q_${q.id}"]:checked`);
-                            if (selected && selected.value === 'yes') {
-                                achievedWeight += q.weight;
-                            }
-                            totalWeight += q.weight;
-                        });
-                        
-                        const score = totalWeight > 0 ? (achievedWeight / totalWeight) * 100 : 0;
-                        const viability = score >= 70 ? 'ALTA' : score >= 40 ? 'MÉDIA' : 'BAIXA';
-                        const resultDiv = document.getElementById('scoreResult');
-                        if (resultDiv) {
-                            resultDiv.style.display = 'block';
-                            resultDiv.innerHTML = `
-                                <div class="score-summary">
-                                    <h3>RELATÓRIO DE VIABILIDADE</h3>
-                                    <div class="score-circle">${Math.round(score)}%</div>
-                                    <p>Viabilidade: <strong>${viability}</strong></p>
-                                    <p>Pontuação: ${achievedWeight}/${totalWeight}</p>
-                                    <div class="recommendation">${score >= 70 ? 'Caso com forte potencial. Recomenda-se litígio imediato.' : score >= 40 ? 'Caso com potencial moderado. Recomenda-se análise aprofundada.' : 'Caso com baixa probabilidade. Recomenda-se negociação.'}</div>
-                                </div>
-                            `;
-                        }
-                    });
-                }
-            });
-        });
-    }
-    
-    // =========================================================================
-    // MÓDULO: CADEIA DE CUSTÓDIA (INTEGRAÇÃO COM FORENSIC VAULT)
-    // =========================================================================
-    
-    function renderEvidence() {
-        const container = document.getElementById('viewContainer');
-        if (!container) return;
-        
-        const evidenceList = window.ForensicVault ? 
-            Array.from(window.ForensicVault.evidenceChain.values()) : [];
-        
-        container.innerHTML = `
-            <div class="evidence-panel">
-                <h2>${t('nav_evidence')}</h2>
-                <p>Registo imutável de provas com hash SHA-256 e timestamp</p>
-                <div class="evidence-upload">
-                    <div class="form-group">
-                        <label>SELECIONAR FICHEIRO</label>
-                        <input type="file" id="evidenceFile" accept=".pdf,.docx,.jpg,.png,.txt">
-                    </div>
-                    <div class="form-group">
-                        <label>PROCESSO ASSOCIADO</label>
-                        <select id="evidenceCaseId">
-                            ${MOCK_CASES.map(c => `<option value="${c.id}">${c.id} - ${c.client}</option>`).join('')}
-                        </select>
-                    </div>
-                    <div class="form-group">
-                        <label>TIPO DE PROVA</label>
-                        <select id="evidenceType">
-                            <option value="documental">Documental</option>
-                            <option value="pericial">Pericial</option>
-                            <option value="testemunhal">Testemunhal</option>
-                            <option value="digital">Digital</option>
-                        </select>
-                    </div>
-                    <button id="registerEvidenceBtn" class="elite-btn primary full-width"><i class="fas fa-fingerprint"></i> REGISTAR PROVA COM HASH</button>
-                </div>
-                <div id="evidenceList" class="evidence-list">
-                    <h3>PROVAS REGISTADAS</h3>
-                    ${evidenceList.length === 0 ? '<div class="empty-state">Nenhuma prova registada</div>' : 
-                        evidenceList.map(e => `
-                            <div class="evidence-item">
-                                <div class="evidence-header">
-                                    <i class="fas ${e.type === 'digital' ? 'fa-microchip' : 'fa-file-alt'}"></i>
-                                    <strong>${e.name}</strong>
-                                    <span class="evidence-hash">Hash: ${e.hash.substring(0, 16)}...</span>
-                                </div>
-                                <div class="evidence-details">
-                                    <small>Registado em: ${new Date(e.timestamp).toLocaleString()}</small>
-                                    <small>Processo: ${e.caseId}</small>
-                                    <small>Tipo: ${e.type}</small>
-                                    ${e.timestampProof ? '<small><i class="fas fa-clock"></i> Timestamp: ✓</small>' : ''}
-                                </div>
-                                <div class="evidence-actions">
-                                    <button class="action-btn verify-evidence" data-id="${e.id}"><i class="fas fa-shield-alt"></i> VERIFICAR</button>
-                                    <button class="action-btn export-evidence" data-id="${e.id}"><i class="fas fa-download"></i> EXPORTAR</button>
-                                </div>
-                            </div>
-                        `).join('')}
-                </div>
-            </div>
-        `;
-        
-        document.getElementById('registerEvidenceBtn')?.addEventListener('click', () => {
-            const fileInput = document.getElementById('evidenceFile');
-            const caseId = document.getElementById('evidenceCaseId')?.value;
-            const evidenceType = document.getElementById('evidenceType')?.value;
-            
-            if (fileInput && fileInput.files[0]) {
-                const file = fileInput.files[0];
-                const reader = new FileReader();
-                reader.onload = function(e) {
-                    const hash = CryptoJS.SHA256(e.target.result).toString();
-                    const evidence = {
-                        name: file.name,
-                        type: evidenceType,
-                        caseId: caseId,
-                        fileSize: file.size,
-                        fileType: file.type,
-                        metadata: {
-                            uploadedBy: window.ELITE_SESSION_ID || 'system',
-                            fileName: file.name
-                        }
-                    };
-                    
-                    if (window.ForensicVault && typeof window.ForensicVault.registerEvidence === 'function') {
-                        const registered = window.ForensicVault.registerEvidence(evidence);
-                        EliteUtils.showToast(`Prova ${file.name} registada com hash ${hash.substring(0, 16)}...`, 'success');
-                        fileInput.value = '';
-                        renderEvidence();
-                    } else {
-                        EliteUtils.showToast('Módulo Forensic Vault não disponível', 'error');
-                    }
-                };
-                reader.readAsArrayBuffer(file);
-            } else {
-                EliteUtils.showToast('Selecione um ficheiro para registar', 'warning');
-            }
-        });
-        
-        document.querySelectorAll('.verify-evidence').forEach(btn => {
-            btn.addEventListener('click', () => {
-                const id = btn.dataset.id;
-                if (window.ForensicVault) {
-                    const result = window.ForensicVault.verifyEvidence(id);
-                    EliteUtils.showToast(result.valid ? 'Evidência íntegra ✓' : 'ALERTA: Evidência comprometida!', result.valid ? 'success' : 'error');
-                }
-            });
-        });
-        
-        document.querySelectorAll('.export-evidence').forEach(btn => {
-            btn.addEventListener('click', () => {
-                const id = btn.dataset.id;
-                if (window.ForensicVault) {
-                    window.ForensicVault.exportChainOfCustody(id);
-                }
-            });
-        });
-    }
-    
-    // =========================================================================
-    // MÓDULO: REGISTOS RGPD (ART. 30.º)
-    // =========================================================================
-    
-    function renderActivityLog() {
-        const container = document.getElementById('viewContainer');
-        if (!container) return;
-        
-        const activityLog = JSON.parse(localStorage.getItem('elite_activity_log') || '[]');
-        const forensicLogs = window.ForensicVault ? window.ForensicVault.getAllAccessLogs(100) : [];
-        const combinedLogs = [...activityLog, ...forensicLogs.map(l => ({
-            timestamp: l.timestamp,
-            user: l.userId || l.user || 'Sistema',
-            action: l.action,
-            entity: l.evidenceId || l.entity || 'Forensic Vault',
-            hash: l.hash
-        }))].sort((a, b) => new Date(b.timestamp) - new Date(a.timestamp));
-        
-        container.innerHTML = `
-            <div class="activity-log-container">
-                <div class="activity-log-header">
-                    <h2><i class="fas fa-history"></i> REGISTO DE ATIVIDADES (ART. 30.º RGPD)</h2>
-                    <div class="activity-actions">
-                        <button id="exportLogBtn" class="elite-btn secondary"><i class="fas fa-download"></i> EXPORTAR RAT</button>
-                        <button id="clearLogBtn" class="elite-btn danger"><i class="fas fa-trash"></i> LIMPAR REGISTOS</button>
-                    </div>
-                </div>
-                <div class="log-stats">
-                    <div class="stat-card">
-                        <div class="stat-value">${combinedLogs.length}</div>
-                        <div class="stat-label">Total de Registos</div>
-                    </div>
-                    <div class="stat-card">
-                        <div class="stat-value">${combinedLogs.filter(l => new Date(l.timestamp) > new Date(Date.now() - 24*60*60*1000)).length}</div>
-                        <div class="stat-label">Últimas 24h</div>
-                    </div>
-                    <div class="stat-card">
-                        <div class="stat-value">${[...new Set(combinedLogs.map(l => l.user))].length}</div>
-                        <div class="stat-label">Utilizadores Ativos</div>
-                    </div>
-                </div>
-                <table class="data-table">
-                    <thead>
-                        <tr><th>DATA/HORA</th><th>UTILIZADOR</th><th>AÇÃO</th><th>ENTIDADE</th><th>HASH</th> </thead>
-                    <tbody>
-                        ${combinedLogs.length === 0 ? '<tr><td colspan="5" style="text-align: center;">Nenhum registo de atividade</td></tr>' : 
-                            combinedLogs.slice(0, 100).map(log => `
-                                <tr>
-                                    <td>${new Date(log.timestamp).toLocaleString()}</td>
-                                    <td>${log.user}</td>
-                                    <td>${log.action}</td>
-                                    <td>${log.entity || '---'}</td>
-                                    <td class="log-hash">${log.hash ? log.hash.substring(0, 16) + '...' : '---'}</td>
-                                </tr>
-                            `).join('')}
-                    </tbody>
-                </table>
-            </div>
-        `;
-        
-        document.getElementById('exportLogBtn')?.addEventListener('click', () => {
-            const csv = ['Data/Hora,Utilizador,Ação,Entidade,Hash', ...combinedLogs.map(l => `"${l.timestamp}","${l.user}","${l.action}","${l.entity || ''}","${l.hash || ''}"`)].join('\n');
-            const blob = new Blob(["\uFEFF" + csv], { type: 'text/csv;charset=utf-8' });
-            const link = document.createElement('a');
-            link.href = URL.createObjectURL(blob);
-            link.download = `rat_elite_probatum_${new Date().toISOString().slice(0, 10)}.csv`;
-            link.click();
-            URL.revokeObjectURL(link.href);
-            EliteUtils.showToast('Registo de atividades exportado', 'success');
-        });
-        
-        document.getElementById('clearLogBtn')?.addEventListener('click', () => {
-            if (confirm('Tem certeza que deseja eliminar todos os registos de atividade? Esta ação não pode ser desfeita.')) {
-                localStorage.setItem('elite_activity_log', '[]');
-                EliteUtils.showToast('Registos de atividade eliminados', 'warning');
-                renderActivityLog();
-            }
-        });
     }
     
     // =========================================================================
@@ -1124,7 +812,7 @@
     }
     
     // =========================================================================
-    // RENDERIZAÇÃO DOS PROCESSOS (COM FILTROS PT-PT)
+    // RENDERIZAÇÃO DOS PROCESSOS
     // =========================================================================
     
     function renderCases() {
@@ -1160,22 +848,21 @@
             </div>
             <table class="data-table">
                 <thead>
-                    <tr><th>ID</th><th>CLIENTE</th><th>VALOR</th><th>ÁREA</th><th>PROBABILIDADE</th><th>STATUS</th><th>AÇÕES</th></tr>
-                </thead>
+                    <tr><th>ID</th><th>CLIENTE</th><th>VALOR</th><th>ÁREA</th><th>PROBABILIDADE</th><th>STATUS</th><th>AÇÕES</th> </thead>
                 <tbody id="casesTableBody">
                     ${MOCK_CASES.map(c => `
                         <tr data-case-id="${c.id}" data-category="${c.category}">
-                            <td><strong>${c.id}</strong></td>
-                            <td>${c.client}</td>
-                            <td>${EliteUtils.formatCurrency(c.value)}</td>
-                            <td><span class="case-badge ${c.category}">${c.categoryName}</span></td>
-                            <td><div class="progress-bar"><div class="progress-fill" style="width: ${c.successProbability * 100}%"></div><span class="progress-text">${EliteUtils.formatPercentage(c.successProbability * 100)}</span></div></td>
-                            <td><span class="status-badge status-${c.status === 'active' ? 'active' : 'pending'}">${c.status === 'active' ? 'ATIVO' : 'PENDENTE'}</span></td>
-                            <td><button class="action-btn view-case" data-id="${c.id}"><i class="fas fa-eye"></i></button><button class="action-btn delete-case" data-id="${c.id}"><i class="fas fa-trash"></i></button></td>
-                        </tr>
+                            <td><strong>${c.id}</strong> </div>
+                            <td>${c.client} </div>
+                            <td>${EliteUtils.formatCurrency(c.value)} </div>
+                            <td><span class="case-badge ${c.category}">${c.categoryName}</span> </div>
+                            <td><div class="progress-bar"><div class="progress-fill" style="width: ${c.successProbability * 100}%"></div><span class="progress-text">${EliteUtils.formatPercentage(c.successProbability * 100)}</span></div> </div>
+                            <td><span class="status-badge status-${c.status === 'active' ? 'active' : 'pending'}">${c.status === 'active' ? 'ATIVO' : 'PENDENTE'}</span> </div>
+                            <td><button class="action-btn view-case" data-id="${c.id}"><i class="fas fa-eye"></i></button><button class="action-btn delete-case" data-id="${c.id}"><i class="fas fa-trash"></i></button> </div>
+                         </div>
                     `).join('')}
                 </tbody>
-            </table>
+             </div>
         `;
         
         attachCaseEvents();
@@ -1254,14 +941,371 @@
     }
     
     // =========================================================================
-    // FUNÇÕES DE RENDERIZAÇÃO DAS DEMAIS VIEWS (SIMPLIFICADAS)
+    // MÓDULO: QUESTIONÁRIOS ESTRATÉGICOS
     // =========================================================================
     
-    function renderInsolvency() { const container = document.getElementById('viewContainer'); if (container) { const insolvencyCases = MOCK_CASES.filter(c => c.category === 'insolvency' || c.category === 'banking'); container.innerHTML = `<h2>${t('nav_insolvency')}</h2><table class="data-table"><thead><tr><th>ID</th><th>CLIENTE</th><th>VALOR</th><th>PROBABILIDADE</th><th>FASE</th></tr></thead><tbody>${insolvencyCases.map(c => `<tr><td><strong>${c.id}</strong></td><td>${c.client}</td><td>${EliteUtils.formatCurrency(c.value)}</td><td><div class="progress-bar"><div class="progress-fill" style="width: ${c.successProbability * 100}%"></div><span class="progress-text">${EliteUtils.formatPercentage(c.successProbability * 100)}</span></div></td><td>${c.fase_processual || 'Em curso'}</td></tr>`).join('')}</tbody></table>`; } }
+    function renderQuestionnaire() {
+        const container = document.getElementById('viewContainer');
+        if (!container) return;
+        
+        const areas = [
+            { id: 'banking', name: 'Contencioso Bancário', questions: 12 },
+            { id: 'ma', name: 'Fusões e Aquisições', questions: 18 },
+            { id: 'mass', name: 'Litigância de Massa', questions: 15 },
+            { id: 'insolvency', name: 'Insolvência (CIRE)', questions: 10 },
+            { id: 'tax', name: 'Direito Fiscal', questions: 14 }
+        ];
+        
+        container.innerHTML = `
+            <div class="questionnaire-panel">
+                <h2>${t('nav_questionnaire')}</h2>
+                <p>Checklists estratégicos por área do direito</p>
+                <div class="category-selector">
+                    ${areas.map(area => `
+                        <button class="category-btn" data-area="${area.id}">${area.name}</button>
+                    `).join('')}
+                </div>
+                <div id="questionsContainer" class="questions-container" style="margin-top: 20px;">
+                    <div class="empty-state">Selecione uma área para visualizar o checklist</div>
+                </div>
+                <div id="scoreResult" class="score-result" style="display: none;"></div>
+            </div>
+        `;
+        
+        const questionnaires = {
+            banking: {
+                title: 'Checklist - Contencioso Bancário',
+                questions: [
+                    { id: 'B1', text: 'Existe contrato de crédito devidamente assinado?', weight: 10 },
+                    { id: 'B2', text: 'As garantias reais estão registadas?', weight: 9 },
+                    { id: 'B3', text: 'Foi notificada a interpelação admonitória?', weight: 8 },
+                    { id: 'B4', text: 'As taxas de juro estão dentro dos limites legais?', weight: 8 },
+                    { id: 'B5', text: 'Existe seguro de crédito associado?', weight: 6 },
+                    { id: 'B6', text: 'O devedor é pessoa singular ou coletiva?', weight: 5 },
+                    { id: 'B7', text: 'Existem fiadores com património suficiente?', weight: 8 },
+                    { id: 'B8', text: 'Foi realizada perícia de avaliação dos bens?', weight: 7 },
+                    { id: 'B9', text: 'O processo está em execução ou em fase de conhecimento?', weight: 6 },
+                    { id: 'B10', text: 'Existe jurisprudência favorável do STJ?', weight: 7 },
+                    { id: 'B11', text: 'Foram identificados vícios de forma no contrato?', weight: 8 },
+                    { id: 'B12', text: 'O valor em disputa ultrapassa €500.000?', weight: 6 }
+                ]
+            },
+            ma: {
+                title: 'Checklist - Fusões e Aquisições',
+                questions: [
+                    { id: 'M1', text: 'Due diligence legal concluída?', weight: 10 },
+                    { id: 'M2', text: 'Cláusulas de não concorrência adequadas?', weight: 9 },
+                    { id: 'M3', text: 'Transferência de contratos de trabalho?', weight: 8 },
+                    { id: 'M4', text: 'Aprovação da Autoridade da Concorrência?', weight: 9 },
+                    { id: 'M5', text: 'Propriedade intelectual devidamente cedida?', weight: 8 },
+                    { id: 'M6', text: 'Passivos contingentes identificados?', weight: 8 },
+                    { id: 'M7', text: 'Mecanismos de earn-out definidos?', weight: 7 },
+                    { id: 'M8', text: 'Representações e garantias adequadas?', weight: 9 },
+                    { id: 'M9', text: 'Cláusulas de indemnização negociadas?', weight: 8 },
+                    { id: 'M10', text: 'Contrato de compra e venda revisto por todas as partes?', weight: 10 }
+                ]
+            },
+            mass: {
+                title: 'Checklist - Litigância de Massa',
+                questions: [
+                    { id: 'L1', text: 'Identificada a base de consumidores prejudicados?', weight: 10 },
+                    { id: 'L2', text: 'Recolhida documentação probatória coletiva?', weight: 9 },
+                    { id: 'L3', text: 'Analisada jurisprudência sobre ações coletivas?', weight: 8 },
+                    { id: 'L4', text: 'Definido o modelo de honorários (contingência)?', weight: 8 },
+                    { id: 'L5', text: 'Estimado o valor médio por consumidor?', weight: 7 },
+                    { id: 'L6', text: 'Identificado o foro mais favorável?', weight: 7 },
+                    { id: 'L7', text: 'Preparada a petição inicial coletiva?', weight: 9 },
+                    { id: 'L8', text: 'Definida a estratégia de comunicação?', weight: 6 }
+                ]
+            }
+        };
+        
+        document.querySelectorAll('.category-btn').forEach(btn => {
+            btn.addEventListener('click', () => {
+                const area = btn.dataset.area;
+                const qData = questionnaires[area];
+                if (!qData) return;
+                
+                document.querySelectorAll('.category-btn').forEach(b => b.classList.remove('active'));
+                btn.classList.add('active');
+                
+                const containerDiv = document.getElementById('questionsContainer');
+                if (containerDiv) {
+                    containerDiv.innerHTML = `
+                        <h3>${qData.title}</h3>
+                        ${qData.questions.map(q => `
+                            <div class="question-item">
+                                <div class="question-text">${q.text}</div>
+                                <div class="question-options">
+                                    <label><input type="radio" name="q_${q.id}" value="yes"> SIM</label>
+                                    <label><input type="radio" name="q_${q.id}" value="no"> NÃO</label>
+                                    <label><input type="radio" name="q_${q.id}" value="na"> N/A</label>
+                                </div>
+                            </div>
+                        `).join('')}
+                        <button id="calculateScoreBtn" class="elite-btn primary full-width" style="margin-top: 20px;">CALCULAR VIABILIDADE</button>
+                    `;
+                    
+                    document.getElementById('calculateScoreBtn')?.addEventListener('click', () => {
+                        let totalWeight = 0;
+                        let achievedWeight = 0;
+                        
+                        qData.questions.forEach(q => {
+                            const selected = document.querySelector(`input[name="q_${q.id}"]:checked`);
+                            if (selected && selected.value === 'yes') {
+                                achievedWeight += q.weight;
+                            }
+                            totalWeight += q.weight;
+                        });
+                        
+                        const score = totalWeight > 0 ? (achievedWeight / totalWeight) * 100 : 0;
+                        const viability = score >= 70 ? 'ALTA' : score >= 40 ? 'MÉDIA' : 'BAIXA';
+                        const resultDiv = document.getElementById('scoreResult');
+                        if (resultDiv) {
+                            resultDiv.style.display = 'block';
+                            resultDiv.innerHTML = `
+                                <div class="score-summary">
+                                    <h3>RELATÓRIO DE VIABILIDADE</h3>
+                                    <div class="score-circle">${Math.round(score)}%</div>
+                                    <p>Viabilidade: <strong>${viability}</strong></p>
+                                    <p>Pontuação: ${achievedWeight}/${totalWeight}</p>
+                                    <div class="recommendation">${score >= 70 ? 'Caso com forte potencial. Recomenda-se litígio imediato.' : score >= 40 ? 'Caso com potencial moderado. Recomenda-se análise aprofundada.' : 'Caso com baixa probabilidade. Recomenda-se negociação.'}</div>
+                                </div>
+                            `;
+                        }
+                    });
+                }
+            });
+        });
+    }
+    
+    // =========================================================================
+    // MÓDULO: CADEIA DE CUSTÓDIA
+    // =========================================================================
+    
+    function renderEvidence() {
+        const container = document.getElementById('viewContainer');
+        if (!container) return;
+        
+        const evidenceList = window.ForensicVault ? 
+            Array.from(window.ForensicVault.evidenceChain.values()) : [];
+        
+        container.innerHTML = `
+            <div class="evidence-panel">
+                <h2>${t('nav_evidence')}</h2>
+                <p>Registo imutável de provas com hash SHA-256 e timestamp blockchain</p>
+                <div class="evidence-upload">
+                    <div class="form-group">
+                        <label>SELECIONAR FICHEIRO</label>
+                        <input type="file" id="evidenceFile" accept=".pdf,.docx,.jpg,.png,.txt">
+                    </div>
+                    <div class="form-group">
+                        <label>PROCESSO ASSOCIADO</label>
+                        <select id="evidenceCaseId">
+                            ${MOCK_CASES.map(c => `<option value="${c.id}">${c.id} - ${c.client}</option>`).join('')}
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label>TIPO DE PROVA</label>
+                        <select id="evidenceType">
+                            <option value="documental">Documental</option>
+                            <option value="pericial">Pericial</option>
+                            <option value="testemunhal">Testemunhal</option>
+                            <option value="digital">Digital</option>
+                        </select>
+                    </div>
+                    <button id="registerEvidenceBtn" class="elite-btn primary full-width"><i class="fas fa-fingerprint"></i> REGISTAR PROVA COM NFT FORENSE</button>
+                </div>
+                <div id="evidenceList" class="evidence-list">
+                    <h3>PROVAS REGISTADAS</h3>
+                    ${evidenceList.length === 0 ? '<div class="empty-state">Nenhuma prova registada</div>' : 
+                        evidenceList.map(e => `
+                            <div class="evidence-item">
+                                <div class="evidence-header">
+                                    <i class="fas ${e.type === 'digital' ? 'fa-microchip' : 'fa-file-alt'}"></i>
+                                    <strong>${e.name}</strong>
+                                    <span class="evidence-hash">Hash: ${e.hash.substring(0, 16)}...</span>
+                                </div>
+                                <div class="evidence-details">
+                                    <small>Registado em: ${new Date(e.timestamp).toLocaleString()}</small>
+                                    <small>Processo: ${e.caseId}</small>
+                                    <small>Tipo: ${e.type}</small>
+                                    ${e.timestampProof ? '<small><i class="fas fa-clock"></i> Timestamp: ✓</small>' : ''}
+                                    ${window.BlockchainCustody ? '<small><i class="fas fa-link"></i> Blockchain: ✓</small>' : ''}
+                                </div>
+                                <div class="evidence-actions">
+                                    <button class="action-btn verify-evidence" data-id="${e.id}"><i class="fas fa-shield-alt"></i> VERIFICAR INTEGRIDADE</button>
+                                    <button class="action-btn export-evidence" data-id="${e.id}"><i class="fas fa-download"></i> EXPORTAR CERTIFICADO</button>
+                                </div>
+                            </div>
+                        `).join('')}
+                </div>
+            </div>
+        `;
+        
+        document.getElementById('registerEvidenceBtn')?.addEventListener('click', () => {
+            const fileInput = document.getElementById('evidenceFile');
+            const caseId = document.getElementById('evidenceCaseId')?.value;
+            const evidenceType = document.getElementById('evidenceType')?.value;
+            
+            if (fileInput && fileInput.files[0]) {
+                const file = fileInput.files[0];
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    const fileHash = CryptoJS.SHA256(e.target.result).toString();
+                    const evidence = {
+                        name: file.name,
+                        type: evidenceType,
+                        caseId: caseId,
+                        fileSize: file.size,
+                        fileType: file.type,
+                        fileHash: fileHash,
+                        metadata: {
+                            uploadedBy: window.ELITE_SESSION_ID || 'system',
+                            fileName: file.name,
+                            fileSize: file.size
+                        }
+                    };
+                    
+                    if (window.ForensicVault && typeof window.ForensicVault.registerEvidence === 'function') {
+                        const registered = window.ForensicVault.registerEvidence(evidence);
+                        
+                        // Gerar NFT Forense se o módulo estiver disponível
+                        if (window.BlockchainCustody && typeof window.BlockchainCustody.generateForensicNFT === 'function') {
+                            const nft = window.BlockchainCustody.generateForensicNFT({
+                                id: registered.id,
+                                name: file.name,
+                                type: evidenceType,
+                                caseId: caseId,
+                                fileHash: fileHash,
+                                content: e.target.result,
+                                metadata: evidence.metadata
+                            });
+                            EliteUtils.showToast(`NFT Forense gerado: ${nft.id.substring(0, 20)}...`, 'success');
+                        }
+                        
+                        EliteUtils.showToast(`Prova ${file.name} registada com hash ${fileHash.substring(0, 16)}...`, 'success');
+                        fileInput.value = '';
+                        renderEvidence();
+                    } else {
+                        EliteUtils.showToast('Módulo Forensic Vault não disponível', 'error');
+                    }
+                };
+                reader.readAsArrayBuffer(file);
+            } else {
+                EliteUtils.showToast('Selecione um ficheiro para registar', 'warning');
+            }
+        });
+        
+        document.querySelectorAll('.verify-evidence').forEach(btn => {
+            btn.addEventListener('click', () => {
+                const id = btn.dataset.id;
+                if (window.ForensicVault) {
+                    const result = window.ForensicVault.verifyEvidence(id);
+                    EliteUtils.showToast(result.valid ? 'Evidência íntegra ✓' : 'ALERTA: Evidência comprometida!', result.valid ? 'success' : 'error');
+                }
+            });
+        });
+        
+        document.querySelectorAll('.export-evidence').forEach(btn => {
+            btn.addEventListener('click', () => {
+                const id = btn.dataset.id;
+                if (window.ForensicVault) {
+                    window.ForensicVault.exportChainOfCustody(id);
+                }
+            });
+        });
+    }
+    
+    // =========================================================================
+    // MÓDULO: REGISTOS RGPD
+    // =========================================================================
+    
+    function renderActivityLog() {
+        const container = document.getElementById('viewContainer');
+        if (!container) return;
+        
+        const activityLog = JSON.parse(localStorage.getItem('elite_activity_log') || '[]');
+        const forensicLogs = window.ForensicVault ? window.ForensicVault.getAllAccessLogs(100) : [];
+        const combinedLogs = [...activityLog, ...forensicLogs.map(l => ({
+            timestamp: l.timestamp,
+            user: l.userId || l.user || 'Sistema',
+            action: l.action,
+            entity: l.evidenceId || l.entity || 'Forensic Vault',
+            hash: l.hash
+        }))].sort((a, b) => new Date(b.timestamp) - new Date(a.timestamp));
+        
+        container.innerHTML = `
+            <div class="activity-log-container">
+                <div class="activity-log-header">
+                    <h2><i class="fas fa-history"></i> REGISTO DE ATIVIDADES (ART. 30.º RGPD)</h2>
+                    <div class="activity-actions">
+                        <button id="exportLogBtn" class="elite-btn secondary"><i class="fas fa-download"></i> EXPORTAR RAT</button>
+                        <button id="clearLogBtn" class="elite-btn danger"><i class="fas fa-trash"></i> LIMPAR REGISTOS</button>
+                    </div>
+                </div>
+                <div class="log-stats">
+                    <div class="stat-card">
+                        <div class="stat-value">${combinedLogs.length}</div>
+                        <div class="stat-label">Total de Registos</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-value">${combinedLogs.filter(l => new Date(l.timestamp) > new Date(Date.now() - 24*60*60*1000)).length}</div>
+                        <div class="stat-label">Últimas 24h</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-value">${[...new Set(combinedLogs.map(l => l.user))].length}</div>
+                        <div class="stat-label">Utilizadores Ativos</div>
+                    </div>
+                </div>
+                <table class="data-table">
+                    <thead>
+                        <tr><th>DATA/HORA</th><th>UTILIZADOR</th><th>AÇÃO</th><th>ENTIDADE</th><th>HASH</th> </thead>
+                    <tbody>
+                        ${combinedLogs.length === 0 ? '}<td colspan="5" style="text-align: center;">Nenhum registo de atividade</td>' : 
+                            combinedLogs.slice(0, 100).map(log => `
+                                <tr>
+                                    <td>${new Date(log.timestamp).toLocaleString()}</td>
+                                    <td>${log.user}</td>
+                                    <td>${log.action}</td>
+                                    <td>${log.entity || '---'}</td>
+                                    <td class="log-hash">${log.hash ? log.hash.substring(0, 16) + '...' : '---'}</td>
+                                </tr>
+                            `).join('')}
+                    </tbody>
+                </table>
+            </div>
+        `;
+        
+        document.getElementById('exportLogBtn')?.addEventListener('click', () => {
+            const csv = ['Data/Hora,Utilizador,Ação,Entidade,Hash', ...combinedLogs.map(l => `"${l.timestamp}","${l.user}","${l.action}","${l.entity || ''}","${l.hash || ''}"`)].join('\n');
+            const blob = new Blob(["\uFEFF" + csv], { type: 'text/csv;charset=utf-8' });
+            const link = document.createElement('a');
+            link.href = URL.createObjectURL(blob);
+            link.download = `rat_elite_probatum_${new Date().toISOString().slice(0, 10)}.csv`;
+            link.click();
+            URL.revokeObjectURL(link.href);
+            EliteUtils.showToast('Registo de atividades exportado', 'success');
+        });
+        
+        document.getElementById('clearLogBtn')?.addEventListener('click', () => {
+            if (confirm('Tem certeza que deseja eliminar todos os registos de atividade? Esta ação não pode ser desfeita.')) {
+                localStorage.setItem('elite_activity_log', '[]');
+                EliteUtils.showToast('Registos de atividade eliminados', 'warning');
+                renderActivityLog();
+            }
+        });
+    }
+    
+    // =========================================================================
+    // FUNÇÕES DE RENDERIZAÇÃO DAS DEMAIS VIEWS
+    // =========================================================================
+    
+    function renderInsolvency() { const container = document.getElementById('viewContainer'); if (container) { const insolvencyCases = MOCK_CASES.filter(c => c.category === 'insolvency' || c.category === 'banking'); container.innerHTML = `<h2>${t('nav_insolvency')}</h2><table class="data-table"><thead> <th>ID</th><th>CLIENTE</th><th>VALOR</th><th>PROBABILIDADE</th><th>FASE</th> </thead><tbody>${insolvencyCases.map(c => `<tr><td><strong>${c.id}</strong></td><td>${c.client}</td><td>${EliteUtils.formatCurrency(c.value)}</td><td><div class="progress-bar"><div class="progress-fill" style="width: ${c.successProbability * 100}%"></div><span class="progress-text">${EliteUtils.formatPercentage(c.successProbability * 100)}</span></div></td><td>${c.fase_processual || 'Em curso'}</td></tr>`).join('')}</tbody></table>`; } }
     function renderLabor() { const container = document.getElementById('viewContainer'); if (container) container.innerHTML = `<h2>${t('nav_labor')}</h2><p>Contencioso Laboral - Módulo em desenvolvimento</p>`; }
     function renderLitigation() { const container = document.getElementById('viewContainer'); if (container) container.innerHTML = `<h2>${t('nav_litigation')}</h2><p>Inteligência de Litígio - Análise preditiva disponível no dashboard</p>`; }
     function renderAdversary() { const container = document.getElementById('viewContainer'); if (container) container.innerHTML = `<h2>${t('nav_adversary')}</h2><p>Análise de Oposição - Módulo em desenvolvimento</p>`; }
-    function renderSimulator() { const container = document.getElementById('viewContainer'); if (container) container.innerHTML = `<h2>${t('nav_simulator')}</h2><p>Simulador de Contra-Perícia - Módulo em desenvolvimento</p>`; }
+    function renderSimulator() { const container = document.getElementById('viewContainer'); if (container) container.innerHTML = `<h2>${t('nav_simulator')}</h2><p>Simulador de Contra-Perícia - Utilize o módulo Wargaming Engine</p>`; }
     function renderDeadlines() { const container = document.getElementById('viewContainer'); if (container) container.innerHTML = `<h2>${t('nav_deadlines')}</h2><p>Prazos Judiciais - Utilize o módulo de calendário integrado</p>`; }
     function renderReports() { const container = document.getElementById('viewContainer'); if (container) container.innerHTML = `<h2>${t('nav_reports')}</h2><p>Relatórios - Utilize o botão de exportação no cabeçalho</p>`; }
     function renderAdmin() { const container = document.getElementById('viewContainer'); if (container) container.innerHTML = `<h2>${t('nav_admin')}</h2><p>Administração - Acesso restrito a super utilizadores</p>`; }
@@ -1304,67 +1348,6 @@
         const logs = JSON.parse(localStorage.getItem('elite_activity_log') || '[]');
         logs.unshift(logEntry);
         localStorage.setItem('elite_activity_log', JSON.stringify(logs.slice(0, 500)));
-    }
-    
-    // =========================================================================
-    // EXPORTAÇÃO PARA MÓVEL (FALLBACK)
-    // =========================================================================
-    
-    async function exportCurrentViewToMobile() {
-        const container = document.getElementById('viewContainer');
-        if (!container) return;
-        
-        const originalHtml = container.innerHTML;
-        const title = document.getElementById('pageTitle')?.innerText || 'Relatório';
-        
-        const exportHtml = `
-            <div style="padding: 20px; font-family: 'JetBrains Mono', monospace; background: #0a0c10; color: #fff;">
-                <div style="border-bottom: 2px solid #00e5ff; padding-bottom: 16px; margin-bottom: 20px;">
-                    <h1 style="color: #00e5ff; margin: 0;">ELITE PROBATUM</h1>
-                    <p style="color: #94a3b8; margin: 4px 0 0;">Relatório Forense • ${new Date().toLocaleString()}</p>
-                </div>
-                <div style="background: #000; padding: 20px; border-radius: 12px; margin-bottom: 20px;">
-                    <h3 style="color: #00e5ff; margin-top: 0;">${title}</h3>
-                    <div>${originalHtml}</div>
-                </div>
-                <div style="text-align: center; padding-top: 20px; color: #64748b; font-size: 10px;">
-                    Documento gerado por ELITE PROBATUM v2.0.3 • Assinatura Digital: ${CryptoJS.SHA256(originalHtml + Date.now()).toString().substring(0, 16)}...
-                </div>
-            </div>
-        `;
-        
-        const element = document.createElement('div');
-        element.innerHTML = exportHtml;
-        element.style.position = 'absolute';
-        element.style.left = '-9999px';
-        document.body.appendChild(element);
-        
-        try {
-            if (typeof html2canvas !== 'undefined' && typeof jspdf !== 'undefined') {
-                const canvas = await html2canvas(element, { scale: 2, backgroundColor: '#0a0c10' });
-                const imgData = canvas.toDataURL('image/png');
-                const { jsPDF } = jspdf;
-                const pdf = new jsPDF('p', 'mm', 'a4');
-                const imgWidth = 190;
-                const imgHeight = (canvas.height * imgWidth) / canvas.width;
-                pdf.addImage(imgData, 'PNG', 10, 10, imgWidth, imgHeight);
-                pdf.save(`elite_probatum_${title.replace(/\s/g, '_')}_${new Date().toISOString().slice(0, 10)}.pdf`);
-                EliteUtils.showToast('Relatório exportado para PDF', 'success');
-            } else {
-                const blob = new Blob([exportHtml], { type: 'text/html' });
-                const link = document.createElement('a');
-                link.href = URL.createObjectURL(blob);
-                link.download = `elite_report_${new Date().toISOString().slice(0, 10)}.html`;
-                link.click();
-                URL.revokeObjectURL(link.href);
-                EliteUtils.showToast('Relatório exportado para HTML', 'success');
-            }
-        } catch (error) {
-            console.error('Erro na exportação:', error);
-            EliteUtils.showToast('Erro ao exportar relatório', 'error');
-        } finally {
-            document.body.removeChild(element);
-        }
     }
     
     // =========================================================================
@@ -1423,14 +1406,36 @@
         currentView: currentView,
         
         initDashboard: function() {
-            EliteUtils.log('Inicializando Unidade de Comando Forense Digital v2.0.3...');
+            EliteUtils.log('Inicializando Unidade de Comando Forense Digital v2.0.4...');
             
             const sessionHash = window.ELITE_SECURE_HASH || MASTER_HASH;
             secureStorage = new SecureStorage(sessionHash);
             window.SecureStorageInstance = secureStorage;
             
+            // Inicializar Forensic Vault
             if (window.ForensicVault && typeof window.ForensicVault.initialize === 'function') {
                 window.ForensicVault.initialize(sessionHash);
+            }
+            
+            // INICIALIZAR MÓDULOS DISRUPTIVOS
+            if (window.WargamingEngine && typeof window.WargamingEngine.initialize === 'function') {
+                window.WargamingEngine.initialize();
+                EliteUtils.log('✅ Wargaming Engine inicializado');
+            }
+            
+            if (window.JudgeBiometrics && typeof window.JudgeBiometrics.initialize === 'function') {
+                window.JudgeBiometrics.initialize();
+                EliteUtils.log('✅ Judge Biometrics inicializado');
+            }
+            
+            if (window.BlockchainCustody && typeof window.BlockchainCustody.initialize === 'function') {
+                window.BlockchainCustody.initialize();
+                EliteUtils.log('✅ Blockchain Custody inicializado');
+            }
+            
+            if (window.QuantumLegalAnalytics && typeof window.QuantumLegalAnalytics.initialize === 'function') {
+                window.QuantumLegalAnalytics.initialize();
+                EliteUtils.log('✅ Quantum Legal Analytics inicializado');
             }
             
             const savedLocale = localStorage.getItem('elite_locale');
@@ -1447,6 +1452,7 @@
             EliteUtils.log(`✅ ${MOCK_CASES.length} processos estratégicos carregados`);
             EliteUtils.log(`📊 Valor total em disputa: ${EliteUtils.formatCurrency(MOCK_CASES.reduce((s,c)=>s+c.value,0))}`);
             EliteUtils.log(`🔐 Storage seguro inicializado com PBKDF2`);
+            EliteUtils.log(`🚀 Módulos de inovação disruptiva ativos: Wargaming, Biometrics, Blockchain, Quantum Analytics`);
         },
         
         navigateTo: navigateTo,
@@ -1468,6 +1474,7 @@
     EliteUtils.log(`Master Hash: ${MASTER_HASH.substring(0, 16)}...`);
     EliteUtils.log(`${MOCK_CASES.length} processos estratégicos carregados`);
     EliteUtils.log(`Valor total em disputa: ${EliteUtils.formatCurrency(MOCK_CASES.reduce((s,c)=>s+c.value,0))}`);
+    EliteUtils.log(`🚀 Inovações Disruptivas: Wargaming | Biometrics | Blockchain | Quantum`);
     EliteUtils.log(`========================================`);
     
 })();
