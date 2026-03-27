@@ -1,9 +1,10 @@
 /**
  * ============================================================================
- * ELITE PROBATUM — MÓDULO DE WARGAMING JURÍDICO
+ * ELITE PROBATUM v2.0.5 — MÓDULO DE RISK MITIGATION ENGINE
+ * ANÁLISE DE RISCO ESTRATÉGICO E SIMULAÇÃO DE CENÁRIOS
  * ============================================================================
- * INOVAÇÃO DISRUPTIVA #1:
- * Motor de Simulação de Contra-Perícia (Stress Test de Prova)
+ * INOVAÇÃO ESTRATÉGICA:
+ * Motor de Simulação de Risco (Stress Test de Prova)
  * 
  * Funcionalidades:
  * 1. IA atua como "Advogado da Parte Contrária" para testar evidências
@@ -14,7 +15,7 @@
  * ============================================================================
  */
 
-class WargamingEngine {
+class RiskMitigationEngine {
     constructor() {
         this.initialized = false;
         this.simulationHistory = [];
@@ -26,11 +27,11 @@ class WargamingEngine {
     }
     
     /**
-     * Inicializa o motor de wargaming
+     * Inicializa o motor de análise de risco
      */
     initialize() {
         this.initialized = true;
-        console.log('[ELITE] Wargaming Engine inicializado - Simulação de Contra-Perícia Ativa');
+        console.log('[ELITE] Risk Mitigation Engine inicializado - Simulação de Risco Ativa');
         return this;
     }
     
@@ -241,7 +242,7 @@ class WargamingEngine {
      * Carrega histórico de simulações
      */
     loadSimulationHistory() {
-        const stored = localStorage.getItem('elite_wargaming_history');
+        const stored = localStorage.getItem('elite_risk_mitigation_history');
         if (stored) {
             try {
                 this.simulationHistory = JSON.parse(stored);
@@ -259,7 +260,7 @@ class WargamingEngine {
         if (this.simulationHistory.length > 100) {
             this.simulationHistory = this.simulationHistory.slice(0, 100);
         }
-        localStorage.setItem('elite_wargaming_history', JSON.stringify(this.simulationHistory));
+        localStorage.setItem('elite_risk_mitigation_history', JSON.stringify(this.simulationHistory));
     }
     
     /**
@@ -389,17 +390,17 @@ class WargamingEngine {
         
         // Ajustar por força da evidência
         if (evidence.hash && evidence.timestampProof) {
-            likelihood -= 0.2; // Evidência forte reduz probabilidade
+            likelihood -= 0.2;
         }
         
         // Ajustar por tipo de caso
         if (caseData.category === 'tax' && attack.id === 'ATT_DOC_001') {
-            likelihood += 0.1; // Casos fiscais têm mais ataques documentais
+            likelihood += 0.1;
         }
         
         // Ajustar por valor da causa
         if (caseData.value > 1000000) {
-            likelihood += 0.15; // Casos de alto valor atraem mais ataques
+            likelihood += 0.15;
         }
         
         return Math.min(Math.max(likelihood, 0.1), 0.95);
@@ -664,7 +665,7 @@ class WargamingEngine {
     }
     
     /**
-     * Renderiza dashboard de simulação
+     * Renderiza dashboard de simulação de risco
      */
     renderDashboard(containerId, caseData, evidenceList) {
         const container = document.getElementById(containerId);
@@ -673,9 +674,9 @@ class WargamingEngine {
         const report = this.generateReport(caseData, evidenceList);
         
         container.innerHTML = `
-            <div class="wargaming-dashboard">
+            <div class="risk-mitigation-dashboard">
                 <div class="dashboard-header">
-                    <h2><i class="fas fa-chess-board"></i> SIMULAÇÃO DE CONTRA-PERÍCIA</h2>
+                    <h2><i class="fas fa-chart-line"></i> ANÁLISE DE RISCO ESTRATÉGICO</h2>
                     <div class="risk-score ${report.overallRiskScore > 70 ? 'critical' : report.overallRiskScore > 40 ? 'warning' : 'safe'}">
                         <span class="score-value">${report.overallRiskScore}</span>
                         <span class="score-label">Risco Global</span>
@@ -762,7 +763,7 @@ class WargamingEngine {
         // Estilos adicionais
         const style = document.createElement('style');
         style.textContent = `
-            .wargaming-dashboard { padding: 0; }
+            .risk-mitigation-dashboard { padding: 0; }
             .risk-score { text-align: center; padding: 16px; border-radius: 16px; background: var(--bg-terminal); }
             .risk-score.critical { border-left: 4px solid #ff1744; }
             .risk-score.warning { border-left: 4px solid #ffc107; }
@@ -790,7 +791,6 @@ class WargamingEngine {
             .vulnerability-card.risk-baixo { border-left: 3px solid #00e676; }
             .vulnerability-header { display: flex; justify-content: space-between; margin-bottom: 8px; }
             .risk-badge { font-size: 0.6rem; padding: 2px 8px; border-radius: 12px; }
-            .risk-badge:contains("Alto") { background: #ff1744; color: #fff; }
             .action-card { background: var(--bg-terminal); border-radius: 12px; padding: 16px; margin-bottom: 12px; }
             .action-card.priority-high { border-left: 3px solid #ff1744; }
             .action-card.priority-medium { border-left: 3px solid #ffc107; }
@@ -811,5 +811,8 @@ class WargamingEngine {
     }
 }
 
-// Instância global
-window.WargamingEngine = new WargamingEngine();
+// Instância global - mantendo compatibilidade com nome antigo para não quebrar referências
+window.WargamingEngine = new RiskMitigationEngine();
+window.RiskMitigationEngine = window.WargamingEngine;
+
+console.log('[ELITE] Risk Mitigation Engine carregado - Análise de Risco Estratégico Ativa');
