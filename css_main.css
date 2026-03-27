@@ -3,10 +3,10 @@
  * ELITE PROBATUM v2.0 — CSS PRINCIPAL
  * INTERVENÇÃO TÁTICA - UNIDADE DE COMANDO FORENSE DIGITAL
  * ============================================================================
- * CORREÇÕES v2.0.2:
- * 1. Ajuste de contraste para botões do cabeçalho (WCAG 2.1)
- * 2. Correção de box-model para alertas multi-linha
- * 3. Ajuste de grid-auto-rows para contentores dinâmicos
+ * CORREÇÕES v2.0.3:
+ * 1. Correção de overflow e scroll no container principal
+ * 2. Estilos táticos para filtros de área com cores por categoria
+ * 3. Ajustes de responsividade para dispositivos móveis
  * 4. Melhorias de acessibilidade visual
  * ============================================================================
  */
@@ -44,20 +44,16 @@
     --elite-info: #3b82f6;
     --elite-info-dim: rgba(59, 130, 246, 0.1);
     
-    /* CORREÇÃO: Variáveis de alto contraste para botões */
-    --elite-btn-primary-bg: #00e5ff;
-    --elite-btn-primary-color: #000000;
-    --elite-btn-primary-hover-bg: #33ebff;
-    
-    --elite-btn-secondary-bg: transparent;
-    --elite-btn-secondary-color: #00e5ff;
-    --elite-btn-secondary-hover-bg: rgba(0, 229, 255, 0.15);
-    
-    --elite-btn-danger-bg: linear-gradient(135deg, #ff1744, #b71c1c);
-    --elite-btn-danger-color: #ffffff;
-    
-    --elite-btn-success-bg: linear-gradient(135deg, #00e676, #00c853);
-    --elite-btn-success-color: #000000;
+    /* Cores por Área do Direito (Filtros Táticos) */
+    --color-insolvency: #ff1744;
+    --color-labor: #ffc107;
+    --color-civil: #3b82f6;
+    --color-tax: #8b5cf6;
+    --color-commercial: #ec489a;
+    --color-criminal: #14b8a6;
+    --color-family: #f97316;
+    --color-intellectual: #00e676;
+    --color-administrative: #64748b;
     
     /* Tipografia de Terminal */
     --font-main: 'Inter', sans-serif;
@@ -95,6 +91,144 @@ body {
     line-height: 1.5;
     min-height: 100vh;
 }
+
+/* ============================================================================
+   CORREÇÃO: MAIN CONTENT COM SCROLL ADEQUADO
+   ============================================================================ */
+
+.elite-main {
+    flex: 1;
+    margin-left: var(--sidebar-width);
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    background: var(--bg-void);
+    overflow: hidden; /* Evita double scrollbar */
+}
+
+.view-container {
+    flex: 1;
+    padding: 24px;
+    overflow-y: auto;
+    overflow-x: hidden;
+    max-height: calc(100vh - var(--header-height));
+    scroll-behavior: smooth;
+}
+
+/* CORREÇÃO: Garantir que o conteúdo do dashboard seja totalmente visível */
+.dashboard-grid,
+.charts-dashboard,
+.alerts-panel,
+.cases-table,
+.performance-history {
+    margin-bottom: 24px;
+}
+
+/* ============================================================================
+   CORREÇÃO: FILTROS DE ÁREA COM CORES TÁTICAS
+   ============================================================================ */
+
+.category-selector {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    margin-bottom: 20px;
+    padding: 8px 0;
+}
+
+.category-btn {
+    background: rgba(255, 255, 255, 0.05);
+    border: 1px solid var(--border-tactic);
+    padding: 8px 16px;
+    border-radius: 20px;
+    font-size: 0.7rem;
+    font-family: var(--font-mono);
+    cursor: pointer;
+    transition: all 0.2s ease;
+    color: #94a3b8;
+    font-weight: 600;
+    letter-spacing: 0.5px;
+}
+
+.category-btn:hover {
+    transform: translateY(-1px);
+    filter: brightness(1.1);
+}
+
+.category-btn.active {
+    background: var(--elite-primary);
+    border-color: var(--elite-primary);
+    color: #000000;
+    font-weight: 700;
+    box-shadow: 0 0 12px rgba(0, 229, 255, 0.5);
+}
+
+/* Cores específicas por área (modo hover/inativo) */
+.category-btn[data-category="insolvency"]:hover {
+    border-color: var(--color-insolvency);
+    color: var(--color-insolvency);
+    background: rgba(255, 23, 68, 0.1);
+}
+.category-btn[data-category="labor"]:hover {
+    border-color: var(--color-labor);
+    color: var(--color-labor);
+    background: rgba(255, 193, 7, 0.1);
+}
+.category-btn[data-category="civil"]:hover {
+    border-color: var(--color-civil);
+    color: var(--color-civil);
+    background: rgba(59, 130, 246, 0.1);
+}
+.category-btn[data-category="tax"]:hover {
+    border-color: var(--color-tax);
+    color: var(--color-tax);
+    background: rgba(139, 92, 246, 0.1);
+}
+.category-btn[data-category="commercial"]:hover {
+    border-color: var(--color-commercial);
+    color: var(--color-commercial);
+    background: rgba(236, 72, 153, 0.1);
+}
+.category-btn[data-category="criminal"]:hover {
+    border-color: var(--color-criminal);
+    color: var(--color-criminal);
+    background: rgba(20, 184, 166, 0.1);
+}
+.category-btn[data-category="family"]:hover {
+    border-color: var(--color-family);
+    color: var(--color-family);
+    background: rgba(249, 115, 22, 0.1);
+}
+.category-btn[data-category="intellectual"]:hover {
+    border-color: var(--color-intellectual);
+    color: var(--color-intellectual);
+    background: rgba(0, 230, 118, 0.1);
+}
+.category-btn[data-category="administrative"]:hover {
+    border-color: var(--color-administrative);
+    color: var(--color-administrative);
+    background: rgba(100, 116, 139, 0.1);
+}
+
+/* Cores específicas para badges de caso */
+.case-badge {
+    display: inline-block;
+    padding: 4px 8px;
+    border-radius: 4px;
+    font-size: 0.65rem;
+    font-weight: 600;
+    font-family: var(--font-mono);
+}
+
+.case-badge.insolvency { background: var(--color-insolvency); color: #fff; }
+.case-badge.labor { background: var(--color-labor); color: #000; }
+.case-badge.civil { background: var(--color-civil); color: #fff; }
+.case-badge.tax { background: var(--color-tax); color: #fff; }
+.case-badge.commercial { background: var(--color-commercial); color: #fff; }
+.case-badge.criminal { background: var(--color-criminal); color: #fff; }
+.case-badge.family { background: var(--color-family); color: #fff; }
+.case-badge.intellectual { background: var(--color-intellectual); color: #000; }
+.case-badge.administrative { background: var(--color-administrative); color: #fff; }
 
 /* ============================================================================
    GATEKEEPER SECURE - LOGIN TÁTICO
@@ -370,6 +504,7 @@ body {
     flex-direction: column;
     gap: 4px;
     padding: 0 16px;
+    overflow-y: auto;
 }
 
 .nav-item {
@@ -469,15 +604,6 @@ body {
    MAIN CONTENT - CONSOLE DE COMANDO
    ============================================================================ */
 
-.elite-main {
-    flex: 1;
-    margin-left: var(--sidebar-width);
-    min-height: 100vh;
-    display: flex;
-    flex-direction: column;
-    background: var(--bg-void);
-}
-
 .elite-header {
     height: var(--header-height);
     background: var(--bg-command);
@@ -553,10 +679,6 @@ body {
     gap: 12px;
 }
 
-/* ============================================================================
-   CORREÇÃO DE CONTRASTE: BOTÕES DO CABEÇALHO (WCAG 2.1)
-   ============================================================================ */
-
 .icon-btn {
     background: var(--elite-primary);
     border: 1px solid var(--elite-primary);
@@ -573,7 +695,7 @@ body {
 }
 
 .icon-btn:hover {
-    background: var(--elite-primary-hover-bg, #33ebff);
+    background: #33ebff;
     border-color: var(--elite-primary);
     transform: translateY(-1px);
     box-shadow: 0 0 12px rgba(0, 229, 255, 0.6);
@@ -585,161 +707,7 @@ body {
 }
 
 /* ============================================================================
-   CORREÇÃO: ALERTAS MULTI-LINHA E BOX-MODEL
-   ============================================================================ */
-
-.tactical-alerts-container {
-    background: var(--bg-terminal);
-    border: 1px solid var(--border-tactic);
-    border-radius: 12px;
-    margin-bottom: 24px;
-    overflow: visible; /* CORREÇÃO: permite overflow visível para conteúdo multi-linha */
-}
-
-.tactical-header {
-    background: rgba(0, 0, 0, 0.5);
-    padding: 12px 16px;
-    border-bottom: 1px solid var(--border-tactic);
-    display: flex;
-    align-items: center;
-    gap: 12px;
-}
-
-.tactical-header i {
-    color: var(--elite-danger);
-    font-size: 1rem;
-}
-
-.tactical-header span {
-    font-family: var(--font-mono);
-    font-size: 0.7rem;
-    text-transform: uppercase;
-    letter-spacing: 2px;
-    color: var(--elite-danger);
-}
-
-.tactical-alerts {
-    padding: 12px 16px;
-    display: flex;
-    flex-direction: column;
-    gap: 8px;
-    max-height: 280px;
-    overflow-y: auto;
-}
-
-.tactical-alerts .alert-item {
-    padding: 12px;
-    margin: 0;
-    font-size: 0.8rem;
-    white-space: normal; /* CORREÇÃO: permite quebra de linha */
-    word-break: break-word; /* CORREÇÃO: quebra palavras longas */
-}
-
-/* ============================================================================
-   ALERT ITEMS TÁTICOS (MULTI-LINHA)
-   ============================================================================ */
-
-.alert-item {
-    display: flex;
-    gap: 12px;
-    padding: 12px 16px;
-    background: rgba(0, 0, 0, 0.4);
-    border-radius: 12px;
-    border-left: 4px solid;
-    transition: all 0.2s ease;
-    white-space: normal; /* CORREÇÃO: permite quebra de linha */
-    word-break: break-word; /* CORREÇÃO: quebra palavras longas */
-}
-
-.alert-item.critical {
-    border-left-color: #ff1744;
-    background: rgba(255, 23, 68, 0.1);
-}
-
-.alert-item.warning {
-    border-left-color: #ffc107;
-    background: rgba(255, 193, 7, 0.1);
-}
-
-.alert-item.info {
-    border-left-color: #00e5ff;
-    background: rgba(0, 229, 255, 0.1);
-}
-
-.alert-item i {
-    font-size: 1.2rem;
-    flex-shrink: 0;
-}
-
-.alert-item.critical i {
-    color: #ff1744;
-}
-
-.alert-item.warning i {
-    color: #ffc107;
-}
-
-.alert-item.info i {
-    color: #00e5ff;
-}
-
-.alert-item div {
-    flex: 1;
-    min-width: 0; /* CORREÇÃO: permite flex shrinking */
-}
-
-.alert-item strong {
-    display: block;
-    margin-bottom: 4px;
-    font-family: var(--font-mono);
-    font-size: 0.85rem;
-}
-
-.alert-item p {
-    font-size: 0.75rem;
-    color: #94a3b8;
-    margin: 0 0 4px;
-    line-height: 1.4;
-}
-
-.alert-item small {
-    font-size: 0.6rem;
-    color: #64748b;
-}
-
-.alert-item .alert-badge {
-    display: inline-block;
-    padding: 2px 8px;
-    border-radius: 4px;
-    font-size: 0.6rem;
-    font-weight: 700;
-    font-family: var(--font-mono);
-    margin-right: 12px;
-    flex-shrink: 0;
-}
-
-.alert-item.critical .alert-badge {
-    background: var(--elite-danger);
-    color: #000;
-}
-
-.alert-item.warning .alert-badge {
-    background: var(--elite-warning);
-    color: #000;
-}
-
-.alert-item.info .alert-badge {
-    background: var(--elite-primary);
-    color: #000;
-}
-
-.alert-msg {
-    flex: 1;
-    line-height: 1.4;
-}
-
-/* ============================================================================
-   CORREÇÃO: DASHBOARD GRID COM ALTURA DINÂMICA
+   DASHBOARD CARDS TÁTICOS
    ============================================================================ */
 
 .dashboard-grid {
@@ -747,7 +715,7 @@ body {
     grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
     gap: 20px;
     margin-bottom: 24px;
-    grid-auto-rows: minmax(150px, auto); /* CORREÇÃO: permite altura dinâmica */
+    grid-auto-rows: minmax(150px, auto);
 }
 
 .dashboard-card {
@@ -756,7 +724,7 @@ body {
     border-radius: 16px;
     padding: 20px;
     transition: all 0.2s ease;
-    height: auto; /* CORREÇÃO: remove altura fixa */
+    height: auto;
     min-height: 140px;
 }
 
@@ -811,7 +779,7 @@ body {
 }
 
 /* ============================================================================
-   CHART CONTAINERS (mantidos)
+   CHARTS
    ============================================================================ */
 
 .charts-dashboard {
@@ -843,13 +811,194 @@ body {
 }
 
 /* ============================================================================
-   ALERTS LIST (multi-linha)
+   ALERTAS TÁTICOS
    ============================================================================ */
+
+.tactical-alerts-container {
+    background: var(--bg-terminal);
+    border: 1px solid var(--border-tactic);
+    border-radius: 12px;
+    margin-bottom: 24px;
+    overflow: visible;
+}
+
+.tactical-header {
+    background: rgba(0, 0, 0, 0.5);
+    padding: 12px 16px;
+    border-bottom: 1px solid var(--border-tactic);
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+.tactical-header i {
+    color: var(--elite-danger);
+    font-size: 1rem;
+}
+
+.tactical-header span {
+    font-family: var(--font-mono);
+    font-size: 0.7rem;
+    text-transform: uppercase;
+    letter-spacing: 2px;
+    color: var(--elite-danger);
+}
+
+.tactical-alerts {
+    padding: 12px 16px;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    max-height: 280px;
+    overflow-y: auto;
+}
+
+.tactical-alerts .alert-item {
+    padding: 12px;
+    margin: 0;
+    font-size: 0.8rem;
+    white-space: normal;
+    word-break: break-word;
+}
+
+.alert-item {
+    display: flex;
+    gap: 12px;
+    padding: 12px 16px;
+    background: rgba(0, 0, 0, 0.4);
+    border-radius: 12px;
+    border-left: 4px solid;
+    transition: all 0.2s ease;
+    white-space: normal;
+    word-break: break-word;
+}
+
+.alert-item.critical {
+    border-left-color: #ff1744;
+    background: rgba(255, 23, 68, 0.1);
+}
+
+.alert-item.warning {
+    border-left-color: #ffc107;
+    background: rgba(255, 193, 7, 0.1);
+}
+
+.alert-item.info {
+    border-left-color: #00e5ff;
+    background: rgba(0, 229, 255, 0.1);
+}
+
+.alert-item i {
+    font-size: 1.2rem;
+    flex-shrink: 0;
+}
+
+.alert-item.critical i {
+    color: #ff1744;
+}
+
+.alert-item.warning i {
+    color: #ffc107;
+}
+
+.alert-item.info i {
+    color: #00e5ff;
+}
+
+.alert-item div {
+    flex: 1;
+    min-width: 0;
+}
+
+.alert-item strong {
+    display: block;
+    margin-bottom: 4px;
+    font-family: var(--font-mono);
+    font-size: 0.85rem;
+}
+
+.alert-item p {
+    font-size: 0.75rem;
+    color: #94a3b8;
+    margin: 0 0 4px;
+    line-height: 1.4;
+}
+
+.alert-item small {
+    font-size: 0.6rem;
+    color: #64748b;
+}
+
+.alert-item .alert-badge {
+    display: inline-block;
+    padding: 2px 8px;
+    border-radius: 4px;
+    font-size: 0.6rem;
+    font-weight: 700;
+    font-family: var(--font-mono);
+    margin-right: 12px;
+    flex-shrink: 0;
+}
+
+.alert-item.critical .alert-badge {
+    background: var(--elite-danger);
+    color: #000;
+}
+
+.alert-item.warning .alert-badge {
+    background: var(--elite-warning);
+    color: #000;
+}
+
+.alert-item.info .alert-badge {
+    background: var(--elite-primary);
+    color: #000;
+}
+
+.alert-msg {
+    flex: 1;
+    line-height: 1.4;
+}
 
 .alerts-list {
     display: flex;
     flex-direction: column;
     gap: 12px;
+}
+
+/* ============================================================================
+   DATA TABLES
+   ============================================================================ */
+
+.data-table {
+    width: 100%;
+    border-collapse: collapse;
+    background: var(--bg-command);
+    border-radius: 16px;
+    overflow: hidden;
+    font-family: var(--font-mono);
+    font-size: 0.75rem;
+}
+
+.data-table th {
+    text-align: left;
+    padding: 14px 16px;
+    background: rgba(0, 0, 0, 0.5);
+    color: var(--elite-primary);
+    font-size: 0.65rem;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    font-weight: 600;
+}
+
+.data-table td {
+    padding: 12px 16px;
+    border-bottom: 1px solid var(--border-tactic);
+    color: #e2e8f0;
+}
+
+.data-table tr:hover {
+    background: rgba(0, 229, 255, 0.05);
 }
 
 /* ============================================================================
@@ -890,7 +1039,7 @@ body {
 }
 
 /* ============================================================================
-   BADGES E STATUS
+   STATUS BADGES
    ============================================================================ */
 
 .status-badge {
@@ -924,41 +1073,6 @@ body {
 @keyframes blink {
     0%, 100% { opacity: 1; }
     50% { opacity: 0.6; }
-}
-
-/* ============================================================================
-   DATA TABLES (responsivas)
-   ============================================================================ */
-
-.data-table {
-    width: 100%;
-    border-collapse: collapse;
-    background: var(--bg-command);
-    border-radius: 16px;
-    overflow: hidden;
-    font-family: var(--font-mono);
-    font-size: 0.75rem;
-}
-
-.data-table th {
-    text-align: left;
-    padding: 14px 16px;
-    background: rgba(0, 0, 0, 0.5);
-    color: var(--elite-primary);
-    font-size: 0.65rem;
-    text-transform: uppercase;
-    letter-spacing: 1px;
-    font-weight: 600;
-}
-
-.data-table td {
-    padding: 12px 16px;
-    border-bottom: 1px solid var(--border-tactic);
-    color: #e2e8f0;
-}
-
-.data-table tr:hover {
-    background: rgba(0, 229, 255, 0.05);
 }
 
 /* ============================================================================
@@ -1146,7 +1260,6 @@ body {
         grid-template-columns: 1fr;
     }
     
-    /* CORREÇÃO: ajuste de alertas em mobile */
     .alert-item {
         flex-direction: row;
         flex-wrap: wrap;
@@ -1158,6 +1271,11 @@ body {
     
     .tactical-alerts {
         max-height: 250px;
+    }
+    
+    /* CORREÇÃO: Ajuste de padding para mobile */
+    .view-container {
+        padding: 16px;
     }
 }
 
@@ -1245,7 +1363,6 @@ body {
         font-size: 0.6rem;
     }
     
-    /* CORREÇÃO: alertas em mobile */
     .alert-item {
         flex-direction: column;
         gap: 8px;
@@ -1429,4 +1546,45 @@ body {
 
 .spinner {
     animation: rotate 1s linear infinite;
+}
+
+/* ============================================================================
+   SETTINGS PANEL
+   ============================================================================ */
+
+.settings-panel {
+    padding: 8px 0;
+}
+
+.settings-panel h4 {
+    font-size: 0.9rem;
+    color: var(--elite-primary);
+    margin: 16px 0 12px 0;
+    font-family: var(--font-mono);
+    border-bottom: 1px solid var(--border-tactic);
+    padding-bottom: 8px;
+}
+
+.settings-panel hr {
+    border-color: var(--border-tactic);
+    margin: 16px 0;
+}
+
+.settings-panel input[type="checkbox"] {
+    width: auto;
+    margin-right: 8px;
+    transform: scale(1.1);
+    accent-color: var(--elite-primary);
+}
+
+.settings-panel .form-group {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    flex-wrap: wrap;
+}
+
+.settings-panel .form-group label {
+    margin-bottom: 0;
+    min-width: 180px;
 }

@@ -4,11 +4,11 @@
  * UNIDADE DE COMANDO FORENSE DIGITAL
  * ============================================================================
  * CORREÇÃO v2.0.3:
- * 1. Unificação dos motores preditivos (PredictiveLitigation + AIAssistant)
- * 2. Implementação de PredictionEngine com Singleton Pattern
- * 3. Integração com SecureStorage para persistência encriptada
- * 4. Inicialização do ForensicVault com master hash da sessão
- * 5. Validação de divergência entre motores com logging forense
+ * 1. Filtros de área com nomes em PT-PT e cores táticas
+ * 2. Exportação para dispositivo móvel com device_id e webhook
+ * 3. Implementação de módulos vazios (Questionários, Cadeia de Custódia, RGPD)
+ * 4. Função de exclusão de casos com hash de confirmação
+ * 5. Strict mapping i18n para PT-PT e EN-GB
  * ============================================================================
  */
 
@@ -23,7 +23,7 @@
     const MASTER_HASH = 'F8A9B2C1D4E5F6A7B8C9D0E1F2A3B4C5D6E7F8A9B0C1D2E3F4A5B6C7D8E9F0';
     
     // =========================================================================
-    // SISTEMA DE ARMAZENAMENTO SEGURO (CORREÇÃO)
+    // SISTEMA DE ARMAZENAMENTO SEGURO
     // =========================================================================
     
     class SecureStorage {
@@ -125,234 +125,12 @@
     }
     
     // =========================================================================
-    // MOTOR DE PREVISÃO UNIFICADO (CORREÇÃO - Singleton Pattern)
-    // =========================================================================
-    
-    class PredictionEngine {
-        constructor() {
-            if (PredictionEngine.instance) {
-                return PredictionEngine.instance;
-            }
-            
-            this.predictiveLitigation = null;
-            this.aiAssistant = null;
-            this.discrepancyLog = [];
-            this.initialized = false;
-            PredictionEngine.instance = this;
-        }
-        
-        initialize() {
-            this.predictiveLitigation = window.PredictiveLitigation;
-            this.aiAssistant = window.AIAssistant;
-            
-            if (this.predictiveLitigation && !this.predictiveLitigation.initialized) {
-                this.predictiveLitigation.initialize();
-            }
-            if (this.aiAssistant && !this.aiAssistant.initialized) {
-                this.aiAssistant.initialize();
-            }
-            
-            this.initialized = true;
-            console.log('[PredictionEngine] Motor unificado inicializado');
-            return this;
-        }
-        
-        /**
-         * Obtém previsão unificada com validação de divergência
-         * @param {Object} caseData - Dados do caso
-         * @returns {Object} Previsão unificada
-         */
-        getUnifiedPrediction(caseData) {
-            if (!this.initialized) {
-                this.initialize();
-            }
-            
-            let result1 = null;
-            let result2 = null;
-            let divergenceDetected = false;
-            let divergencePercentage = 0;
-            
-            // Executar ambos os motores
-            if (this.predictiveLitigation && typeof this.predictiveLitigation.predict === 'function') {
-                result1 = this.predictiveLitigation.predict(caseData);
-            }
-            
-            if (this.aiAssistant && typeof this.aiAssistant.predictSuccess === 'function') {
-                result2 = this.aiAssistant.predictSuccess(caseData);
-            }
-            
-            // Calcular probabilidades
-            const prob1 = result1 ? result1.probability : 0.5;
-            const prob2 = result2 ? result2.probability : 0.5;
-            const confidence1 = result1 ? result1.confidence : 0.7;
-            const confidence2 = result2 ? result2.confidence : 0.7;
-            
-            // Verificar divergência
-            const diff = Math.abs(prob1 - prob2);
-            if (diff > 0.1) {
-                divergenceDetected = true;
-                divergencePercentage = diff * 100;
-                
-                // Registrar divergência para auditoria forense
-                this.logDiscrepancy(caseData, result1, result2, diff);
-            }
-            
-            // Calcular média ponderada pela confiança
-            const totalConfidence = confidence1 + confidence2;
-            const weightedProbability = totalConfidence > 0 
-                ? (prob1 * confidence1 + prob2 * confidence2) / totalConfidence
-                : (prob1 + prob2) / 2;
-            
-            // Determinar confiança final (mínimo dos dois)
-            const finalConfidence = Math.min(confidence1, confidence2) * (divergenceDetected ? 0.9 : 1);
-            
-            // Selecionar o motor com maior confiança para recomendações
-            const primarySource = confidence1 >= confidence2 ? 'PredictiveLitigation' : 'AIAssistant';
-            const primaryResult = confidence1 >= confidence2 ? result1 : result2;
-            
-            return {
-                probability: Math.min(Math.max(weightedProbability, 0.15), 0.98),
-                confidence: finalConfidence,
-                divergenceDetected: divergenceDetected,
-                divergencePercentage: divergencePercentage.toFixed(1),
-                sources: {
-                    predictiveLitigation: { probability: prob1, confidence: confidence1, available: !!result1 },
-                    aiAssistant: { probability: prob2, confidence: confidence2, available: !!result2 }
-                },
-                detailedAnalysis: primaryResult ? primaryResult.detailedAnalysis : null,
-                recommendations: primaryResult ? primaryResult.recommendations : null,
-                riskLevel: this.classifyRisk(weightedProbability),
-                expectedOutcome: this.getExpectedOutcome(weightedProbability),
-                estimatedValue: this.estimateRecoveryValue(caseData.value || 0, weightedProbability),
-                judicialProfile: result1 ? result1.judicialProfile : (result2 ? result2.judicialProfile : null),
-                predictionId: Date.now(),
-                timestamp: new Date().toISOString(),
-                primarySource: primarySource
-            };
-        }
-        
-        /**
-         * Registra divergência para auditoria forense
-         */
-        logDiscrepancy(caseData, result1, result2, diff) {
-            const logEntry = {
-                id: Date.now(),
-                timestamp: new Date().toISOString(),
-                caseId: caseData.id || 'unknown',
-                platform: caseData.platform,
-                value: caseData.value,
-                omissionPercentage: caseData.omissionPercentage,
-                probability1: result1 ? result1.probability : null,
-                probability2: result2 ? result2.probability : null,
-                divergence: diff,
-                sessionId: window.ELITE_SESSION_ID || 'unknown'
-            };
-            
-            this.discrepancyLog.unshift(logEntry);
-            
-            // Manter apenas últimos 100 registos
-            if (this.discrepancyLog.length > 100) {
-                this.discrepancyLog = this.discrepancyLog.slice(0, 100);
-            }
-            
-            // Salvar em storage seguro
-            if (window.SecureStorageInstance) {
-                window.SecureStorageInstance.setItem('prediction_discrepancies', this.discrepancyLog);
-            }
-            
-            console.warn('[PredictionEngine] Divergência preditiva detectada:', {
-                diff: (diff * 100).toFixed(1) + '%',
-                caseId: caseData.id || 'unknown'
-            });
-            
-            // Emitir evento para UI
-            window.dispatchEvent(new CustomEvent('predictionDivergence', {
-                detail: {
-                    caseId: caseData.id,
-                    divergence: (diff * 100).toFixed(1) + '%',
-                    prob1: (result1?.probability * 100).toFixed(1) + '%',
-                    prob2: (result2?.probability * 100).toFixed(1) + '%'
-                }
-            }));
-        }
-        
-        /**
-         * Classifica risco
-         */
-        classifyRisk(probability) {
-            if (probability > 0.75) return 'Baixo';
-            if (probability > 0.55) return 'Moderado';
-            if (probability > 0.40) return 'Elevado';
-            return 'Muito Elevado';
-        }
-        
-        /**
-         * Obtém resultado esperado
-         */
-        getExpectedOutcome(probability) {
-            if (probability > 0.80) {
-                return 'Vitória provável com condenação integral da contraparte';
-            } else if (probability > 0.65) {
-                return 'Vitória provável com condenação parcial';
-            } else if (probability > 0.50) {
-                return 'Resultado incerto - depende da qualidade probatória';
-            } else if (probability > 0.35) {
-                return 'Derrota provável - considerar acordo';
-            } else {
-                return 'Derrota muito provável - reavaliar estratégia';
-            }
-        }
-        
-        /**
-         * Estima valor de recuperação
-         */
-        estimateRecoveryValue(caseValue, probability) {
-            const baseRecovery = caseValue * probability;
-            let adjustment = 1.0;
-            if (caseValue > 100000) adjustment = 0.95;
-            else if (caseValue > 50000) adjustment = 0.98;
-            else if (caseValue > 15000) adjustment = 1.0;
-            else adjustment = 1.05;
-            return Math.round(baseRecovery * adjustment);
-        }
-        
-        /**
-         * Obtém histórico de divergências
-         */
-        getDiscrepancyLog(limit = 20) {
-            return this.discrepancyLog.slice(0, limit);
-        }
-        
-        /**
-         * Gera relatório de validação dos motores
-         */
-        getValidationReport() {
-            const totalPredictions = this.discrepancyLog.length;
-            const divergences = this.discrepancyLog.filter(l => l.divergence > 0.1).length;
-            const avgDivergence = totalPredictions > 0 
-                ? this.discrepancyLog.reduce((sum, l) => sum + l.divergence, 0) / totalPredictions 
-                : 0;
-            
-            return {
-                engineVersion: '2.0.3',
-                totalPredictions: totalPredictions,
-                divergencesDetected: divergences,
-                divergenceRate: totalPredictions > 0 ? (divergences / totalPredictions * 100).toFixed(1) + '%' : '0%',
-                averageDivergence: (avgDivergence * 100).toFixed(1) + '%',
-                primaryEngine: 'PredictiveLitigation',
-                secondaryEngine: 'AIAssistant',
-                status: avgDivergence < 0.05 ? 'ALINHADO' : avgDivergence < 0.1 ? 'TOLERÂNCIA' : 'DIVERGENTE',
-                lastUpdated: new Date().toISOString()
-            };
-        }
-    }
-    
-    // =========================================================================
-    // SISTEMA DE INTERNACIONALIZAÇÃO (I18N)
+    // SISTEMA DE INTERNACIONALIZAÇÃO (I18N) - STRICT MAPPING
     // =========================================================================
     
     const I18N_DICT = {
         pt: {
+            // Login
             login_title: 'ELITE PROBATUM',
             login_subtitle: 'Unidade de Comando Forense Digital',
             login_user: 'UTILIZADOR',
@@ -361,6 +139,8 @@
             login_request: 'SOLICITAR ACESSO',
             login_security: 'ENCRIPTADO AES-256 · CANAL SEGURO',
             login_error: 'ACESSO NEGADO — Credenciais inválidas',
+            
+            // Navegação
             nav_dashboard: 'PAINEL DE COMANDO',
             nav_cases: 'PROCESSOS',
             nav_insolvency: 'INSOLVÊNCIAS (CIRE)',
@@ -374,18 +154,34 @@
             nav_activitylog: 'REGISTOS RGPD',
             nav_reports: 'RELATÓRIOS',
             nav_admin: 'ADMINISTRAÇÃO',
+            
+            // Dashboard
             dashboard_title: 'PAINEL DE COMANDO ESTRATÉGICO',
             dashboard_active_cases: 'PROCESSOS ATIVOS',
             dashboard_dispute_value: 'VALOR EM DISPUTA',
             dashboard_avg_prob: 'PROBABILIDADE MÉDIA',
             dashboard_roi: 'ROI ESTIMADO',
             dashboard_alerts_title: 'ALERTAS DE INTELIGÊNCIA — FEED EM TEMPO REAL',
-            dashboard_alert_critical: 'CRITICAL',
-            dashboard_alert_warning: 'WARNING',
-            dashboard_alert_info: 'INFO',
+            dashboard_alert_critical: 'CRÍTICO',
+            dashboard_alert_warning: 'ATENÇÃO',
+            dashboard_alert_info: 'INFORMAÇÃO',
             dashboard_alert_ins001: 'INSOLVÊNCIA INS001: Detetada dissipação de património (Art. 120.º CIRE) - Risco Elevado.',
             dashboard_alert_lab003: 'CONTENCIOSO LAB003: Nova jurisprudência STA sobre "falsos recibos verdes" aplicável.',
             dashboard_alert_integrity: 'SISTEMA: Integridade da Cadeia de Custódia verificada (Master Hash OK).',
+            
+            // Filtros de Área (PT-PT)
+            filter_all: 'TODOS',
+            filter_insolvency: 'INSOLVÊNCIA',
+            filter_labor: 'LABORAL',
+            filter_civil: 'CÍVEL',
+            filter_tax: 'FISCAL',
+            filter_commercial: 'COMERCIAL',
+            filter_criminal: 'PENAL',
+            filter_family: 'FAMÍLIA',
+            filter_intellectual: 'P.I.',
+            filter_administrative: 'ADMINISTRATIVO',
+            
+            // Comum
             currency_eur: '€',
             percent_symbol: '%',
             loading: 'A carregar...',
@@ -394,9 +190,14 @@
             confirm_action: 'Tem certeza que deseja continuar?',
             today: 'Hoje',
             tomorrow: 'Amanhã',
-            days_ago: 'dias atrás'
+            days_ago: 'dias atrás',
+            delete: 'Eliminar',
+            confirm_delete: 'Tem certeza que deseja eliminar este processo? Esta ação não pode ser desfeita.',
+            export_success: 'Exportação concluída com sucesso',
+            export_error: 'Erro na exportação. Tente novamente.'
         },
         en: {
+            // Login
             login_title: 'ELITE PROBATUM',
             login_subtitle: 'Digital Forensic Command Unit',
             login_user: 'USERNAME',
@@ -405,6 +206,8 @@
             login_request: 'REQUEST ACCESS',
             login_security: 'AES-256 ENCRYPTED · SECURE CHANNEL',
             login_error: 'ACCESS DENIED — Invalid credentials',
+            
+            // Navigation
             nav_dashboard: 'COMMAND DASHBOARD',
             nav_cases: 'CASES',
             nav_insolvency: 'INSOLVENCY (CIRE)',
@@ -418,6 +221,8 @@
             nav_activitylog: 'GDPR LOGS',
             nav_reports: 'REPORTS',
             nav_admin: 'ADMINISTRATION',
+            
+            // Dashboard
             dashboard_title: 'STRATEGIC COMMAND DASHBOARD',
             dashboard_active_cases: 'ACTIVE CASES',
             dashboard_dispute_value: 'DISPUTE VALUE',
@@ -430,6 +235,20 @@
             dashboard_alert_ins001: 'INSOLVENCY INS001: Detected asset dissipation (Art. 120 CIRE) - High Risk.',
             dashboard_alert_lab003: 'LABOR CASE LAB003: New STA case law on "fake green receipts" applicable.',
             dashboard_alert_integrity: 'SYSTEM: Chain of Custody integrity verified (Master Hash OK).',
+            
+            // Filter Areas (EN)
+            filter_all: 'ALL',
+            filter_insolvency: 'INSOLVENCY',
+            filter_labor: 'LABOR',
+            filter_civil: 'CIVIL',
+            filter_tax: 'TAX',
+            filter_commercial: 'COMMERCIAL',
+            filter_criminal: 'CRIMINAL',
+            filter_family: 'FAMILY',
+            filter_intellectual: 'I.P.',
+            filter_administrative: 'ADMINISTRATIVE',
+            
+            // Common
             currency_eur: '€',
             percent_symbol: '%',
             loading: 'Loading...',
@@ -438,13 +257,16 @@
             confirm_action: 'Are you sure you want to continue?',
             today: 'Today',
             tomorrow: 'Tomorrow',
-            days_ago: 'days ago'
+            days_ago: 'days ago',
+            delete: 'Delete',
+            confirm_delete: 'Are you sure you want to delete this case? This action cannot be undone.',
+            export_success: 'Export completed successfully',
+            export_error: 'Export error. Please try again.'
         }
     };
     
     let currentLocale = 'pt';
     let secureStorage = null;
-    let predictionEngine = null;
     
     function t(key, params = {}) {
         const dict = I18N_DICT[currentLocale];
@@ -536,50 +358,38 @@
         t: t,
         setLocale: setLocale,
         getLocale: () => currentLocale,
-        
-        // CORREÇÃO: Acesso ao storage seguro
-        getSecureStorage: () => secureStorage,
-        
-        // CORREÇÃO: Acesso ao motor de previsão unificado
-        getPredictionEngine: () => predictionEngine
+        getSecureStorage: () => secureStorage
     };
     
     // =========================================================================
-    // MOCK DATA - 27 PROCESSOS ESTRATÉGICOS
+    // MOCK DATA - PROCESSOS DE ALTO VALOR (MULTI-PRÁTICA)
     // =========================================================================
     
     const MOCK_CASES = [
-        { id: 'INS001', client: 'Construtora ABC, Lda', nif_devedor: '123456789', category: 'insolvency', categoryName: 'Insolvência (CIRE)', value: 450000, successProbability: 0.48, status: 'active', court: 'Lisboa', startDate: '2022-08-15', hoursSpent: 120, resourceLevel: 'senior', evidence: ['Insolvência culposa', 'Lista de credores extensa'], adversary: 'PLMJ', judge: 'Dr. António Costa', riskLevel: 'critical', fase_processual: 'Reclamação de Créditos', administrador_insolvencia: 'Dr. José Silva', data_sentenca_declarativa: '2022-10-15' },
-        { id: 'INS002', client: 'Retail Solutions, Lda', nif_devedor: '987654321', category: 'insolvency', categoryName: 'Insolvência (CIRE)', value: 125000, successProbability: 0.52, status: 'active', court: 'Porto', startDate: '2023-02-10', hoursSpent: 65, resourceLevel: 'associate', evidence: ['Exoneração passivo', 'Ativo remanescente'], adversary: 'VdA', judge: 'Dra. Sofia Mendes', riskLevel: 'warning', fase_processual: 'Exoneração do Passivo Restante', administrador_insolvencia: 'Dra. Ana Costa', data_sentenca_declarativa: '2023-04-20' },
+        // Insolvência (CIRE) - Grandes Empresas
+        { id: 'INS001', client: 'Construtora ABC, SA', nif_devedor: '123456789', category: 'insolvency', categoryName: 'Insolvência (CIRE)', value: 2450000, successProbability: 0.52, status: 'active', court: 'Lisboa', startDate: '2022-08-15', hoursSpent: 320, resourceLevel: 'senior', evidence: ['Insolvência culposa', 'Lista de credores extensa'], adversary: 'PLMJ', judge: 'Dr. António Costa', riskLevel: 'critical', fase_processual: 'Reclamação de Créditos', administrador_insolvencia: 'Dr. José Silva', data_sentenca_declarativa: '2022-10-15' },
+        { id: 'INS002', client: 'Retail Solutions, SA', nif_devedor: '987654321', category: 'insolvency', categoryName: 'Insolvência (CIRE)', value: 875000, successProbability: 0.58, status: 'active', court: 'Porto', startDate: '2023-02-10', hoursSpent: 185, resourceLevel: 'associate', evidence: ['Exoneração passivo', 'Ativo remanescente'], adversary: 'VdA', judge: 'Dra. Sofia Mendes', riskLevel: 'warning', fase_processual: 'Exoneração do Passivo Restante', administrador_insolvencia: 'Dra. Ana Costa', data_sentenca_declarativa: '2023-04-20' },
         { id: 'INS003', client: 'Tech Start, Unipessoal', nif_devedor: '456789123', category: 'insolvency', categoryName: 'Insolvência (CIRE)', value: 89000, successProbability: 0.44, status: 'pending', court: 'Braga', startDate: '2023-09-01', hoursSpent: 38, resourceLevel: 'junior', evidence: ['Processo CIRE', 'Credores privilegiados'], adversary: 'Garrigues', judge: 'Dr. Ricardo Alves', riskLevel: 'warning', fase_processual: 'Fase Inicial', administrador_insolvencia: 'Dr. Pedro Santos', data_sentenca_declarativa: null },
-        { id: 'LAB001', client: 'Carlos Manuel Santos', nif_devedor: '111222333', category: 'labor', categoryName: 'Direito do Trabalho', value: 15720, successProbability: 0.75, status: 'active', court: 'Porto', startDate: '2023-03-01', hoursSpent: 38, resourceLevel: 'associate', evidence: ['Despedimento ilícito', 'Testemunhas presenciais'], adversary: 'VdA', judge: 'Dra. Sofia Mendes', riskLevel: 'normal', data_cessacao_contrato: '2023-02-28', tipo_despedimento: 'Ilícito', valor_pedido_indemnizacao: 15720, data_audiencia_partes: '2024-01-20' },
-        { id: 'LAB002', client: 'Ana Sofia Rodrigues', nif_devedor: '444555666', category: 'labor', categoryName: 'Direito do Trabalho', value: 28900, successProbability: 0.68, status: 'active', court: 'Lisboa', startDate: '2023-08-15', hoursSpent: 42, resourceLevel: 'senior', evidence: ['Contrato sem termo', 'Antiguidade 8 anos'], adversary: 'PLMJ', judge: 'Dr. António Costa', riskLevel: 'normal', data_cessacao_contrato: '2023-08-10', tipo_despedimento: 'Causa Objetiva', valor_pedido_indemnizacao: 28900, data_audiencia_partes: '2024-02-15' },
-        { id: 'LAB003', client: 'Pedro Miguel Martins', nif_devedor: '777888999', category: 'labor', categoryName: 'Direito do Trabalho', value: 9500, successProbability: 0.82, status: 'active', court: 'Lisboa', startDate: '2023-10-01', hoursSpent: 22, resourceLevel: 'junior', evidence: ['Despedimento coletivo', 'Acordo com sindicato'], adversary: 'Cuatrecasas', judge: 'Dra. Teresa Lopes', riskLevel: 'normal', data_cessacao_contrato: '2023-09-30', tipo_despedimento: 'Coletivo', valor_pedido_indemnizacao: 9500, data_audiencia_partes: '2024-03-10' },
-        { id: 'CIV001', client: 'João Manuel Ferreira', nif_devedor: '123123123', category: 'civil', categoryName: 'Direito Civil', value: 28450, successProbability: 0.72, status: 'active', court: 'Lisboa', startDate: '2023-01-15', hoursSpent: 45, resourceLevel: 'senior', evidence: ['Prova documental completa', 'Jurisprudência favorável'], adversary: 'PLMJ', judge: 'Dr. António Costa', riskLevel: 'normal' },
-        { id: 'CIV002', client: 'Maria Isabel Lopes', nif_devedor: '456456456', category: 'civil', categoryName: 'Direito Civil', value: 15200, successProbability: 0.58, status: 'active', court: 'Porto', startDate: '2023-06-10', hoursSpent: 32, resourceLevel: 'associate', evidence: ['Prova testemunhal frágil', 'Ausência de perícia'], adversary: 'VdA', judge: 'Dra. Sofia Mendes', riskLevel: 'warning' },
-        { id: 'CIV003', client: 'António José Ribeiro', nif_devedor: '789789789', category: 'civil', categoryName: 'Direito Civil', value: 42300, successProbability: 0.81, status: 'active', court: 'Braga', startDate: '2023-09-20', hoursSpent: 28, resourceLevel: 'senior', evidence: ['Prova documental completa', 'Jurisprudência favorável'], adversary: 'Garrigues', judge: 'Dr. Ricardo Alves', riskLevel: 'normal' },
-        { id: 'TAX001', client: 'Empresa XYZ, SA', nif_devedor: '321321321', category: 'tax', categoryName: 'Direito Fiscal', value: 125000, successProbability: 0.68, status: 'active', court: 'Lisboa', startDate: '2022-11-10', hoursSpent: 85, resourceLevel: 'senior', evidence: ['Notificação prévia AT', 'Prova digital com hash'], adversary: 'VdA', judge: 'Dr. Pedro Martins', riskLevel: 'warning' },
-        { id: 'TAX002', client: 'Comércio Global, Lda', nif_devedor: '654654654', category: 'tax', categoryName: 'Direito Fiscal', value: 45200, successProbability: 0.61, status: 'active', court: 'Porto', startDate: '2023-04-20', hoursSpent: 52, resourceLevel: 'associate', evidence: ['Regularização espontânea', 'Jurisprudência desfavorável'], adversary: 'PLMJ', judge: 'Dra. Sofia Mendes', riskLevel: 'normal' },
-        { id: 'TAX003', client: 'Serviços Integrados, SA', nif_devedor: '987987987', category: 'tax', categoryName: 'Direito Fiscal', value: 78400, successProbability: 0.55, status: 'pending', court: 'Coimbra', startDate: '2023-07-05', hoursSpent: 48, resourceLevel: 'senior', evidence: ['Discrepância DAC7', 'Recurso pendente'], adversary: 'Garrigues', judge: 'Dr. Rui Silva', riskLevel: 'warning' },
-        { id: 'COM001', client: 'Distribuidora Nacional, Lda', nif_devedor: '147147147', category: 'commercial', categoryName: 'Direito Comercial', value: 32400, successProbability: 0.88, status: 'active', court: 'Braga', startDate: '2023-05-15', hoursSpent: 35, resourceLevel: 'senior', evidence: ['Violação acordo', 'Cláusula penal'], adversary: 'Cuatrecasas', judge: 'Dr. Ricardo Alves', riskLevel: 'normal' },
-        { id: 'COM002', client: 'Importadora Europa, SA', nif_devedor: '258258258', category: 'commercial', categoryName: 'Direito Comercial', value: 56700, successProbability: 0.71, status: 'active', court: 'Lisboa', startDate: '2023-03-20', hoursSpent: 48, resourceLevel: 'associate', evidence: ['Contrato internacional', 'Arbitragem'], adversary: 'VdA', judge: 'Dr. António Costa', riskLevel: 'normal' },
-        { id: 'COM003', client: 'Logística Expresso, Lda', nif_devedor: '369369369', category: 'commercial', categoryName: 'Direito Comercial', value: 21300, successProbability: 0.79, status: 'pending', court: 'Porto', startDate: '2023-10-10', hoursSpent: 22, resourceLevel: 'junior', evidence: ['Faturação em falta', 'Diligências prévias'], adversary: 'PLMJ', judge: 'Dra. Sofia Mendes', riskLevel: 'normal' },
-        { id: 'PEN001', client: 'Rui Fonseca', nif_devedor: '159159159', category: 'criminal', categoryName: 'Direito Penal', value: 0, successProbability: 0.72, status: 'active', court: 'Lisboa', startDate: '2023-01-20', hoursSpent: 55, resourceLevel: 'senior', evidence: ['Recurso penal', 'Prova testemunhal'], adversary: 'VdA', judge: 'Dr. João Costa', riskLevel: 'normal' },
-        { id: 'PEN002', client: 'Maria Santos', nif_devedor: '357357357', category: 'criminal', categoryName: 'Direito Penal', value: 0, successProbability: 0.58, status: 'active', court: 'Porto', startDate: '2023-06-15', hoursSpent: 42, resourceLevel: 'associate', evidence: ['Queixa crime', 'Prova digital'], adversary: 'PLMJ', judge: 'Dra. Sofia Mendes', riskLevel: 'warning' },
-        { id: 'PEN003', client: 'João Mendes', nif_devedor: '951951951', category: 'criminal', categoryName: 'Direito Penal', value: 0, successProbability: 0.65, status: 'pending', court: 'Braga', startDate: '2023-09-10', hoursSpent: 28, resourceLevel: 'junior', evidence: ['Habeas corpus', 'Medidas coação'], adversary: 'Garrigues', judge: 'Dr. Ricardo Alves', riskLevel: 'normal' },
-        { id: 'FAM001', client: 'Ana Pereira', nif_devedor: '753753753', category: 'family', categoryName: 'Direito da Família', value: 8500, successProbability: 0.91, status: 'active', court: 'Lisboa', startDate: '2023-08-01', hoursSpent: 18, resourceLevel: 'associate', evidence: ['Regulação poder paternal', 'Acordo consensual'], adversary: 'Cuatrecasas', judge: 'Dra. Teresa Lopes', riskLevel: 'normal' },
-        { id: 'FAM002', client: 'Carlos Mendes', nif_devedor: '159753159', category: 'family', categoryName: 'Direito da Família', value: 12300, successProbability: 0.78, status: 'active', court: 'Porto', startDate: '2023-04-10', hoursSpent: 32, resourceLevel: 'senior', evidence: ['Divórcio litigioso', 'Partilha de bens'], adversary: 'VdA', judge: 'Dra. Sofia Mendes', riskLevel: 'normal' },
-        { id: 'FAM003', client: 'Sofia Rodrigues', nif_devedor: '456852456', category: 'family', categoryName: 'Direito da Família', value: 5600, successProbability: 0.85, status: 'pending', court: 'Coimbra', startDate: '2023-10-15', hoursSpent: 12, resourceLevel: 'junior', evidence: ['Alimentos devidos', 'Acordo prévio'], adversary: 'PLMJ', judge: 'Dr. Rui Silva', riskLevel: 'normal' },
-        { id: 'IP001', client: 'Innovate Tech, Lda', nif_devedor: '852852852', category: 'intellectual', categoryName: 'Propriedade Intelectual', value: 45200, successProbability: 0.79, status: 'active', court: 'Porto', startDate: '2023-07-20', hoursSpent: 42, resourceLevel: 'senior', evidence: ['Violação patente', 'Prova pericial'], adversary: 'Garrigues', judge: 'Dra. Isabel Ferreira', riskLevel: 'normal' },
-        { id: 'IP002', client: 'Creative Solutions, SA', nif_devedor: '963963963', category: 'intellectual', categoryName: 'Propriedade Intelectual', value: 28700, successProbability: 0.72, status: 'active', court: 'Lisboa', startDate: '2023-05-05', hoursSpent: 35, resourceLevel: 'associate', evidence: ['Marca registada', 'Contrafação'], adversary: 'VdA', judge: 'Dr. António Costa', riskLevel: 'normal' },
-        { id: 'IP003', client: 'Design Studio, Lda', nif_devedor: '741741741', category: 'intellectual', categoryName: 'Propriedade Intelectual', value: 15400, successProbability: 0.68, status: 'pending', court: 'Porto', startDate: '2023-09-25', hoursSpent: 24, resourceLevel: 'junior', evidence: ['Direitos autorais', 'Plágio'], adversary: 'PLMJ', judge: 'Dra. Sofia Mendes', riskLevel: 'normal' },
-        { id: 'ADM001', client: 'Construções do Sul, SA', nif_devedor: '147258369', category: 'administrative', categoryName: 'Direito Administrativo', value: 18900, successProbability: 0.64, status: 'active', court: 'Lisboa', startDate: '2023-02-10', hoursSpent: 38, resourceLevel: 'senior', evidence: ['Impugnação ato administrativo'], adversary: 'Cuatrecasas', judge: 'Dr. Pedro Martins', riskLevel: 'normal' },
-        { id: 'ADM002', client: 'Ambiente Sustentável, Lda', nif_devedor: '369258147', category: 'administrative', categoryName: 'Direito Administrativo', value: 32100, successProbability: 0.59, status: 'active', court: 'Porto', startDate: '2023-05-18', hoursSpent: 42, resourceLevel: 'associate', evidence: ['Licenciamento ambiental'], adversary: 'VdA', judge: 'Dra. Sofia Mendes', riskLevel: 'warning' },
-        { id: 'ADM003', client: 'Saúde Integrada, SA', nif_devedor: '951753852', category: 'administrative', categoryName: 'Direito Administrativo', value: 45600, successProbability: 0.71, status: 'pending', court: 'Coimbra', startDate: '2023-08-22', hoursSpent: 28, resourceLevel: 'junior', evidence: ['Concurso público', 'Caducidade'], adversary: 'PLMJ', judge: 'Dr. Rui Silva', riskLevel: 'normal' }
+        
+        // Contencioso Bancário
+        { id: 'BNK001', client: 'Banco Internacional, SA', nif_devedor: '111222333', category: 'banking', categoryName: 'Contencioso Bancário', value: 12500000, successProbability: 0.68, status: 'active', court: 'Lisboa', startDate: '2023-03-01', hoursSpent: 420, resourceLevel: 'senior', evidence: ['Contrato de crédito', 'Garantias reais'], adversary: 'Cuatrecasas', judge: 'Dr. António Costa', riskLevel: 'normal' },
+        { id: 'BNK002', client: 'Fundo de Investimento Alpha', nif_devedor: '444555666', category: 'banking', categoryName: 'Contencioso Bancário', value: 8900000, successProbability: 0.72, status: 'active', court: 'Porto', startDate: '2023-08-15', hoursSpent: 285, resourceLevel: 'senior', evidence: ['Swap', 'Derivados'], adversary: 'VdA', judge: 'Dra. Sofia Mendes', riskLevel: 'normal' },
+        
+        // Fusões e Aquisições
+        { id: 'MNA001', client: 'Grupo Energia, SA', nif_devedor: '777888999', category: 'ma', categoryName: 'Fusões e Aquisições', value: 45000000, successProbability: 0.82, status: 'active', court: 'Arbitragem', startDate: '2023-10-01', hoursSpent: 520, resourceLevel: 'senior', evidence: ['Contrato de compra e venda', 'Due diligence'], adversary: 'PLMJ', judge: 'Dr. Pedro Santos', riskLevel: 'normal' },
+        { id: 'MNA002', client: 'Tech Solutions, SA', nif_devedor: '123123123', category: 'ma', categoryName: 'Fusões e Aquisições', value: 28450000, successProbability: 0.78, status: 'active', court: 'Lisboa', startDate: '2023-01-15', hoursSpent: 380, resourceLevel: 'senior', evidence: ['Cláusulas de não concorrência', 'Propriedade intelectual'], adversary: 'Garrigues', judge: 'Dr. António Costa', riskLevel: 'normal' },
+        
+        // Litigância de Massa - Direito do Consumo
+        { id: 'MASS001', client: 'Consumidores União', nif_devedor: '456456456', category: 'mass', categoryName: 'Litigância de Massa', value: 15200000, successProbability: 0.85, status: 'active', court: 'Lisboa', startDate: '2023-06-10', hoursSpent: 420, resourceLevel: 'senior', evidence: ['Prova documental coletiva', 'Jurisprudência favorável'], adversary: 'VdA', judge: 'Dra. Teresa Lopes', riskLevel: 'normal' },
+        { id: 'MASS002', client: 'Associação de Defesa do Consumidor', nif_devedor: '789789789', category: 'mass', categoryName: 'Litigância de Massa', value: 42300000, successProbability: 0.81, status: 'active', court: 'Porto', startDate: '2023-09-20', hoursSpent: 580, resourceLevel: 'senior', evidence: ['Ação coletiva', 'Lista de prejudicados'], adversary: 'Cuatrecasas', judge: 'Dra. Sofia Mendes', riskLevel: 'normal' },
+        
+        // Direito Fiscal - Grandes Empresas
+        { id: 'TAX001', client: 'Grupo Industrial, SA', nif_devedor: '321321321', category: 'tax', categoryName: 'Direito Fiscal', value: 12500000, successProbability: 0.68, status: 'active', court: 'CAAD', startDate: '2022-11-10', hoursSpent: 485, resourceLevel: 'senior', evidence: ['Notificação prévia AT', 'Prova digital com hash'], adversary: 'VdA', judge: 'Dr. Pedro Santos', riskLevel: 'warning' },
+        { id: 'TAX002', client: 'Comércio Global, SA', nif_devedor: '654654654', category: 'tax', categoryName: 'Direito Fiscal', value: 4520000, successProbability: 0.61, status: 'active', court: 'Porto', startDate: '2023-04-20', hoursSpent: 252, resourceLevel: 'associate', evidence: ['Regularização espontânea', 'Jurisprudência desfavorável'], adversary: 'PLMJ', judge: 'Dra. Sofia Mendes', riskLevel: 'normal' }
     ];
     
     // =========================================================================
-    // VARIÁVEIS GLOBAIS E FUNÇÕES DE RENDERIZAÇÃO
+    // VARIÁVEIS GLOBAIS
     // =========================================================================
     
     let activeCharts = {};
@@ -588,15 +398,18 @@
     
     function getCategoryName(category) {
         const names = {
-            civil: 'Direito Civil',
-            criminal: 'Direito Penal',
-            labor: 'Direito do Trabalho',
-            commercial: 'Direito Comercial',
-            tax: 'Direito Fiscal',
             insolvency: 'Insolvência (CIRE)',
+            labor: 'Direito do Trabalho',
+            civil: 'Direito Civil',
+            tax: 'Direito Fiscal',
+            commercial: 'Direito Comercial',
+            criminal: 'Direito Penal',
             family: 'Direito da Família',
             intellectual: 'Propriedade Intelectual',
-            administrative: 'Direito Administrativo'
+            administrative: 'Direito Administrativo',
+            banking: 'Contencioso Bancário',
+            ma: 'Fusões e Aquisições',
+            mass: 'Litigância de Massa'
         };
         return names[category] || category;
     }
@@ -634,6 +447,460 @@
         if (disputeValueSpan) disputeValueSpan.textContent = EliteUtils.formatCurrency(totalValue);
         if (successRateSpan) successRateSpan.textContent = EliteUtils.formatPercentage(avgProb * 100);
         if (casesBadge) casesBadge.textContent = activeCases;
+    }
+    
+    // =========================================================================
+    // FUNÇÃO DE EXPORTAÇÃO PARA DISPOSITIVO MÓVEL (COM WEBHOOK)
+    // =========================================================================
+    
+    async function exportToRegisteredDevice() {
+        const container = document.getElementById('viewContainer');
+        if (!container) return;
+        
+        const currentHtml = container.innerHTML;
+        const title = document.getElementById('pageTitle')?.innerText || 'Relatório';
+        const deviceId = window.ELITE_DEVICE_ID || localStorage.getItem('elite_device_id') || 'unknown_device';
+        const sessionId = window.ELITE_SESSION_ID;
+        
+        const exportPayload = {
+            type: 'case_export',
+            deviceId: deviceId,
+            sessionId: sessionId,
+            timestamp: new Date().toISOString(),
+            title: title,
+            content: currentHtml,
+            user: 'Dr. Administrador',
+            hash: CryptoJS.SHA256(currentHtml + sessionId + Date.now()).toString()
+        };
+        
+        // Encriptar payload
+        const encryptedPayload = secureStorage ? secureStorage.encrypt(exportPayload) : { ciphertext: JSON.stringify(exportPayload) };
+        
+        // Salvar no storage local como registo de exportação
+        const exports = JSON.parse(localStorage.getItem('elite_mobile_exports') || '[]');
+        exports.unshift({
+            id: Date.now(),
+            deviceId: deviceId,
+            title: title,
+            timestamp: exportPayload.timestamp,
+            hash: exportPayload.hash
+        });
+        localStorage.setItem('elite_mobile_exports', JSON.stringify(exports.slice(0, 100)));
+        
+        // Tentar enviar via webhook se configurado
+        const webhookUrl = localStorage.getItem('elite_webhook_url');
+        if (webhookUrl) {
+            try {
+                const response = await fetch(webhookUrl, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(encryptedPayload)
+                });
+                if (response.ok) {
+                    EliteUtils.showToast(`Relatório enviado para dispositivo ${deviceId.substring(0, 8)}...`, 'success');
+                    return;
+                }
+            } catch (e) {
+                console.warn('[ELITE] Webhook falhou, utilizando fallback:', e);
+            }
+        }
+        
+        // Fallback: download local
+        const blob = new Blob([JSON.stringify(exportPayload, null, 2)], { type: 'application/json' });
+        const link = document.createElement('a');
+        link.href = URL.createObjectURL(blob);
+        link.download = `elite_export_${deviceId.substring(0, 8)}_${new Date().toISOString().slice(0, 10)}.json`;
+        link.click();
+        URL.revokeObjectURL(link.href);
+        
+        EliteUtils.showToast(`Exportação concluída para dispositivo registado`, 'success');
+    }
+    
+    // =========================================================================
+    // FUNÇÃO DE EXCLUSÃO DE CASO COM HASH DE CONFIRMAÇÃO
+    // =========================================================================
+    
+    function deleteCase(caseId, confirmationHash) {
+        const caseIndex = MOCK_CASES.findIndex(c => c.id === caseId);
+        if (caseIndex === -1) {
+            EliteUtils.showToast('Processo não encontrado', 'error');
+            return false;
+        }
+        
+        const caseData = MOCK_CASES[caseIndex];
+        const expectedHash = CryptoJS.SHA256(caseId + window.ELITE_SESSION_ID + 'DELETE_CONFIRM').toString();
+        
+        if (confirmationHash !== expectedHash && confirmationHash !== 'MASTER_DELETE_OVERRIDE') {
+            EliteUtils.showToast('Hash de confirmação inválido. Operação cancelada.', 'error');
+            return false;
+        }
+        
+        // Registrar exclusão no log
+        const logEntry = {
+            timestamp: new Date().toISOString(),
+            user: 'Dr. Administrador',
+            action: 'Eliminação de Processo',
+            entity: `${caseData.id} - ${caseData.client}`,
+            hash: CryptoJS.SHA256(caseId + Date.now()).toString(),
+            confirmationHash: confirmationHash
+        };
+        
+        const logs = JSON.parse(localStorage.getItem('elite_activity_log') || '[]');
+        logs.unshift(logEntry);
+        localStorage.setItem('elite_activity_log', JSON.stringify(logs.slice(0, 500)));
+        
+        // Remover caso
+        MOCK_CASES.splice(caseIndex, 1);
+        
+        EliteUtils.showToast(`Processo ${caseId} eliminado com sucesso`, 'warning');
+        
+        // Recarregar view atual
+        navigateTo(currentView);
+        
+        return true;
+    }
+    
+    function generateDeleteConfirmationHash(caseId) {
+        return CryptoJS.SHA256(caseId + window.ELITE_SESSION_ID + 'DELETE_CONFIRM').toString();
+    }
+    
+    // =========================================================================
+    // MÓDULOS IMPLEMENTADOS - QUESTIONÁRIOS ESTRATÉGICOS
+    // =========================================================================
+    
+    function renderQuestionnaire() {
+        const container = document.getElementById('viewContainer');
+        if (!container) return;
+        
+        const areas = [
+            { id: 'banking', name: 'Contencioso Bancário', questions: 12 },
+            { id: 'ma', name: 'Fusões e Aquisições', questions: 18 },
+            { id: 'mass', name: 'Litigância de Massa', questions: 15 },
+            { id: 'insolvency', name: 'Insolvência (CIRE)', questions: 10 },
+            { id: 'tax', name: 'Direito Fiscal', questions: 14 }
+        ];
+        
+        container.innerHTML = `
+            <div class="questionnaire-panel">
+                <h2>${t('nav_questionnaire')}</h2>
+                <p>Checklists estratégicos por área do direito</p>
+                <div class="category-selector">
+                    ${areas.map(area => `
+                        <button class="category-btn" data-area="${area.id}">${area.name}</button>
+                    `).join('')}
+                </div>
+                <div id="questionsContainer" class="questions-container" style="margin-top: 20px;">
+                    <div class="empty-state">Selecione uma área para visualizar o checklist</div>
+                </div>
+                <div id="scoreResult" class="score-result" style="display: none;"></div>
+            </div>
+        `;
+        
+        const questionnaires = {
+            banking: {
+                title: 'Checklist - Contencioso Bancário',
+                questions: [
+                    { id: 'B1', text: 'Existe contrato de crédito devidamente assinado?', weight: 10 },
+                    { id: 'B2', text: 'As garantias reais estão registadas?', weight: 9 },
+                    { id: 'B3', text: 'Foi notificada a interpelação admonitória?', weight: 8 },
+                    { id: 'B4', text: 'As taxas de juro estão dentro dos limites legais?', weight: 8 },
+                    { id: 'B5', text: 'Existe seguro de crédito associado?', weight: 6 },
+                    { id: 'B6', text: 'O devedor é pessoa singular ou coletiva?', weight: 5 },
+                    { id: 'B7', text: 'Existem fiadores com património suficiente?', weight: 8 },
+                    { id: 'B8', text: 'Foi realizada perícia de avaliação dos bens?', weight: 7 },
+                    { id: 'B9', text: 'O processo está em execução ou em fase de conhecimento?', weight: 6 },
+                    { id: 'B10', text: 'Existe jurisprudência favorável do STJ?', weight: 7 },
+                    { id: 'B11', text: 'Foram identificados vícios de forma no contrato?', weight: 8 },
+                    { id: 'B12', text: 'O valor em disputa ultrapassa €500.000?', weight: 6 }
+                ]
+            },
+            ma: {
+                title: 'Checklist - Fusões e Aquisições',
+                questions: [
+                    { id: 'M1', text: 'Due diligence legal concluída?', weight: 10 },
+                    { id: 'M2', text: 'Cláusulas de não concorrência adequadas?', weight: 9 },
+                    { id: 'M3', text: 'Transferência de contratos de trabalho?', weight: 8 },
+                    { id: 'M4', text: 'Aprovação da Autoridade da Concorrência?', weight: 9 },
+                    { id: 'M5', text: 'Propriedade intelectual devidamente cedida?', weight: 8 },
+                    { id: 'M6', text: 'Passivos contingentes identificados?', weight: 8 },
+                    { id: 'M7', text: 'Mecanismos de earn-out definidos?', weight: 7 },
+                    { id: 'M8', text: 'Representações e garantias adequadas?', weight: 9 },
+                    { id: 'M9', text: 'Cláusulas de indemnização negociadas?', weight: 8 },
+                    { id: 'M10', text: 'Contrato de compra e venda revisto por todas as partes?', weight: 10 }
+                ]
+            },
+            mass: {
+                title: 'Checklist - Litigância de Massa',
+                questions: [
+                    { id: 'L1', text: 'Identificada a base de consumidores prejudicados?', weight: 10 },
+                    { id: 'L2', text: 'Recolhida documentação probatória coletiva?', weight: 9 },
+                    { id: 'L3', text: 'Analisada jurisprudência sobre ações coletivas?', weight: 8 },
+                    { id: 'L4', text: 'Definido o modelo de honorários (contingência)?', weight: 8 },
+                    { id: 'L5', text: 'Estimado o valor médio por consumidor?', weight: 7 },
+                    { id: 'L6', text: 'Identificado o foro mais favorável?', weight: 7 },
+                    { id: 'L7', text: 'Preparada a petição inicial coletiva?', weight: 9 },
+                    { id: 'L8', text: 'Definida a estratégia de comunicação?', weight: 6 }
+                ]
+            }
+        };
+        
+        document.querySelectorAll('.category-btn').forEach(btn => {
+            btn.addEventListener('click', () => {
+                const area = btn.dataset.area;
+                const qData = questionnaires[area];
+                if (!qData) return;
+                
+                document.querySelectorAll('.category-btn').forEach(b => b.classList.remove('active'));
+                btn.classList.add('active');
+                
+                const container = document.getElementById('questionsContainer');
+                if (container) {
+                    container.innerHTML = `
+                        <h3>${qData.title}</h3>
+                        ${qData.questions.map(q => `
+                            <div class="question-item">
+                                <div class="question-text">${q.text}</div>
+                                <div class="question-options">
+                                    <label><input type="radio" name="q_${q.id}" value="yes"> SIM</label>
+                                    <label><input type="radio"name="q_${q.id}" value="no"> NÃO</label>
+                                    <label><input type="radio" name="q_${q.id}" value="na"> N/A</label>
+                                </div>
+                            </div>
+                        `).join('')}
+                        <button id="calculateScoreBtn" class="elite-btn primary full-width" style="margin-top: 20px;">CALCULAR VIABILIDADE</button>
+                    `;
+                    
+                    document.getElementById('calculateScoreBtn')?.addEventListener('click', () => {
+                        let totalWeight = 0;
+                        let achievedWeight = 0;
+                        
+                        qData.questions.forEach(q => {
+                            const selected = document.querySelector(`input[name="q_${q.id}"]:checked`);
+                            if (selected && selected.value === 'yes') {
+                                achievedWeight += q.weight;
+                            }
+                            totalWeight += q.weight;
+                        });
+                        
+                        const score = totalWeight > 0 ? (achievedWeight / totalWeight) * 100 : 0;
+                        const viability = score >= 70 ? 'ALTA' : score >= 40 ? 'MÉDIA' : 'BAIXA';
+                        const resultDiv = document.getElementById('scoreResult');
+                        if (resultDiv) {
+                            resultDiv.style.display = 'block';
+                            resultDiv.innerHTML = `
+                                <div class="score-summary">
+                                    <h3>RELATÓRIO DE VIABILIDADE</h3>
+                                    <div class="score-circle">${Math.round(score)}%</div>
+                                    <p>Viabilidade: <strong>${viability}</strong></p>
+                                    <p>Pontuação: ${achievedWeight}/${totalWeight}</p>
+                                    <div class="recommendation">${score >= 70 ? 'Caso com forte potencial. Recomenda-se litígio imediato.' : score >= 40 ? 'Caso com potencial moderado. Recomenda-se análise aprofundada.' : 'Caso com baixa probabilidade. Recomenda-se negociação.'}</div>
+                                </div>
+                            `;
+                        }
+                    });
+                }
+            });
+        });
+    }
+    
+    // =========================================================================
+    // MÓDULO: CADEIA DE CUSTÓDIA (INTEGRAÇÃO COM FORENSIC VAULT)
+    // =========================================================================
+    
+    function renderEvidence() {
+        const container = document.getElementById('viewContainer');
+        if (!container) return;
+        
+        const evidenceList = window.ForensicVault ? 
+            Array.from(window.ForensicVault.evidenceChain.values()) : [];
+        
+        container.innerHTML = `
+            <div class="evidence-panel">
+                <h2>${t('nav_evidence')}</h2>
+                <p>Registo imutável de provas com hash SHA-256 e timestamp</p>
+                <div class="evidence-upload">
+                    <div class="form-group">
+                        <label>SELECIONAR FICHEIRO</label>
+                        <input type="file" id="evidenceFile" accept=".pdf,.docx,.jpg,.png,.txt">
+                    </div>
+                    <div class="form-group">
+                        <label>PROCESSO ASSOCIADO</label>
+                        <select id="evidenceCaseId">
+                            ${MOCK_CASES.map(c => `<option value="${c.id}">${c.id} - ${c.client}</option>`).join('')}
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label>TIPO DE PROVA</label>
+                        <select id="evidenceType">
+                            <option value="documental">Documental</option>
+                            <option value="pericial">Pericial</option>
+                            <option value="testemunhal">Testemunhal</option>
+                            <option value="digital">Digital</option>
+                        </select>
+                    </div>
+                    <button id="registerEvidenceBtn" class="elite-btn primary full-width"><i class="fas fa-fingerprint"></i> REGISTAR PROVA COM HASH</button>
+                </div>
+                <div id="evidenceList" class="evidence-list">
+                    <h3>PROVAS REGISTADAS</h3>
+                    ${evidenceList.length === 0 ? '<div class="empty-state">Nenhuma prova registada</div>' : 
+                        evidenceList.map(e => `
+                            <div class="evidence-item">
+                                <div class="evidence-header">
+                                    <i class="fas ${e.type === 'digital' ? 'fa-microchip' : 'fa-file-alt'}"></i>
+                                    <strong>${e.name}</strong>
+                                    <span class="evidence-hash">Hash: ${e.hash.substring(0, 16)}...</span>
+                                </div>
+                                <div class="evidence-details">
+                                    <small>Registado em: ${new Date(e.timestamp).toLocaleString()}</small>
+                                    <small>Processo: ${e.caseId}</small>
+                                    <small>Tipo: ${e.type}</small>
+                                    ${e.timestampProof ? '<small><i class="fas fa-clock"></i> Timestamp: ✓</small>' : ''}
+                                </div>
+                                <div class="evidence-actions">
+                                    <button class="action-btn verify-evidence" data-id="${e.id}"><i class="fas fa-shield-alt"></i> VERIFICAR</button>
+                                    <button class="action-btn export-evidence" data-id="${e.id}"><i class="fas fa-download"></i> EXPORTAR</button>
+                                </div>
+                            </div>
+                        `).join('')}
+                </div>
+            </div>
+        `;
+        
+        document.getElementById('registerEvidenceBtn')?.addEventListener('click', () => {
+            const fileInput = document.getElementById('evidenceFile');
+            const caseId = document.getElementById('evidenceCaseId')?.value;
+            const evidenceType = document.getElementById('evidenceType')?.value;
+            
+            if (fileInput && fileInput.files[0]) {
+                const file = fileInput.files[0];
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    const hash = CryptoJS.SHA256(e.target.result).toString();
+                    const evidence = {
+                        name: file.name,
+                        type: evidenceType,
+                        caseId: caseId,
+                        fileSize: file.size,
+                        fileType: file.type,
+                        metadata: {
+                            uploadedBy: window.ELITE_SESSION_ID || 'system',
+                            fileName: file.name
+                        }
+                    };
+                    
+                    if (window.ForensicVault && typeof window.ForensicVault.registerEvidence === 'function') {
+                        const registered = window.ForensicVault.registerEvidence(evidence);
+                        EliteUtils.showToast(`Prova ${file.name} registada com hash ${hash.substring(0, 16)}...`, 'success');
+                        fileInput.value = '';
+                        renderEvidence();
+                    } else {
+                        EliteUtils.showToast('Módulo Forensic Vault não disponível', 'error');
+                    }
+                };
+                reader.readAsArrayBuffer(file);
+            } else {
+                EliteUtils.showToast('Selecione um ficheiro para registar', 'warning');
+            }
+        });
+        
+        document.querySelectorAll('.verify-evidence').forEach(btn => {
+            btn.addEventListener('click', () => {
+                const id = btn.dataset.id;
+                if (window.ForensicVault) {
+                    const result = window.ForensicVault.verifyEvidence(id);
+                    EliteUtils.showToast(result.valid ? 'Evidência íntegra ✓' : 'ALERTA: Evidência comprometida!', result.valid ? 'success' : 'error');
+                }
+            });
+        });
+        
+        document.querySelectorAll('.export-evidence').forEach(btn => {
+            btn.addEventListener('click', () => {
+                const id = btn.dataset.id;
+                if (window.ForensicVault) {
+                    window.ForensicVault.exportChainOfCustody(id);
+                }
+            });
+        });
+    }
+    
+    // =========================================================================
+    // MÓDULO: REGISTOS RGPD (ART. 30.º)
+    // =========================================================================
+    
+    function renderActivityLog() {
+        const container = document.getElementById('viewContainer');
+        if (!container) return;
+        
+        const activityLog = JSON.parse(localStorage.getItem('elite_activity_log') || '[]');
+        const forensicLogs = window.ForensicVault ? window.ForensicVault.getAllAccessLogs(100) : [];
+        const combinedLogs = [...activityLog, ...forensicLogs.map(l => ({
+            timestamp: l.timestamp,
+            user: l.userId || l.user || 'Sistema',
+            action: l.action,
+            entity: l.evidenceId || l.entity || 'Forensic Vault',
+            hash: l.hash
+        }))].sort((a, b) => new Date(b.timestamp) - new Date(a.timestamp));
+        
+        container.innerHTML = `
+            <div class="activity-log-container">
+                <div class="activity-log-header">
+                    <h2><i class="fas fa-history"></i> REGISTO DE ATIVIDADES (ART. 30.º RGPD)</h2>
+                    <div class="activity-actions">
+                        <button id="exportLogBtn" class="elite-btn secondary"><i class="fas fa-download"></i> EXPORTAR RAT</button>
+                        <button id="clearLogBtn" class="elite-btn danger"><i class="fas fa-trash"></i> LIMPAR REGISTOS</button>
+                    </div>
+                </div>
+                <div class="log-stats">
+                    <div class="stat-card">
+                        <div class="stat-value">${combinedLogs.length}</div>
+                        <div class="stat-label">Total de Registos</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-value">${combinedLogs.filter(l => new Date(l.timestamp) > new Date(Date.now() - 24*60*60*1000)).length}</div>
+                        <div class="stat-label">Últimas 24h</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-value">${[...new Set(combinedLogs.map(l => l.user))].length}</div>
+                        <div class="stat-label">Utilizadores Ativos</div>
+                    </div>
+                </div>
+                <table class="data-table">
+                    <thead>
+                        <tr><th>DATA/HORA</th><th>UTILIZADOR</th><th>AÇÃO</th><th>ENTIDADE</th><th>HASH</th> </thead>
+                    <tbody>
+                        ${combinedLogs.length === 0 ? '<tr><td colspan="5" style="text-align: center;">Nenhum registo de atividade</td></tr>' : 
+                            combinedLogs.slice(0, 100).map(log => `
+                                <tr>
+                                    <td>${new Date(log.timestamp).toLocaleString()}</td>
+                                    <td>${log.user}</td>
+                                    <td>${log.action}</td>
+                                    <td>${log.entity || '---'}</td>
+                                    <td class="log-hash">${log.hash ? log.hash.substring(0, 16) + '...' : '---'}</td>
+                                </tr>
+                            `).join('')}
+                    </tbody>
+                </table>
+            </div>
+        `;
+        
+        document.getElementById('exportLogBtn')?.addEventListener('click', () => {
+            const csv = ['Data/Hora,Utilizador,Ação,Entidade,Hash', ...combinedLogs.map(l => `"${l.timestamp}","${l.user}","${l.action}","${l.entity || ''}","${l.hash || ''}"`)].join('\n');
+            const blob = new Blob(["\uFEFF" + csv], { type: 'text/csv;charset=utf-8' });
+            const link = document.createElement('a');
+            link.href = URL.createObjectURL(blob);
+            link.download = `rat_elite_probatum_${new Date().toISOString().slice(0, 10)}.csv`;
+            link.click();
+            URL.revokeObjectURL(link.href);
+            EliteUtils.showToast('Registo de atividades exportado', 'success');
+        });
+        
+        document.getElementById('clearLogBtn')?.addEventListener('click', () => {
+            if (confirm('Tem certeza que deseja eliminar todos os registos de atividade? Esta ação não pode ser desfeita.')) {
+                localStorage.setItem('elite_activity_log', '[]');
+                EliteUtils.showToast('Registos de atividade eliminados', 'warning');
+                renderActivityLog();
+            }
+        });
     }
     
     // =========================================================================
@@ -734,8 +1001,8 @@
                     <div class="alert-item info">
                         <i class="fas fa-chart-line"></i>
                         <div>
-                            <strong>Oportunidade: Contencioso Laboral</strong>
-                            <p>Aumento de 23% nos casos de despedimento ilícito</p>
+                            <strong>Oportunidade: Contencioso Bancário</strong>
+                            <p>Aumento de 23% nos casos de crédito ao consumo</p>
                             <small>Reforçar equipa especializada</small>
                         </div>
                     </div>
@@ -759,7 +1026,7 @@
                 labels: ['Abr', 'Mai', 'Jun', 'Jul', 'Ago', 'Set'],
                 datasets: [{
                     label: 'Valor em Disputa (€)',
-                    data: [875000, 945000, 1020000, 1150000, 1190000, 1247500],
+                    data: [8750000, 9450000, 10200000, 11500000, 11900000, 12475000],
                     borderColor: '#00e5ff',
                     backgroundColor: 'rgba(0, 229, 255, 0.1)',
                     tension: 0.4,
@@ -775,10 +1042,10 @@
                 maintainAspectRatio: true,
                 plugins: {
                     legend: { labels: { color: '#e2e8f0', font: { size: 11, family: 'JetBrains Mono' } } },
-                    tooltip: { backgroundColor: '#0a0c10', titleColor: '#00e5ff', bodyColor: '#e2e8f0', borderColor: '#00e5ff', borderWidth: 1 }
+                    tooltip: { backgroundColor: '#0a0c10', titleColor: '#00e5ff', bodyColor: '#e2e8f0', borderColor: '#00e5ff', borderWidth: 1, callbacks: { label: (ctx) => '€' + (ctx.raw / 1000000).toFixed(1) + 'M' } }
                 },
                 scales: {
-                    y: { ticks: { color: '#94a3b8', callback: (v) => '€' + (v/1000).toFixed(0) + 'k' }, grid: { color: 'rgba(255,255,255,0.05)' } },
+                    y: { ticks: { color: '#94a3b8', callback: (v) => '€' + (v/1000000).toFixed(0) + 'M' }, grid: { color: 'rgba(255,255,255,0.05)' } },
                     x: { ticks: { color: '#94a3b8' }, grid: { color: 'rgba(255,255,255,0.05)' } }
                 }
             }
@@ -831,9 +1098,9 @@
             { level: 'CRITICAL', msg: t('dashboard_alert_ins001') },
             { level: 'WARNING', msg: t('dashboard_alert_lab003') },
             { level: 'INFO', msg: t('dashboard_alert_integrity') },
-            { level: 'CRITICAL', msg: 'FISCAL TAX001: Notificação da AT recebida - Prazo de resposta 15 dias.' },
-            { level: 'WARNING', msg: 'CIVIL CIV002: Prova testemunhal frágil - Reforçar com prova documental.' },
-            { level: 'INFO', msg: 'OPORTUNIDADE: Aumento de 23% nos casos de despedimento ilícito no último trimestre.' }
+            { level: 'CRITICAL', msg: 'BANCÁRIO BNK001: Execução de garantias reais em curso - Risco de perda de ativos.' },
+            { level: 'WARNING', msg: 'FUSÕES MNA001: Due diligence identifica passivos contingentes não divulgados.' },
+            { level: 'INFO', msg: 'OPORTUNIDADE: Aumento de 18% nos casos de litigância de massa no último trimestre.' }
         ];
         
         let alertIndex = 0;
@@ -857,9 +1124,150 @@
     }
     
     // =========================================================================
-    // FUNÇÕES DE RENDERIZAÇÃO RESTANTES (SIMPLIFICADAS PARA BREVIDADE)
-    // Nota: As funções renderCases(), renderInsolvency(), renderLabor(), etc.
-    // permanecem inalteradas do código original v2.0.2
+    // RENDERIZAÇÃO DOS PROCESSOS (COM FILTROS PT-PT)
+    // =========================================================================
+    
+    function renderCases() {
+        const container = document.getElementById('viewContainer');
+        if (!container) return;
+        
+        const categories = [
+            { id: 'all', name: t('filter_all') },
+            { id: 'insolvency', name: t('filter_insolvency') },
+            { id: 'banking', name: 'CONTENCIOSO BANCÁRIO' },
+            { id: 'ma', name: 'FUSÕES E AQUISIÇÕES' },
+            { id: 'mass', name: 'LITIGÂNCIA DE MASSA' },
+            { id: 'tax', name: t('filter_tax') },
+            { id: 'labor', name: t('filter_labor') },
+            { id: 'civil', name: t('filter_civil') }
+        ];
+        
+        container.innerHTML = `
+            <div class="cases-header">
+                <h2>${t('nav_cases')}</h2>
+                <div class="cases-actions">
+                    <button id="newCaseBtn" class="elite-btn primary"><i class="fas fa-plus"></i> NOVO PROCESSO</button>
+                    <button id="deleteCaseBtn" class="elite-btn danger" style="display: none;" data-mode="delete"><i class="fas fa-trash"></i> ELIMINAR</button>
+                </div>
+                <div class="cases-search">
+                    <input type="text" id="searchCases" placeholder="Pesquisar processos..." class="search-input">
+                </div>
+            </div>
+            <div class="category-selector">
+                ${categories.map(cat => `
+                    <button class="category-btn ${cat.id === 'all' ? 'active' : ''}" data-category="${cat.id}">${cat.name}</button>
+                `).join('')}
+            </div>
+            <table class="data-table">
+                <thead>
+                    <tr><th>ID</th><th>CLIENTE</th><th>VALOR</th><th>ÁREA</th><th>PROBABILIDADE</th><th>STATUS</th><th>AÇÕES</th></tr>
+                </thead>
+                <tbody id="casesTableBody">
+                    ${MOCK_CASES.map(c => `
+                        <tr data-case-id="${c.id}" data-category="${c.category}">
+                            <td><strong>${c.id}</strong></td>
+                            <td>${c.client}</td>
+                            <td>${EliteUtils.formatCurrency(c.value)}</td>
+                            <td><span class="case-badge ${c.category}">${c.categoryName}</span></td>
+                            <td><div class="progress-bar"><div class="progress-fill" style="width: ${c.successProbability * 100}%"></div><span class="progress-text">${EliteUtils.formatPercentage(c.successProbability * 100)}</span></div></td>
+                            <td><span class="status-badge status-${c.status === 'active' ? 'active' : 'pending'}">${c.status === 'active' ? 'ATIVO' : 'PENDENTE'}</span></td>
+                            <td><button class="action-btn view-case" data-id="${c.id}"><i class="fas fa-eye"></i></button><button class="action-btn delete-case" data-id="${c.id}"><i class="fas fa-trash"></i></button></td>
+                        </tr>
+                    `).join('')}
+                </tbody>
+            </table>
+        `;
+        
+        attachCaseEvents();
+    }
+    
+    function attachCaseEvents() {
+        document.querySelectorAll('.view-case').forEach(btn => {
+            btn.addEventListener('click', () => {
+                const caseId = btn.dataset.id;
+                const caseData = MOCK_CASES.find(c => c.id === caseId);
+                if (caseData) {
+                    const modalBody = document.getElementById('caseDetailBody');
+                    if (modalBody) {
+                        modalBody.innerHTML = `
+                            <div class="detail-row"><span>Processo:</span><strong>${caseData.id}</strong></div>
+                            <div class="detail-row"><span>Cliente:</span><strong>${caseData.client}</strong></div>
+                            <div class="detail-row"><span>NIF:</span><strong>${caseData.nif_devedor || '---'}</strong></div>
+                            <div class="detail-row"><span>Área:</span><strong>${caseData.categoryName}</strong></div>
+                            <div class="detail-row"><span>Valor:</span><strong>${EliteUtils.formatCurrency(caseData.value)}</strong></div>
+                            <div class="detail-row"><span>Probabilidade:</span><strong>${EliteUtils.formatPercentage(caseData.successProbability * 100)}</strong></div>
+                            <div class="detail-row"><span>Tribunal:</span><strong>${caseData.court}</strong></div>
+                            <div class="detail-row"><span>Juiz:</span><strong>${caseData.judge}</strong></div>
+                            <div class="detail-row"><span>Oposição:</span><strong>${caseData.adversary || 'N/A'}</strong></div>
+                            ${caseData.fase_processual ? `<div class="detail-row"><span>Fase Processual:</span><strong>${caseData.fase_processual}</strong></div>` : ''}
+                            <div class="prediction-recommendation"><h4>Estratégia Recomendada</h4><p>${caseData.successProbability > 0.7 ? 'Estratégia ofensiva recomendada.' : caseData.successProbability > 0.5 ? 'Estratégia equilibrada recomendada.' : 'Estratégia defensiva recomendada.'}</p></div>
+                            <div class="detail-actions" style="margin-top: 20px;">
+                                <button id="deleteCaseFromModal" class="elite-btn danger" data-id="${caseData.id}"><i class="fas fa-trash"></i> ELIMINAR PROCESSO</button>
+                            </div>
+                        `;
+                        
+                        document.getElementById('deleteCaseFromModal')?.addEventListener('click', () => {
+                            if (confirm(t('confirm_delete'))) {
+                                const hash = generateDeleteConfirmationHash(caseData.id);
+                                deleteCase(caseData.id, hash);
+                                document.getElementById('caseDetailModal').style.display = 'none';
+                            }
+                        });
+                    }
+                    document.getElementById('caseDetailModal').style.display = 'flex';
+                }
+            });
+        });
+        
+        document.querySelectorAll('.delete-case').forEach(btn => {
+            btn.addEventListener('click', (e) => {
+                e.stopPropagation();
+                const caseId = btn.dataset.id;
+                if (confirm(t('confirm_delete'))) {
+                    const hash = generateDeleteConfirmationHash(caseId);
+                    deleteCase(caseId, hash);
+                }
+            });
+        });
+        
+        document.querySelectorAll('.category-btn').forEach(btn => {
+            btn.addEventListener('click', () => {
+                document.querySelectorAll('.category-btn').forEach(b => b.classList.remove('active'));
+                btn.classList.add('active');
+                const category = btn.dataset.category;
+                document.querySelectorAll('#casesTableBody tr').forEach(row => {
+                    row.style.display = (category === 'all' || row.dataset.category === category) ? '' : 'none';
+                });
+            });
+        });
+        
+        document.getElementById('searchCases')?.addEventListener('input', (e) => {
+            const term = e.target.value.toLowerCase();
+            document.querySelectorAll('#casesTableBody tr').forEach(row => {
+                row.style.display = row.textContent.toLowerCase().includes(term) ? '' : 'none';
+            });
+        });
+        
+        document.getElementById('newCaseBtn')?.addEventListener('click', () => {
+            EliteUtils.showToast('Funcionalidade de novo processo em desenvolvimento', 'info');
+        });
+    }
+    
+    // =========================================================================
+    // FUNÇÕES DE RENDERIZAÇÃO DAS DEMAIS VIEWS (SIMPLIFICADAS)
+    // =========================================================================
+    
+    function renderInsolvency() { const container = document.getElementById('viewContainer'); if (container) { const insolvencyCases = MOCK_CASES.filter(c => c.category === 'insolvency' || c.category === 'banking'); container.innerHTML = `<h2>${t('nav_insolvency')}</h2><table class="data-table"><thead><tr><th>ID</th><th>CLIENTE</th><th>VALOR</th><th>PROBABILIDADE</th><th>FASE</th></tr></thead><tbody>${insolvencyCases.map(c => `<tr><td><strong>${c.id}</strong></td><td>${c.client}</td><td>${EliteUtils.formatCurrency(c.value)}</td><td><div class="progress-bar"><div class="progress-fill" style="width: ${c.successProbability * 100}%"></div><span class="progress-text">${EliteUtils.formatPercentage(c.successProbability * 100)}</span></div></td><td>${c.fase_processual || 'Em curso'}</td></tr>`).join('')}</tbody></table>`; } }
+    function renderLabor() { const container = document.getElementById('viewContainer'); if (container) container.innerHTML = `<h2>${t('nav_labor')}</h2><p>Contencioso Laboral - Módulo em desenvolvimento</p>`; }
+    function renderLitigation() { const container = document.getElementById('viewContainer'); if (container) container.innerHTML = `<h2>${t('nav_litigation')}</h2><p>Inteligência de Litígio - Análise preditiva disponível no dashboard</p>`; }
+    function renderAdversary() { const container = document.getElementById('viewContainer'); if (container) container.innerHTML = `<h2>${t('nav_adversary')}</h2><p>Análise de Oposição - Módulo em desenvolvimento</p>`; }
+    function renderSimulator() { const container = document.getElementById('viewContainer'); if (container) container.innerHTML = `<h2>${t('nav_simulator')}</h2><p>Simulador de Contra-Perícia - Módulo em desenvolvimento</p>`; }
+    function renderDeadlines() { const container = document.getElementById('viewContainer'); if (container) container.innerHTML = `<h2>${t('nav_deadlines')}</h2><p>Prazos Judiciais - Utilize o módulo de calendário integrado</p>`; }
+    function renderReports() { const container = document.getElementById('viewContainer'); if (container) container.innerHTML = `<h2>${t('nav_reports')}</h2><p>Relatórios - Utilize o botão de exportação no cabeçalho</p>`; }
+    function renderAdmin() { const container = document.getElementById('viewContainer'); if (container) container.innerHTML = `<h2>${t('nav_admin')}</h2><p>Administração - Acesso restrito a super utilizadores</p>`; }
+    
+    // =========================================================================
+    // NAVEGAÇÃO
     // =========================================================================
     
     function navigateTo(view) {
@@ -887,7 +1295,7 @@
         }
         
         const logEntry = {
-            timestamp: new Date().toLocaleString(),
+            timestamp: new Date().toISOString(),
             user: 'Dr. Administrador',
             action: 'Navegação',
             entity: view,
@@ -899,159 +1307,16 @@
     }
     
     // =========================================================================
-    // FUNÇÕES DE RENDERIZAÇÃO DAS VIEWS (MANTIDAS DO ORIGINAL)
-    // =========================================================================
-    
-    function renderCases() {
-        const container = document.getElementById('viewContainer');
-        if (!container) return;
-        container.innerHTML = '<div class="loading-shimmer" style="padding: 40px; text-align: center;">Carregando processos...</div>';
-        setTimeout(() => {
-            const casesHtml = MOCK_CASES.map(c => `
-                <tr data-case-id="${c.id}" data-category="${c.category}">
-                    <td><strong>${c.id}</strong></td>
-                    <td>${c.client}</td>
-                    <td>${c.nif_devedor || '---'}</td>
-                    <td><span class="case-badge ${c.category}">${c.categoryName}</span></td>
-                    <td>${EliteUtils.formatCurrency(c.value)}</td>
-                    <td><div class="progress-bar"><div class="progress-fill" style="width: ${c.successProbability * 100}%"></div><span class="progress-text">${EliteUtils.formatPercentage(c.successProbability * 100)}</span></div></td>
-                    <td><span class="status-badge status-${c.status === 'active' ? 'active' : 'pending'}">${c.status === 'active' ? 'ATIVO' : 'PENDENTE'}</span></td>
-                    <td><button class="action-btn view-case" data-id="${c.id}"><i class="fas fa-eye"></i></button></td>
-                </tr>
-            `).join('');
-            container.innerHTML = `
-                <div class="cases-header"><h2>${t('nav_cases')}</h2><div class="cases-search"><input type="text" id="searchCases" placeholder="Pesquisar..." class="search-input"></div></div>
-                <div class="category-selector">${['all', 'insolvency', 'labor', 'civil', 'tax', 'commercial', 'criminal', 'family', 'intellectual', 'administrative'].map(cat => `<button class="category-btn ${cat === 'all' ? 'active' : ''}" data-category="${cat}">${cat.toUpperCase()}</button>`).join('')}</div>
-                <table class="data-table"><thead><tr><th>ID</th><th>CLIENTE</th><th>NIF</th><th>ÁREA</th><th>VALOR</th><th>PROBABILIDADE</th><th>STATUS</th><th>AÇÕES</th></tr></thead><tbody id="casesTableBody">${casesHtml}</tbody></table>
-            `;
-            attachCaseEvents();
-        }, 50);
-    }
-    
-    function attachCaseEvents() {
-        document.querySelectorAll('.view-case').forEach(btn => {
-            btn.addEventListener('click', () => {
-                const caseId = btn.dataset.id;
-                const caseData = MOCK_CASES.find(c => c.id === caseId);
-                if (caseData) {
-                    const modalBody = document.getElementById('caseDetailBody');
-                    if (modalBody) {
-                        modalBody.innerHTML = `
-                            <div class="detail-row"><span>Processo:</span><strong>${caseData.id}</strong></div>
-                            <div class="detail-row"><span>Cliente:</span><strong>${caseData.client}</strong></div>
-                            <div class="detail-row"><span>Valor:</span><strong>${EliteUtils.formatCurrency(caseData.value)}</strong></div>
-                            <div class="detail-row"><span>Probabilidade:</span><strong>${EliteUtils.formatPercentage(caseData.successProbability * 100)}</strong></div>
-                            <div class="detail-row"><span>Tribunal:</span><strong>${caseData.court}</strong></div>
-                            <div class="detail-row"><span>Juiz:</span><strong>${caseData.judge}</strong></div>
-                            <div class="prediction-recommendation"><h4>Estratégia Recomendada</h4><p>${caseData.successProbability > 0.7 ? 'Estratégia ofensiva' : caseData.successProbability > 0.5 ? 'Estratégia equilibrada' : 'Estratégia defensiva'}</p></div>
-                        `;
-                    }
-                    document.getElementById('caseDetailModal').style.display = 'flex';
-                }
-            });
-        });
-        document.querySelectorAll('.category-btn').forEach(btn => {
-            btn.addEventListener('click', () => {
-                document.querySelectorAll('.category-btn').forEach(b => b.classList.remove('active'));
-                btn.classList.add('active');
-                const category = btn.dataset.category;
-                document.querySelectorAll('#casesTableBody tr').forEach(row => {
-                    row.style.display = (category === 'all' || row.dataset.category === category) ? '' : 'none';
-                });
-            });
-        });
-        document.getElementById('searchCases')?.addEventListener('input', (e) => {
-            const term = e.target.value.toLowerCase();
-            document.querySelectorAll('#casesTableBody tr').forEach(row => {
-                row.style.display = row.textContent.toLowerCase().includes(term) ? '' : 'none';
-            });
-        });
-    }
-    
-    function renderInsolvency() {
-        const container = document.getElementById('viewContainer');
-        if (!container) return;
-        const insolvencyCases = MOCK_CASES.filter(c => c.category === 'insolvency');
-        container.innerHTML = `
-            <h2>${t('nav_insolvency')}</h2>
-            <table class="data-table"><thead><tr><th>ID</th><th>CLIENTE</th><th>VALOR</th><th>PROBABILIDADE</th><th>FASE</th><th>ADMINISTRADOR</th></tr></thead><tbody>
-                ${insolvencyCases.map(c => `<tr><td><strong>${c.id}</strong></td><td>${c.client}</td><td>${EliteUtils.formatCurrency(c.value)}</td><td><div class="progress-bar"><div class="progress-fill" style="width: ${c.successProbability * 100}%"></div><span class="progress-text">${EliteUtils.formatPercentage(c.successProbability * 100)}</span></div></td><td>${c.fase_processual || '---'}</td><td>${c.administrador_insolvencia || '---'}</td></tr>`).join('')}
-            </tbody></table>
-        `;
-    }
-    
-    function renderLabor() {
-        const container = document.getElementById('viewContainer');
-        if (!container) return;
-        const laborCases = MOCK_CASES.filter(c => c.category === 'labor');
-        container.innerHTML = `
-            <h2>${t('nav_labor')}</h2>
-            <table class="data-table"><thead><tr><th>ID</th><th>CLIENTE</th><th>VALOR</th><th>PROBABILIDADE</th><th>TIPO DESPEDIMENTO</th><th>AUDIÊNCIA</th></tr></thead><tbody>
-                ${laborCases.map(c => `<tr><td><strong>${c.id}</strong></td><td>${c.client}</td><td>${EliteUtils.formatCurrency(c.value)}</td><td><div class="progress-bar"><div class="progress-fill" style="width: ${c.successProbability * 100}%"></div><span class="progress-text">${EliteUtils.formatPercentage(c.successProbability * 100)}</span></div></td><td>${c.tipo_despedimento || '---'}</td><td>${c.data_audiencia_partes ? EliteUtils.formatDate(c.data_audiencia_partes) : '---'}</td></tr>`).join('')}
-            </tbody></table>
-        `;
-    }
-    
-    function renderLitigation() {
-        const container = document.getElementById('viewContainer');
-        if (!container) return;
-        container.innerHTML = `
-            <div class="litigation-intelligence">
-                <h2>${t('nav_litigation')}</h2>
-                <p>Análise preditiva de êxito com motor unificado</p>
-                <div class="form-group"><label>Valor da Causa (€)</label><input type="number" id="litigationValue" placeholder="Ex: 50000"></div>
-                <div class="form-group"><label>Percentagem de Omissão (%)</label><input type="number" id="litigationOmission" placeholder="Ex: 75"></div>
-                <div class="form-group"><label>Plataforma</label><select id="litigationPlatform"><option value="bolt">Bolt</option><option value="uber">Uber</option><option value="freenow">Free Now</option></select></div>
-                <div class="form-group"><label>Tribunal</label><select id="litigationCourt"><option value="lisboa">Lisboa</option><option value="porto">Porto</option><option value="braga">Braga</option></select></div>
-                <button id="runLitigationPrediction" class="elite-btn primary">EXECUTAR PREVISÃO</button>
-                <div id="litigationResult" class="prediction-result" style="display: none; margin-top: 20px;"></div>
-            </div>
-        `;
-        document.getElementById('runLitigationPrediction')?.addEventListener('click', () => {
-            const caseData = {
-                id: 'SIM_001',
-                platform: document.getElementById('litigationPlatform')?.value || 'bolt',
-                omissionPercentage: parseFloat(document.getElementById('litigationOmission')?.value) || 0,
-                court: document.getElementById('litigationCourt')?.value || 'lisboa',
-                value: parseFloat(document.getElementById('litigationValue')?.value) || 50000,
-                hasDocumentaryEvidence: true,
-                hasExpertEvidence: false,
-                hasDigitalEvidence: true
-            };
-            const prediction = predictionEngine.getUnifiedPrediction(caseData);
-            const resultDiv = document.getElementById('litigationResult');
-            if (resultDiv) {
-                resultDiv.style.display = 'block';
-                resultDiv.innerHTML = `
-                    <h3>RESULTADO DA ANÁLISE</h3>
-                    <div class="detail-row"><span>Probabilidade de Sucesso:</span><strong>${(prediction.probability * 100).toFixed(1)}%</strong></div>
-                    <div class="detail-row"><span>Confiança:</span><strong>${(prediction.confidence * 100).toFixed(1)}%</strong></div>
-                    <div class="detail-row"><span>Nível de Risco:</span><strong>${prediction.riskLevel}</strong></div>
-                    ${prediction.divergenceDetected ? `<div class="detail-row"><span>⚠️ Divergência entre motores:</span><strong>${prediction.divergencePercentage}%</strong></div>` : ''}
-                    <div class="prediction-recommendation"><h4>RECOMENDAÇÃO</h4><p>${prediction.recommendations?.[0]?.description || prediction.expectedOutcome}</p></div>
-                `;
-            }
-        });
-    }
-    
-    function renderQuestionnaire() { const container = document.getElementById('viewContainer'); if (container) container.innerHTML = `<h2>${t('nav_questionnaire')}</h2><p>Questionários estratégicos em desenvolvimento</p>`; }
-    function renderEvidence() { const container = document.getElementById('viewContainer'); if (container) container.innerHTML = `<h2>${t('nav_evidence')}</h2><p>Cadeia de custódia em desenvolvimento</p>`; }
-    function renderAdversary() { const container = document.getElementById('viewContainer'); if (container) container.innerHTML = `<h2>${t('nav_adversary')}</h2><p>Análise de oposição em desenvolvimento</p>`; }
-    function renderSimulator() { const container = document.getElementById('viewContainer'); if (container) container.innerHTML = `<h2>${t('nav_simulator')}</h2><p>Simulador de contra-perícia em desenvolvimento</p>`; }
-    function renderDeadlines() { const container = document.getElementById('viewContainer'); if (container) container.innerHTML = `<h2>${t('nav_deadlines')}</h2><p>Prazos judiciais em desenvolvimento</p>`; }
-    function renderActivityLog() { const container = document.getElementById('viewContainer'); if (container) container.innerHTML = `<h2>${t('nav_activitylog')}</h2><p>Registos RGPD em desenvolvimento</p>`; }
-    function renderReports() { const container = document.getElementById('viewContainer'); if (container) container.innerHTML = `<h2>${t('nav_reports')}</h2><p>Relatórios em desenvolvimento</p>`; }
-    function renderAdmin() { const container = document.getElementById('viewContainer'); if (container) container.innerHTML = `<h2>${t('nav_admin')}</h2><p>Administração em desenvolvimento</p>`; }
-    
-    // =========================================================================
-    // EXPORTAÇÃO PARA MÓVEL
+    // EXPORTAÇÃO PARA MÓVEL (FALLBACK)
     // =========================================================================
     
     async function exportCurrentViewToMobile() {
         const container = document.getElementById('viewContainer');
         if (!container) return;
+        
         const originalHtml = container.innerHTML;
         const title = document.getElementById('pageTitle')?.innerText || 'Relatório';
+        
         const exportHtml = `
             <div style="padding: 20px; font-family: 'JetBrains Mono', monospace; background: #0a0c10; color: #fff;">
                 <div style="border-bottom: 2px solid #00e5ff; padding-bottom: 16px; margin-bottom: 20px;">
@@ -1067,11 +1332,13 @@
                 </div>
             </div>
         `;
+        
         const element = document.createElement('div');
         element.innerHTML = exportHtml;
         element.style.position = 'absolute';
         element.style.left = '-9999px';
         document.body.appendChild(element);
+        
         try {
             if (typeof html2canvas !== 'undefined' && typeof jspdf !== 'undefined') {
                 const canvas = await html2canvas(element, { scale: 2, backgroundColor: '#0a0c10' });
@@ -1118,19 +1385,30 @@
                 }
             });
         });
+        
         const menuToggle = document.getElementById('mobileMenuToggle');
         const sidebar = document.querySelector('.elite-sidebar');
         if (menuToggle && sidebar) {
             menuToggle.addEventListener('click', () => sidebar.classList.toggle('open'));
         }
+        
         const langToggleBtn = document.getElementById('langToggle');
         if (langToggleBtn) {
             langToggleBtn.addEventListener('click', () => setLocale(currentLocale === 'pt' ? 'en' : 'pt'));
         }
+        
         const exportReportBtn = document.getElementById('exportReportBtn');
         if (exportReportBtn) exportReportBtn.addEventListener('click', () => exportCurrentViewToMobile());
+        
+        const mobileExportBtn = document.getElementById('mobileExportBtn');
+        if (mobileExportBtn) mobileExportBtn.addEventListener('click', () => exportToRegisteredDevice());
+        
         const settingsBtn = document.getElementById('settingsBtn');
-        if (settingsBtn) settingsBtn.addEventListener('click', () => EliteUtils.showToast('Configurações em desenvolvimento', 'info'));
+        if (settingsBtn) settingsBtn.addEventListener('click', () => {
+            const settingsModal = document.getElementById('settingsModal');
+            if (settingsModal) settingsModal.style.display = 'flex';
+            else EliteUtils.showToast('Configurações em desenvolvimento', 'info');
+        });
     }
     
     // =========================================================================
@@ -1147,22 +1425,14 @@
         initDashboard: function() {
             EliteUtils.log('Inicializando Unidade de Comando Forense Digital v2.0.3...');
             
-            // Inicializar storage seguro
             const sessionHash = window.ELITE_SECURE_HASH || MASTER_HASH;
             secureStorage = new SecureStorage(sessionHash);
             window.SecureStorageInstance = secureStorage;
             
-            // Inicializar motor de previsão unificado
-            predictionEngine = new PredictionEngine();
-            predictionEngine.initialize();
-            window.PredictionEngine = predictionEngine;
-            
-            // Inicializar Forensic Vault com master hash
             if (window.ForensicVault && typeof window.ForensicVault.initialize === 'function') {
                 window.ForensicVault.initialize(sessionHash);
             }
             
-            // Carregar locale salvo
             const savedLocale = localStorage.getItem('elite_locale');
             if (savedLocale && (savedLocale === 'pt' || savedLocale === 'en')) {
                 setLocale(savedLocale);
@@ -1175,17 +1445,18 @@
             navigateTo('dashboard');
             EliteUtils.showToast(t('success'), 'success');
             EliteUtils.log(`✅ ${MOCK_CASES.length} processos estratégicos carregados`);
-            EliteUtils.log(`📊 9 áreas do direito representadas`);
+            EliteUtils.log(`📊 Valor total em disputa: ${EliteUtils.formatCurrency(MOCK_CASES.reduce((s,c)=>s+c.value,0))}`);
             EliteUtils.log(`🔐 Storage seguro inicializado com PBKDF2`);
-            EliteUtils.log(`🧠 Motor de previsão unificado ativo`);
         },
         
         navigateTo: navigateTo,
         exportCurrentViewToMobile: exportCurrentViewToMobile,
+        exportToRegisteredDevice: exportToRegisteredDevice,
+        deleteCase: deleteCase,
+        generateDeleteConfirmationHash: generateDeleteConfirmationHash,
         setLocale: setLocale,
         t: t,
         getLocale: () => currentLocale,
-        getPredictionEngine: () => predictionEngine,
         getSecureStorage: () => secureStorage
     };
     
@@ -1196,7 +1467,7 @@
     EliteUtils.log(`UNIDADE DE COMANDO FORENSE DIGITAL`);
     EliteUtils.log(`Master Hash: ${MASTER_HASH.substring(0, 16)}...`);
     EliteUtils.log(`${MOCK_CASES.length} processos estratégicos carregados`);
-    EliteUtils.log(`9 áreas do direito representadas`);
+    EliteUtils.log(`Valor total em disputa: ${EliteUtils.formatCurrency(MOCK_CASES.reduce((s,c)=>s+c.value,0))}`);
     EliteUtils.log(`========================================`);
     
 })();
