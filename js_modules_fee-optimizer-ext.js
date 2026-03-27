@@ -1,913 +1,904 @@
 /**
  * ============================================================================
- * ELITE PROBATUM v2.0.5 — MÓDULO DE COMPENSAÇÃO ESTRATÉGICA
- * INTEGRAÇÃO: MRE + FEE OPTIMIZER
+ * ELITE PROBATUM v2.0.5 — MÓDULO DE VALUE-BASED PRICING ANALYTICS
+ * ANÁLISE DE CUSTO DE OPORTUNIDADE E ROI ESTRATÉGICO
  * ============================================================================
- * ADITAMENTO AO FeeOptimizer EXISTENTE:
- * 1. Cálculo de bónus baseado em ranking de medalhas
- * 2. Integração com Gamification System para performance tracking
- * 3. Geração de relatórios de performance executiva
- * 4. Selagem de bónus no Forensic Vault para auditoria
- * 5. Cálculo de ROI por advogado e por equipa
- * 6. Previsão de performance futura baseada em histórico
+ * INOVAÇÃO ESTRATÉGICA:
+ * Business Intelligence & Value-Based Pricing Analytics
+ * 
+ * Funcionalidades:
+ * 1. Cálculo de Custo de Oportunidade por processo
+ * 2. Análise de ROI de Eficiência Automática
+ * 3. Modelos de precificação baseados em valor
+ * 4. Previsão de rentabilidade por caso
+ * 5. Dashboards executivos de performance financeira
  * ============================================================================
  */
 
-// EXTENSÃO DO FeeOptimizer EXISTENTE
-(function() {
-    'use strict';
+class ValueBasedPricingAnalytics {
+    constructor() {
+        this.feeModels = this.loadFeeModels();
+        this.efficiencyMetrics = this.loadEfficiencyMetrics();
+        this.roiHistory = this.loadROIHistory();
+        this.opportunityCosts = this.loadOpportunityCosts();
+        this.initialized = false;
+        
+        this.loadROIHistory();
+        this.loadOpportunityCosts();
+    }
     
-    // Verificar se FeeOptimizer existe
-    if (typeof window.FeeOptimizer === 'undefined') {
-        console.error('[ELITE] FeeOptimizer não encontrado. O módulo de compensação não será carregado.');
-        // Criar objeto temporário para não quebrar a extensão
-        window.FeeOptimizer = {
-            calculatePerformanceBonus: function() { return { valid: false, error: 'FeeOptimizer não inicializado' }; },
-            generateExecutiveReport: function() { return null; },
-            exportExecutiveReport: function() { return null; }
+    /**
+     * Inicializa o módulo de pricing analytics
+     */
+    initialize() {
+        this.initialized = true;
+        console.log('[ELITE] Value-Based Pricing Analytics inicializado - Análise de ROI Estratégico');
+        return this;
+    }
+    
+    /**
+     * Carrega modelos de precificação
+     */
+    loadFeeModels() {
+        return {
+            hourly: {
+                name: 'Honorários por Hora',
+                baseRate: 250,
+                multiplier: 1.0,
+                applicableCases: ['all'],
+                complexityMultiplier: {
+                    low: 1.0,
+                    medium: 1.3,
+                    high: 1.8,
+                    critical: 2.5
+                },
+                description: 'Modelo tradicional baseado em horas efetivamente trabalhadas'
+            },
+            fixed: {
+                name: 'Honorários Fixos',
+                baseRate: 5000,
+                multiplier: 1.0,
+                applicableCases: ['standard', 'predictable'],
+                complexityMultiplier: {
+                    low: 0.8,
+                    medium: 1.2,
+                    high: 1.6,
+                    critical: 2.0
+                },
+                description: 'Valor fixo por fase processual ou por caso'
+            },
+            contingency: {
+                name: 'Honorários de Êxito',
+                baseRate: 0.20,
+                multiplier: 1.0,
+                applicableCases: ['high_value', 'favorable_odds'],
+                complexityMultiplier: {
+                    low: 0.15,
+                    medium: 0.20,
+                    high: 0.25,
+                    critical: 0.30
+                },
+                description: 'Percentual sobre o valor recuperado (20-30%)'
+            },
+            hybrid: {
+                name: 'Modelo Híbrido',
+                baseRate: 3000,
+                multiplier: 0.12,
+                applicableCases: ['complex', 'uncertain'],
+                complexityMultiplier: {
+                    low: 0.08,
+                    medium: 0.12,
+                    high: 0.18,
+                    critical: 0.25
+                },
+                description: 'Parte fixa + percentual sobre êxito'
+            },
+            valueBased: {
+                name: 'Precificação Baseada em Valor',
+                baseRate: 0,
+                multiplier: 0,
+                applicableCases: ['strategic', 'high_impact'],
+                complexityMultiplier: {
+                    low: 1.0,
+                    medium: 1.5,
+                    high: 2.2,
+                    critical: 3.0
+                },
+                description: 'Valor baseado no benefício económico para o cliente'
+            }
         };
     }
     
-    const originalOptimizer = window.FeeOptimizer;
-    
     /**
-     * Calcula o bónus final baseado no ranking de medalhas do semestre/ano
-     * @param {Object} lawyerStats - Dados de performance do advogado
-     * @param {Array} medals - Medalhas conquistadas no período
-     * @param {Object} periodConfig - Configuração do período (semestre/ano)
-     * @returns {Object} Cálculo de bónus com validação
+     * Carrega métricas de eficiência
      */
-    originalOptimizer.calculatePerformanceBonus = function(lawyerStats, medals, periodConfig = {}) {
-        if (!lawyerStats || !lawyerStats.fixedSalary) {
-            return {
-                error: 'Dados insuficientes para cálculo de bónus',
-                valid: false
-            };
-        }
-        
-        const baseBonusRate = periodConfig.baseBonusRate || 0.10; // 10% do salário base
-        const baseBonus = lawyerStats.fixedSalary * baseBonusRate;
-        
-        // Mapeamento de medalhas para multiplicadores
-        const medalMultipliers = {
-            'PLATINUM': 0.50,  // +50% do bónus base
-            'GOLD': 0.30,      // +30% do bónus base
-            'SILVER': 0.15,    // +15% do bónus base
-            'BRONZE': 0.05,    // +5% do bónus base
-            'DIAMOND': 1.00,   // +100% do bónus base (performance excecional)
-            'MASTER': 0.75,    // +75% do bónus base
-            'ELITE': 2.00      // +200% do bónus base (performance extraordinária)
-        };
-        
-        let multiplier = 1.0;
-        const appliedMedals = [];
-        
-        // Aplicar multiplicadores cumulativos por medalha
-        for (const medal of medals) {
-            const medalKey = typeof medal === 'string' ? medal : (medal.id || medal);
-            const medalMultiplier = medalMultipliers[medalKey];
-            if (medalMultiplier) {
-                multiplier += medalMultiplier;
-                appliedMedals.push({
-                    id: medalKey,
-                    name: this.getMedalName(medalKey),
-                    multiplier: medalMultiplier,
-                    description: this.getMedalDescription(medalKey)
-                });
-            }
-        }
-        
-        // Bónus adicional por performance excecional
-        let performanceBonus = 0;
-        if (lawyerStats.casesWon && lawyerStats.casesWon > 20) {
-            performanceBonus += 0.15;
-            appliedMedals.push({
-                id: 'PERFORMANCE',
-                name: 'Performance Excecional',
-                multiplier: 0.15,
-                description: `+15% por ${lawyerStats.casesWon} vitórias no período`
-            });
-        }
-        
-        if (lawyerStats.efficiency && lawyerStats.efficiency > 0.9) {
-            performanceBonus += 0.10;
-            appliedMedals.push({
-                id: 'EFFICIENCY',
-                name: 'Eficiência Superior',
-                multiplier: 0.10,
-                description: `+10% por eficiência de ${(lawyerStats.efficiency * 100).toFixed(0)}%`
-            });
-        }
-        
-        if (lawyerStats.reputation && lawyerStats.reputation > 90) {
-            performanceBonus += 0.05;
-            appliedMedals.push({
-                id: 'REPUTATION',
-                name: 'Excelência no Atendimento',
-                multiplier: 0.05,
-                description: `+5% por reputação de ${lawyerStats.reputation} pontos`
-            });
-        }
-        
-        multiplier += performanceBonus;
-        
-        // Cap máximo de 3.0x (300% do bónus base)
-        const finalMultiplier = Math.min(multiplier, 3.0);
-        const finalBonus = baseBonus * finalMultiplier;
-        
-        // Calcular métricas adicionais
-        const performanceMetrics = {
-            casesWon: lawyerStats.casesWon || 0,
-            casesLost: lawyerStats.casesLost || 0,
-            successRate: lawyerStats.casesWon && lawyerStats.casesLost ? 
-                (lawyerStats.casesWon / (lawyerStats.casesWon + lawyerStats.casesLost)) * 100 : 0,
-            hoursBilled: lawyerStats.hoursBilled || 0,
-            efficiency: lawyerStats.efficiency || 0,
-            reputation: lawyerStats.reputation || 0,
-            streak: lawyerStats.streak || 0,
-            level: lawyerStats.level || 1
-        };
-        
-        // Gerar hash de validação para auditoria
-        const validationData = `${lawyerStats.id}_${baseBonus}_${finalMultiplier}_${finalBonus}_${Date.now()}`;
-        const validationHash = CryptoJS.SHA256(validationData).toString();
-        
-        // Calcular ROI do advogado
-        const roi = this.calculateLawyerROI(lawyerStats, finalBonus);
-        
-        // Registrar no Forensic Vault se disponível
-        if (window.ForensicVault && typeof window.ForensicVault.logAccess === 'function') {
-            window.ForensicVault.logAccess('SYSTEM', 'BONUS_CALCULATION', lawyerStats.id, {
-                lawyerId: lawyerStats.id,
-                baseBonus: baseBonus,
-                finalBonus: finalBonus,
-                multiplier: finalMultiplier,
-                medals: appliedMedals,
-                validationHash: validationHash,
-                timestamp: new Date().toISOString(),
-                roi: roi
-            });
-        }
-        
+    loadEfficiencyMetrics() {
         return {
-            valid: true,
-            lawyerId: lawyerStats.id,
-            lawyerName: lawyerStats.name || lawyerStats.id,
-            period: periodConfig.period || 'current',
-            baseSalary: lawyerStats.fixedSalary,
-            baseBonusRate: baseBonusRate,
-            baseBonus: baseBonus,
-            baseBonusFormatted: this.formatCurrency(baseBonus),
-            appliedMedals: appliedMedals,
-            totalMultiplier: finalMultiplier.toFixed(2),
-            finalBonus: finalBonus,
-            finalBonusFormatted: this.formatCurrency(finalBonus),
-            currency: 'EUR',
-            performanceMetrics: performanceMetrics,
-            roi: roi,
-            validationHash: validationHash,
-            generatedAt: new Date().toISOString(),
-            recommendation: this.generateBonusRecommendation(performanceMetrics, finalMultiplier),
-            paymentStatus: 'PENDING_APPROVAL'
-        };
-    };
-    
-    /**
-     * Calcula ROI do advogado para o período
-     */
-    originalOptimizer.calculateLawyerROI = function(lawyerStats, bonusAmount) {
-        const revenueGenerated = lawyerStats.hoursBilled * 150; // Assumindo taxa média de €150/hora
-        const totalCompensation = (lawyerStats.fixedSalary || 5000) * 3 + bonusAmount; // Trimestre
-        const roi = revenueGenerated > 0 ? ((revenueGenerated - totalCompensation) / totalCompensation) * 100 : 0;
-        
-        return {
-            revenueGenerated: revenueGenerated,
-            revenueGeneratedFormatted: this.formatCurrency(revenueGenerated),
-            totalCompensation: totalCompensation,
-            totalCompensationFormatted: this.formatCurrency(totalCompensation),
-            roiPercentage: roi.toFixed(1),
-            roiMultiplier: (revenueGenerated / totalCompensation).toFixed(2),
-            assessment: roi > 50 ? 'EXCELENTE' : roi > 20 ? 'BOM' : roi > 0 ? 'SATISFATÓRIO' : 'ATENÇÃO'
-        };
-    };
-    
-    /**
-     * Obtém nome amigável da medalha
-     */
-    originalOptimizer.getMedalName = function(medalId) {
-        const names = {
-            'PLATINUM': 'Platina',
-            'GOLD': 'Ouro',
-            'SILVER': 'Prata',
-            'BRONZE': 'Bronze',
-            'DIAMOND': 'Diamante',
-            'MASTER': 'Mestre',
-            'ELITE': 'Elite'
-        };
-        return names[medalId] || medalId;
-    };
-    
-    /**
-     * Obtém descrição da medalha
-     */
-    originalOptimizer.getMedalDescription = function(medalId) {
-        const descriptions = {
-            'PLATINUM': 'Top 3 no ranking geral - Performance superior',
-            'GOLD': 'Top 10 no ranking geral - Performance destacada',
-            'SILVER': 'Top 20 no ranking geral - Performance consistente',
-            'BRONZE': 'Top 50 no ranking geral - Performance positiva',
-            'DIAMOND': 'Performance excecional - Caso de referência',
-            'MASTER': 'Especialista reconhecido na área',
-            'ELITE': 'Performance extraordinária - Benchmark'
-        };
-        return descriptions[medalId] || 'Medalha de reconhecimento';
-    };
-    
-    /**
-     * Gera recomendação de bónus baseada em performance
-     */
-    originalOptimizer.generateBonusRecommendation = function(metrics, multiplier) {
-        const successRate = metrics.successRate;
-        const efficiency = metrics.efficiency;
-        
-        if (successRate > 80 && efficiency > 0.85) {
-            return {
-                level: 'EXCEPCIONAL',
-                message: 'Performance excecional. Bónus máximo recomendado.',
-                additionalConsideration: 'Considerar promoção ou aumento salarial',
-                nextTarget: 'Manter taxa de sucesso >85% no próximo trimestre'
-            };
-        } else if (successRate > 70 && efficiency > 0.75) {
-            return {
-                level: 'SUPERIOR',
-                message: 'Performance superior à média. Bónus integral recomendado.',
-                additionalConsideration: 'Manter incentivos atuais',
-                nextTarget: 'Aumentar taxa de sucesso para 75%'
-            };
-        } else if (successRate > 60) {
-            return {
-                level: 'SATISFATÓRIO',
-                message: 'Performance dentro do esperado. Bónus proporcional recomendado.',
-                additionalConsideration: 'Identificar áreas de melhoria',
-                nextTarget: 'Reforçar formação em áreas de maior complexidade'
-            };
-        } else {
-            return {
-                level: 'ATENÇÃO',
-                message: 'Performance abaixo do esperado. Revisão de estratégia recomendada.',
-                additionalConsideration: 'Plano de desenvolvimento individual',
-                nextTarget: 'Acompanhamento mensal de métricas de performance'
-            };
-        }
-    };
-    
-    /**
-     * Calcula bónus para múltiplos advogados (equipa)
-     * @param {Array} lawyers - Lista de advogados com seus stats e medalhas
-     * @param {Object} periodConfig - Configuração do período
-     * @returns {Object} Resumo de bónus da equipa
-     */
-    originalOptimizer.calculateTeamBonus = function(lawyers, periodConfig = {}) {
-        const results = [];
-        let totalBonus = 0;
-        let totalBaseBonus = 0;
-        let totalRevenue = 0;
-        
-        for (const lawyer of lawyers) {
-            const bonus = this.calculatePerformanceBonus(lawyer.stats, lawyer.medals, periodConfig);
-            if (bonus.valid) {
-                results.push(bonus);
-                totalBonus += bonus.finalBonus;
-                totalBaseBonus += bonus.baseBonus;
-                totalRevenue += bonus.roi?.revenueGenerated || 0;
-            }
-        }
-        
-        const averageMultiplier = totalBaseBonus > 0 ? totalBonus / totalBaseBonus : 0;
-        const teamROI = totalRevenue > 0 ? ((totalRevenue - totalBonus) / totalBonus) * 100 : 0;
-        
-        // Gerar ranking por performance
-        const ranking = [...results].sort((a, b) => b.finalBonus - a.finalBonus);
-        
-        return {
-            period: periodConfig.period || 'current',
-            totalLawyers: results.length,
-            totalBaseBonus: totalBaseBonus,
-            totalBaseBonusFormatted: this.formatCurrency(totalBaseBonus),
-            totalBonus: totalBonus,
-            totalBonusFormatted: this.formatCurrency(totalBonus),
-            averageMultiplier: averageMultiplier.toFixed(2),
-            teamROI: teamROI.toFixed(1),
-            teamROIPercent: teamROI.toFixed(1) + '%',
-            individualBonuses: results,
-            topPerformer: ranking[0] || null,
-            ranking: ranking.map((r, idx) => ({
-                rank: idx + 1,
-                lawyerName: r.lawyerName,
-                bonus: r.finalBonusFormatted,
-                multiplier: r.totalMultiplier,
-                medals: r.appliedMedals.map(m => m.name)
-            })),
-            validationHash: CryptoJS.SHA256(JSON.stringify(results) + Date.now()).toString(),
-            generatedAt: new Date().toISOString(),
-            recommendation: teamROI > 50 ? 'Equipa de alta performance. Manter incentivos.' : 
-                           teamROI > 20 ? 'Equipa produtiva. Considerar aumentos adicionais.' :
-                           'Revisão de estratégia recomendada para equipa.'
-        };
-    };
-    
-    /**
-     * Gera relatório de performance executiva para sócios
-     * @param {string} period - Período (monthly, quarterly, yearly)
-     * @returns {Object} Relatório executivo
-     */
-    originalOptimizer.generateExecutiveReport = function(period = 'quarterly') {
-        // Obter dados de performance do Gamification System se disponível
-        let podiumData = null;
-        let leaderboardData = [];
-        
-        if (window.GamificationSystem && typeof window.GamificationSystem.getLeaderboard === 'function') {
-            podiumData = window.GamificationSystem.getLeaderboard();
-            leaderboardData = podiumData || [];
-        }
-        
-        // Obter dados de performance do Practice Dashboard se disponível
-        let teamData = null;
-        if (window.PracticeDashboard && window.PracticeDashboard.data) {
-            teamData = window.PracticeDashboard.data;
-        }
-        
-        const reportId = `REP-${Date.now()}-${Math.random().toString(36).substr(2, 8).toUpperCase()}`;
-        
-        // Simular podium de advogados para demonstração
-        const simulatedPodium = {
-            topBilling: [
-                { name: 'Dr. Ricardo S.', lawyerId: 'L001', revenue: 145200, medal: 'PLATINUM', casesWon: 12 },
-                { name: 'Dra. Helena M.', lawyerId: 'L002', revenue: 112000, medal: 'GOLD', casesWon: 9 },
-                { name: 'Dr. Nuno F.', lawyerId: 'L003', revenue: 89000, medal: 'SILVER', casesWon: 7 },
-                { name: 'Dra. Sofia R.', lawyerId: 'L004', revenue: 67000, medal: 'BRONZE', casesWon: 5 },
-                { name: 'Dr. Miguel A.', lawyerId: 'L005', revenue: 52000, medal: 'BRONZE', casesWon: 4 }
-            ],
-            topResolution: [
-                { name: 'Dra. Helena M.', lawyerId: 'L002', casesClosed: 12, medal: 'PLATINUM', avgDuration: 85 },
-                { name: 'Dr. Ricardo S.', lawyerId: 'L001', casesClosed: 9, medal: 'GOLD', avgDuration: 92 },
-                { name: 'Dr. Nuno F.', lawyerId: 'L003', casesClosed: 7, medal: 'SILVER', avgDuration: 78 },
-                { name: 'Dra. Sofia R.', lawyerId: 'L004', casesClosed: 5, medal: 'BRONZE', avgDuration: 95 },
-                { name: 'Dr. Pedro L.', lawyerId: 'L006', casesClosed: 4, medal: 'BRONZE', avgDuration: 88 }
-            ],
-            topEfficiency: [
-                { name: 'Dr. Nuno F.', lawyerId: 'L003', efficiency: 0.94, medal: 'PLATINUM', hoursBilled: 520 },
-                { name: 'Dra. Helena M.', lawyerId: 'L002', efficiency: 0.91, medal: 'GOLD', hoursBilled: 485 },
-                { name: 'Dr. Ricardo S.', lawyerId: 'L001', efficiency: 0.87, medal: 'SILVER', hoursBilled: 560 },
-                { name: 'Dra. Sofia R.', lawyerId: 'L004', efficiency: 0.82, medal: 'BRONZE', hoursBilled: 410 },
-                { name: 'Dr. Pedro L.', lawyerId: 'L006', efficiency: 0.79, medal: 'BRONZE', hoursBilled: 380 }
-            ],
-            topAcquisition: [
-                { name: 'Dr. Nuno F.', lawyerId: 'L003', pipelineValue: 85000, medal: 'GOLD', newClients: 8 },
-                { name: 'Dra. Helena M.', lawyerId: 'L002', pipelineValue: 62000, medal: 'SILVER', newClients: 6 },
-                { name: 'Dr. Ricardo S.', lawyerId: 'L001', pipelineValue: 48000, medal: 'BRONZE', newClients: 5 },
-                { name: 'Dra. Sofia R.', lawyerId: 'L004', pipelineValue: 35000, medal: 'BRONZE', newClients: 4 }
-            ]
-        };
-        
-        // Calcular bónus para cada vencedor
-        const bonusMap = [];
-        const baseSalary = 5000; // Salário base simulado
-        
-        for (const category of Object.keys(simulatedPodium)) {
-            for (const entry of simulatedPodium[category]) {
-                const lawyerStats = {
-                    id: entry.lawyerId,
-                    name: entry.name,
-                    fixedSalary: baseSalary,
-                    casesWon: entry.casesWon || 0,
-                    hoursBilled: entry.hoursBilled || 150,
-                    efficiency: entry.efficiency || 0.8,
-                    reputation: 85
-                };
-                
-                const bonusCalc = this.calculatePerformanceBonus(
-                    lawyerStats,
-                    [{ id: entry.medal }],
-                    { period: period, baseBonusRate: 0.10 }
-                );
-                
-                if (bonusCalc.valid) {
-                    bonusMap.push({
-                        advogado: entry.name,
-                        categoria: this.getCategoryName(category),
-                        medalha: this.getMedalName(entry.medal),
-                        metric: category === 'topBilling' ? `€${entry.revenue.toLocaleString()}` :
-                                category === 'topResolution' ? `${entry.casesClosed} casos` :
-                                category === 'topEfficiency' ? `${(entry.efficiency * 100).toFixed(0)}% eficiência` :
-                                `€${entry.pipelineValue.toLocaleString()}`,
-                        bonus_sugerido: bonusCalc.finalBonus,
-                        base_bonus: bonusCalc.baseBonus,
-                        multiplier: bonusCalc.totalMultiplier,
-                        roi: bonusCalc.roi,
-                        status: 'Aguardando Disparo Bancário (SEPA)',
-                        validationHash: bonusCalc.validationHash,
-                        paymentDeadline: this.calculatePaymentDeadline(period)
-                    });
+            industryAverages: {
+                hourlyRate: 220,
+                avgHoursPerCase: 45,
+                successRate: 0.65,
+                costPerHour: 85
+            },
+            benchmarks: {
+                topQuartile: {
+                    successRate: 0.82,
+                    avgResolutionDays: 95,
+                    clientSatisfaction: 92
+                },
+                median: {
+                    successRate: 0.68,
+                    avgResolutionDays: 135,
+                    clientSatisfaction: 78
+                },
+                bottomQuartile: {
+                    successRate: 0.52,
+                    avgResolutionDays: 180,
+                    clientSatisfaction: 62
                 }
+            },
+            efficiencyFactors: {
+                digitalEvidence: 0.15,
+                specializedTeam: 0.12,
+                aiAssisted: 0.20,
+                precedentResearch: 0.08,
+                templateAutomation: 0.10
+            }
+        };
+    }
+    
+    /**
+     * Carrega histórico de ROI
+     */
+    loadROIHistory() {
+        const stored = localStorage.getItem('elite_roi_history');
+        if (stored) {
+            try {
+                return JSON.parse(stored);
+            } catch (e) {
+                console.error('[ELITE] Erro ao carregar histórico de ROI:', e);
+                return [];
             }
         }
+        return [];
+    }
+    
+    /**
+     * Carrega custos de oportunidade
+     */
+    loadOpportunityCosts() {
+        const stored = localStorage.getItem('elite_opportunity_costs');
+        if (stored) {
+            try {
+                return JSON.parse(stored);
+            } catch (e) {
+                console.error('[ELITE] Erro ao carregar custos de oportunidade:', e);
+                return {};
+            }
+        }
+        return {
+            capitalCost: 0.08,
+            alternativeInvestment: 0.12,
+            marketRate: 0.10
+        };
+    }
+    
+    /**
+     * Salva histórico de ROI
+     */
+    saveROIHistory() {
+        if (this.roiHistory.length > 500) {
+            this.roiHistory = this.roiHistory.slice(0, 500);
+        }
+        localStorage.setItem('elite_roi_history', JSON.stringify(this.roiHistory));
+    }
+    
+    /**
+     * Salva custos de oportunidade
+     */
+    saveOpportunityCosts() {
+        localStorage.setItem('elite_opportunity_costs', JSON.stringify(this.opportunityCosts));
+    }
+    
+    /**
+     * Calcula Custo de Oportunidade para um processo
+     * @param {Object} caseData - Dados do processo
+     * @returns {Object} Análise de custo de oportunidade
+     */
+    calculateOpportunityCost(caseData) {
+        const caseValue = caseData.value || 0;
+        const expectedDuration = caseData.expectedDuration || 180;
+        const successProbability = caseData.successProbability || 0.65;
         
-        // Calcular total de bónus da equipa
-        const totalBonuses = bonusMap.reduce((sum, b) => sum + b.bonus_sugerido, 0);
-        const averageBonus = bonusMap.length > 0 ? totalBonuses / bonusMap.length : 0;
+        // Custo de capital imobilizado
+        const capitalCostRate = this.opportunityCosts.capitalCost || 0.08;
+        const capitalCost = caseValue * capitalCostRate * (expectedDuration / 365);
         
-        // Calcular ROI total da equipa
-        const totalRevenue = simulatedPodium.topBilling.reduce((sum, b) => sum + b.revenue, 0);
-        const teamROI = totalRevenue > 0 ? ((totalRevenue - totalBonuses) / totalBonuses) * 100 : 0;
+        // Custo de oportunidade de investimento alternativo
+        const alternativeRate = this.opportunityCosts.alternativeInvestment || 0.12;
+        const alternativeReturn = caseValue * alternativeRate * (expectedDuration / 365);
         
-        // Gerar projeções para próximo período
-        const projections = this.generateProjections(bonusMap, period);
+        // Custo de oportunidade de recursos humanos
+        const resourceCost = this.calculateResourceOpportunityCost(caseData);
         
-        // Gerar hash mestre do relatório
-        const masterHash = CryptoJS.SHA256(
-            reportId + JSON.stringify(bonusMap) + period + Date.now()
-        ).toString();
+        // Custo de oportunidade total
+        const totalOpportunityCost = capitalCost + alternativeReturn + resourceCost;
         
-        // Registrar no Forensic Vault
-        if (window.ForensicVault && typeof window.ForensicVault.logAccess === 'function') {
-            window.ForensicVault.logAccess('SYSTEM', 'EXECUTIVE_REPORT_GENERATED', 'partner', {
-                reportId: reportId,
-                period: period,
-                totalBonuses: totalBonuses,
-                totalRevenue: totalRevenue,
-                teamROI: teamROI,
-                masterHash: masterHash,
-                timestamp: new Date().toISOString()
+        // Custo de oportunidade ajustado pela probabilidade
+        const riskAdjustedCost = totalOpportunityCost * (1 - successProbability);
+        
+        return {
+            capitalCost: capitalCost,
+            capitalCostFormatted: this.formatCurrency(capitalCost),
+            alternativeReturn: alternativeReturn,
+            alternativeReturnFormatted: this.formatCurrency(alternativeReturn),
+            resourceCost: resourceCost,
+            resourceCostFormatted: this.formatCurrency(resourceCost),
+            totalOpportunityCost: totalOpportunityCost,
+            totalOpportunityCostFormatted: this.formatCurrency(totalOpportunityCost),
+            riskAdjustedCost: riskAdjustedCost,
+            riskAdjustedCostFormatted: this.formatCurrency(riskAdjustedCost),
+            percentageOfValue: ((totalOpportunityCost / caseValue) * 100).toFixed(1) + '%',
+            recommendation: totalOpportunityCost > caseValue * 0.2 
+                ? 'Custo de oportunidade elevado - acelerar resolução'
+                : 'Custo de oportunidade dentro do esperado'
+        };
+    }
+    
+    /**
+     * Calcula custo de oportunidade de recursos humanos
+     */
+    calculateResourceOpportunityCost(caseData) {
+        const hoursSpent = caseData.hoursSpent || 0;
+        const resourceLevel = caseData.resourceLevel || 'senior';
+        
+        const hourlyRates = {
+            senior: 180,
+            associate: 120,
+            junior: 80,
+            partner: 250
+        };
+        
+        const rate = hourlyRates[resourceLevel] || 150;
+        const resourceCost = hoursSpent * rate;
+        
+        // Custo de oportunidade por alocação de recursos
+        const allocationCost = resourceCost * 0.15;
+        
+        return resourceCost + allocationCost;
+    }
+    
+    /**
+     * Calcula ROI de Eficiência Automática
+     * @param {Object} caseData - Dados do processo
+     * @param {Object} efficiencyGains - Ganhos de eficiência
+     * @returns {Object} Análise de ROI
+     */
+    calculateEfficiencyROI(caseData, efficiencyGains = {}) {
+        const traditionalHours = caseData.estimatedHours || 120;
+        const actualHours = caseData.actualHours || traditionalHours * 0.7;
+        
+        // Calcular ganhos de eficiência
+        const hoursSaved = traditionalHours - actualHours;
+        const hourlyRate = this.feeModels.hourly.baseRate;
+        const directSavings = hoursSaved * hourlyRate;
+        
+        // Aplicar fatores de eficiência
+        let efficiencyMultiplier = 1.0;
+        if (efficiencyGains.digitalEvidence) efficiencyMultiplier += this.efficiencyMetrics.efficiencyFactors.digitalEvidence;
+        if (efficiencyGains.specializedTeam) efficiencyMultiplier += this.efficiencyMetrics.efficiencyFactors.specializedTeam;
+        if (efficiencyGains.aiAssisted) efficiencyMultiplier += this.efficiencyMetrics.efficiencyFactors.aiAssisted;
+        if (efficiencyGains.precedentResearch) efficiencyMultiplier += this.efficiencyMetrics.efficiencyFactors.precedentResearch;
+        if (efficiencyGains.templateAutomation) efficiencyMultiplier += this.efficiencyMetrics.efficiencyFactors.templateAutomation;
+        
+        const adjustedSavings = directSavings * efficiencyMultiplier;
+        
+        // Custo da implementação da eficiência
+        const implementationCost = this.calculateImplementationCost(efficiencyGains);
+        
+        // ROI
+        const netBenefit = adjustedSavings - implementationCost;
+        const roi = implementationCost > 0 ? (netBenefit / implementationCost) * 100 : 100;
+        
+        // Payback period
+        const monthlyBenefit = netBenefit / (caseData.expectedDuration / 30);
+        const paybackMonths = monthlyBenefit > 0 ? (implementationCost / monthlyBenefit) : 0;
+        
+        const result = {
+            traditionalHours: traditionalHours,
+            actualHours: actualHours,
+            hoursSaved: hoursSaved,
+            directSavings: directSavings,
+            directSavingsFormatted: this.formatCurrency(directSavings),
+            efficiencyMultiplier: efficiencyMultiplier.toFixed(2),
+            adjustedSavings: adjustedSavings,
+            adjustedSavingsFormatted: this.formatCurrency(adjustedSavings),
+            implementationCost: implementationCost,
+            implementationCostFormatted: this.formatCurrency(implementationCost),
+            netBenefit: netBenefit,
+            netBenefitFormatted: this.formatCurrency(netBenefit),
+            roi: roi.toFixed(1),
+            roiClassification: roi > 200 ? 'Excelente' : roi > 100 ? 'Bom' : roi > 50 ? 'Moderado' : 'Baixo',
+            paybackMonths: paybackMonths.toFixed(1),
+            recommendation: roi > 100 ? 'Investimento em eficiência altamente recomendado' :
+                           roi > 50 ? 'Investimento recomendado' :
+                           'Avaliar viabilidade do investimento'
+        };
+        
+        // Registrar no histórico
+        this.roiHistory.unshift({
+            caseId: caseData.id,
+            timestamp: new Date().toISOString(),
+            efficiencyGains: efficiencyGains,
+            result: result
+        });
+        this.saveROIHistory();
+        
+        return result;
+    }
+    
+    /**
+     * Calcula custo de implementação da eficiência
+     */
+    calculateImplementationCost(efficiencyGains) {
+        let cost = 0;
+        
+        if (efficiencyGains.digitalEvidence) cost += 2500;
+        if (efficiencyGains.specializedTeam) cost += 5000;
+        if (efficiencyGains.aiAssisted) cost += 8000;
+        if (efficiencyGains.precedentResearch) cost += 1500;
+        if (efficiencyGains.templateAutomation) cost += 2000;
+        
+        return cost;
+    }
+    
+    /**
+     * Otimiza modelo de precificação para um caso
+     * @param {Object} caseData - Dados do processo
+     * @returns {Object} Recomendação de modelo de precificação
+     */
+    optimizePricing(caseData) {
+        const caseValue = caseData.value || 0;
+        const successProbability = caseData.successProbability || 0.65;
+        const complexity = caseData.complexity || 'medium';
+        const expectedHours = caseData.estimatedHours || 80;
+        
+        const models = [];
+        
+        // Calcular cada modelo
+        for (const [key, model] of Object.entries(this.feeModels)) {
+            let fee = 0;
+            let value = 0;
+            
+            switch(key) {
+                case 'hourly':
+                    fee = expectedHours * model.baseRate;
+                    fee *= model.complexityMultiplier[complexity];
+                    value = fee;
+                    break;
+                case 'fixed':
+                    fee = model.baseRate;
+                    fee *= model.complexityMultiplier[complexity];
+                    value = fee;
+                    break;
+                case 'contingency':
+                    fee = caseValue * model.baseRate;
+                    fee *= model.complexityMultiplier[complexity];
+                    value = fee * successProbability;
+                    break;
+                case 'hybrid':
+                    const fixedPart = model.baseRate;
+                    const variablePart = caseValue * model.multiplier;
+                    fee = fixedPart + variablePart;
+                    fee *= model.complexityMultiplier[complexity];
+                    value = fixedPart + (variablePart * successProbability);
+                    break;
+                case 'valueBased':
+                    const valueMultiplier = this.calculateValueMultiplier(caseData);
+                    fee = caseValue * 0.15 * valueMultiplier;
+                    fee *= model.complexityMultiplier[complexity];
+                    value = fee * successProbability;
+                    break;
+            }
+            
+            // Calcular ROI para o cliente
+            const clientROI = caseValue > 0 ? ((caseValue - fee) / fee) * 100 : 0;
+            
+            models.push({
+                id: key,
+                name: model.name,
+                description: model.description,
+                fee: Math.round(fee),
+                feeFormatted: this.formatCurrency(fee),
+                expectedValue: Math.round(value),
+                expectedValueFormatted: this.formatCurrency(value),
+                clientROI: clientROI.toFixed(1),
+                clientROIFormatted: clientROI.toFixed(1) + '%',
+                riskProfile: key === 'hourly' ? 'Baixo (cliente)' : 
+                            key === 'fixed' ? 'Moderado' :
+                            key === 'contingency' ? 'Alto (escritório)' :
+                            key === 'hybrid' ? 'Equilibrado' : 'Personalizado',
+                recommendation: this.getPricingRecommendation(key, clientROI, successProbability)
             });
         }
         
-        return {
-            reportId: reportId,
-            title: 'RELATÓRIO DE PERFORMANCE E MERITOCRACIA CORPORATIVA',
-            generatedAt: new Date().toISOString(),
-            generatedAtFormatted: new Date().toLocaleString('pt-PT', { timeZone: 'UTC' }),
-            period: period,
-            periodLabel: this.getPeriodLabel(period),
-            systemVersion: 'v2.0.5',
-            executiveSummary: {
-                totalBonusPool: totalBonuses,
-                totalBonusPoolFormatted: this.formatCurrency(totalBonuses),
-                averageBonusPerLawyer: averageBonus,
-                averageBonusPerLawyerFormatted: this.formatCurrency(averageBonus),
-                topPerformer: bonusMap[0]?.advogado || 'N/A',
-                topPerformerBonus: bonusMap[0]?.bonus_sugerido || 0,
-                topPerformerBonusFormatted: this.formatCurrency(bonusMap[0]?.bonus_sugerido || 0),
-                teamROI: teamROI.toFixed(1) + '%',
-                totalRevenue: totalRevenue,
-                totalRevenueFormatted: this.formatCurrency(totalRevenue),
-                totalLawyersIncentivized: bonusMap.length
-            },
-            rankings: simulatedPodium,
-            bonusAutomation: bonusMap,
-            projections: projections,
-            auditTrail: {
-                masterHash: masterHash,
-                verificationUrl: `#verify/${reportId}`,
-                generatedBy: window.ELITE_SESSION_ID || 'system',
-                timestamp: new Date().toISOString()
-            },
-            legalCompliance: [
-                'Cálculo baseado em métricas objetivas de performance',
-                'Registo imutável no Forensic Vault',
-                'Audit trail completo para verificação',
-                'Conformidade com políticas de remuneração variável',
-                'Transparência total nos critérios de atribuição'
-            ]
-        };
-    };
-    
-    /**
-     * Calcula data limite para pagamento
-     */
-    originalOptimizer.calculatePaymentDeadline = function(period) {
-        const now = new Date();
-        let deadline = new Date(now);
+        // Ordenar por valor esperado
+        models.sort((a, b) => b.expectedValue - a.expectedValue);
         
-        switch(period) {
-            case 'monthly':
-                deadline.setDate(deadline.getDate() + 15);
-                break;
-            case 'quarterly':
-                deadline.setDate(deadline.getDate() + 30);
-                break;
-            case 'yearly':
-                deadline.setMonth(deadline.getMonth() + 1);
-                break;
-            default:
-                deadline.setDate(deadline.getDate() + 20);
-        }
+        // Identificar modelo ótimo
+        const optimalModel = models[0];
         
-        return deadline.toLocaleDateString('pt-PT');
-    };
-    
-    /**
-     * Obtém rótulo do período
-     */
-    originalOptimizer.getPeriodLabel = function(period) {
-        const labels = {
-            'monthly': 'Mensal',
-            'quarterly': 'Trimestral',
-            'yearly': 'Anual'
-        };
-        return labels[period] || period;
-    };
-    
-    /**
-     * Gera projeções para próximo período
-     */
-    originalOptimizer.generateProjections = function(bonusMap, period) {
-        const historicalTotal = bonusMap.reduce((sum, b) => sum + b.bonus_sugerido, 0);
-        const growthRate = 0.12; // 12% de crescimento esperado
-        
-        const multipliers = {
-            'monthly': 1,
-            'quarterly': 3,
-            'yearly': 12
-        };
-        
-        const multiplier = multipliers[period] || 1;
+        // Calcular custo de oportunidade
+        const opportunityCost = this.calculateOpportunityCost(caseData);
         
         return {
-            nextPeriodBonus: historicalTotal * (1 + growthRate),
-            nextPeriodBonusFormatted: this.formatCurrency(historicalTotal * (1 + growthRate)),
-            annualizedBonus: historicalTotal * multiplier,
-            annualizedBonusFormatted: this.formatCurrency(historicalTotal * multiplier),
-            expectedGrowth: (growthRate * 100).toFixed(0) + '%',
-            confidence: 0.85,
-            basedOn: 'Análise histórica de performance e tendências de mercado'
+            caseId: caseData.id,
+            caseValue: caseValue,
+            caseValueFormatted: this.formatCurrency(caseValue),
+            successProbability: successProbability,
+            successProbabilityPercent: (successProbability * 100).toFixed(1) + '%',
+            complexity: complexity,
+            expectedHours: expectedHours,
+            models: models,
+            optimalModel: optimalModel,
+            opportunityCost: opportunityCost,
+            recommendation: this.generatePricingStrategy(optimalModel, caseData, opportunityCost),
+            competitiveAnalysis: this.analyzeCompetitivePricing(caseData)
         };
-    };
+    }
     
     /**
-     * Exporta relatório executivo para HTML/PDF
+     * Calcula multiplicador de valor baseado no caso
      */
-    originalOptimizer.exportExecutiveReport = async function(period = 'quarterly') {
-        const report = this.generateExecutiveReport(period);
+    calculateValueMultiplier(caseData) {
+        let multiplier = 1.0;
         
-        const reportHtml = `
-            <!DOCTYPE html>
-            <html>
-            <head>
-                <meta charset="UTF-8">
-                <title>Relatório de Performance - ${report.reportId}</title>
-                <style>
-                    body {
-                        font-family: 'JetBrains Mono', monospace;
-                        background: white;
-                        color: #0a0c10;
-                        padding: 40px;
-                        margin: 0;
-                        line-height: 1.5;
-                    }
-                    .header {
-                        text-align: center;
-                        border-bottom: 2px solid #00e5ff;
-                        padding-bottom: 20px;
-                        margin-bottom: 30px;
-                    }
-                    .logo { font-size: 24px; font-weight: bold; color: #00e5ff; }
-                    .title { font-size: 18px; font-weight: bold; margin: 20px 0; text-align: center; }
-                    .summary-grid {
-                        display: grid;
-                        grid-template-columns: repeat(4, 1fr);
-                        gap: 20px;
-                        margin: 20px 0;
-                    }
-                    .summary-card {
-                        background: #f8fafc;
-                        padding: 20px;
-                        border-radius: 12px;
-                        text-align: center;
-                        border: 1px solid #e2e8f0;
-                    }
-                    .summary-value {
-                        font-size: 24px;
-                        font-weight: bold;
-                        color: #00e5ff;
-                    }
-                    .summary-label {
-                        font-size: 12px;
-                        color: #64748b;
-                        margin-top: 8px;
-                    }
-                    .rankings-grid {
-                        display: grid;
-                        grid-template-columns: repeat(2, 1fr);
-                        gap: 20px;
-                        margin: 20px 0;
-                    }
-                    .ranking-card {
-                        background: #f8fafc;
-                        padding: 20px;
-                        border-radius: 12px;
-                        border: 1px solid #e2e8f0;
-                    }
-                    .ranking-card h4 {
-                        margin-top: 0;
-                        border-bottom: 1px solid #e2e8f0;
-                        padding-bottom: 8px;
-                    }
-                    .ranking-item {
-                        display: flex;
-                        align-items: center;
-                        gap: 12px;
-                        padding: 10px 0;
-                        border-bottom: 1px solid #e2e8f0;
-                        font-size: 12px;
-                    }
-                    .ranking-item.first {
-                        background: linear-gradient(90deg, rgba(255,215,0,0.1), transparent);
-                    }
-                    .rank { width: 30px; font-weight: bold; }
-                    .name { flex: 1; }
-                    .value { font-weight: bold; color: #00e5ff; }
-                    .medal { font-size: 14px; }
-                    table {
-                        width: 100%;
-                        border-collapse: collapse;
-                        margin: 20px 0;
-                    }
-                    th, td {
-                        border: 1px solid #e2e8f0;
-                        padding: 12px;
-                        text-align: left;
-                        font-size: 12px;
-                    }
-                    th {
-                        background: #f1f5f9;
-                        font-weight: 600;
-                    }
-                    .footer {
-                        margin-top: 50px;
-                        padding-top: 20px;
-                        border-top: 1px solid #e2e8f0;
-                        font-size: 10px;
-                        text-align: center;
-                        color: #94a3b8;
-                    }
-                    .hash {
-                        font-family: monospace;
-                        font-size: 10px;
-                        word-break: break-all;
-                    }
-                    .projection-card {
-                        background: #e8f0fe;
-                        padding: 16px;
-                        border-radius: 12px;
-                        margin: 20px 0;
-                        border-left: 4px solid #00e5ff;
-                    }
-                    @media print {
-                        body { padding: 20px; }
-                        .summary-grid { break-inside: avoid; }
-                        .rankings-grid { break-inside: avoid; }
-                        table { break-inside: avoid; }
-                    }
-                </style>
-            </head>
-            <body>
-                <div class="header">
-                    <div class="logo">ELITE PROBATUM</div>
-                    <div>UNIDADE DE COMANDO FORENSE DIGITAL</div>
-                </div>
-                
-                <div class="title">${report.title}</div>
-                <div class="title">Período: ${report.periodLabel.toUpperCase()}</div>
-                
-                <div class="summary-grid">
-                    <div class="summary-card">
-                        <div class="summary-value">${report.executiveSummary.totalBonusPoolFormatted}</div>
-                        <div class="summary-label">Total de Bónus</div>
-                    </div>
-                    <div class="summary-card">
-                        <div class="summary-value">${report.executiveSummary.averageBonusPerLawyerFormatted}</div>
-                        <div class="summary-label">Bónus Médio por Advogado</div>
-                    </div>
-                    <div class="summary-card">
-                        <div class="summary-value">${report.executiveSummary.topPerformer}</div>
-                        <div class="summary-label">Top Performer</div>
-                    </div>
-                    <div class="summary-card">
-                        <div class="summary-value">${report.executiveSummary.teamROI}</div>
-                        <div class="summary-label">ROI da Equipa</div>
-                    </div>
-                </div>
-                
-                <div class="rankings-grid">
-                    <div class="ranking-card">
-                        <h4><i class="fas fa-trophy"></i> Top Faturação</h4>
-                        ${report.rankings.topBilling.map((p, i) => `
-                            <div class="ranking-item ${i === 0 ? 'first' : ''}">
-                                <span class="rank">${i + 1}º</span>
-                                <span class="name">${p.name}</span>
-                                <span class="value">€${p.revenue.toLocaleString()}</span>
-                                <span class="medal">🏅 ${p.medal}</span>
-                            </div>
-                        `).join('')}
-                    </div>
-                    <div class="ranking-card">
-                        <h4><i class="fas fa-gavel"></i> Resolução de Casos</h4>
-                        ${report.rankings.topResolution.map((p, i) => `
-                            <div class="ranking-item ${i === 0 ? 'first' : ''}">
-                                <span class="rank">${i + 1}º</span>
-                                <span class="name">${p.name}</span>
-                                <span class="value">${p.casesClosed} casos</span>
-                                <span class="medal">🏅 ${p.medal}</span>
-                            </div>
-                        `).join('')}
-                    </div>
-                    <div class="ranking-card">
-                        <h4><i class="fas fa-chart-line"></i> Eficiência</h4>
-                        ${report.rankings.topEfficiency.map((p, i) => `
-                            <div class="ranking-item ${i === 0 ? 'first' : ''}">
-                                <span class="rank">${i + 1}º</span>
-                                <span class="name">${p.name}</span>
-                                <span class="value">${(p.efficiency * 100).toFixed(0)}%</span>
-                                <span class="medal">🏅 ${p.medal}</span>
-                            </div>
-                        `).join('')}
-                    </div>
-                    <div class="ranking-card">
-                        <h4><i class="fas fa-chart-line"></i> Angariação</h4>
-                        ${report.rankings.topAcquisition.map((p, i) => `
-                            <div class="ranking-item ${i === 0 ? 'first' : ''}">
-                                <span class="rank">${i + 1}º</span>
-                                <span class="name">${p.name}</span>
-                                <span class="value">€${p.pipelineValue.toLocaleString()}</span>
-                                <span class="medal">🏅 ${p.medal}</span>
-                            </div>
-                        `).join('')}
-                    </div>
-                </div>
-                
-                <h3>QUADRO DE HONRA E BÓNUS AUTOMATIZADOS</h3>
-                <table>
-                    <thead>
-                        <tr><th>ADVOGADO</th><th>CATEGORIA</th><th>MEDALHA</th><th>MÉTRICA</th><th>BÓNUS SUGERIDO</th><th>STATUS</th> </thead>
-                    <tbody>
-                        ${report.bonusAutomation.map(b => `
-                            <tr>
-                                <td><strong>${b.advogado}</strong> </div>
-                                <td>${b.categoria} </div>
-                                <td><span style="color: ${b.medalha === 'Platina' ? '#ffd700' : b.medalha === 'Ouro' ? '#ffc107' : '#c0c0c0'}">🏅 ${b.medalha}</span> </div>
-                                <td>${b.metric} </div>
-                                <td><strong>${b.bonus_sugerido.toLocaleString()}€</strong> </div>
-                                <td>${b.status} </div>
-                             </div>
-                        `).join('')}
-                    </tbody>
-                </table>
-                
-                <div class="projection-card">
-                    <h4>📈 PROJEÇÕES PARA O PRÓXIMO PERÍODO</h4>
-                    <p><strong>Bónus Projetado:</strong> ${report.projections.nextPeriodBonusFormatted}</p>
-                    <p><strong>Crescimento Esperado:</strong> ${report.projections.expectedGrowth}</p>
-                    <p><strong>Bónus Anualizado:</strong> ${report.projections.annualizedBonusFormatted}</p>
-                    <p><small>Baseado em análise histórica de performance e tendências de mercado. Confiança: ${(report.projections.confidence * 100).toFixed(0)}%</small></p>
-                </div>
-                
-                <div class="footer">
-                    <p><strong>Hash de Validação:</strong> ${report.auditTrail.masterHash.substring(0, 32)}...</p>
-                    <p>Relatório gerado por ELITE PROBATUM v2.0.5 • Sistema de Compensação Meritocrática</p>
-                    <p>Este documento é uma prova de cálculo de bónus baseado em métricas objetivas de performance.</p>
-                    <p>Para verificação, utilize o código: ${report.reportId}</p>
-                </div>
-            </body>
-            </html>
-        `;
+        // Fator de impacto estratégico
+        if (caseData.strategicImportance) multiplier += 0.5;
         
-        const blob = new Blob([reportHtml], { type: 'text/html' });
-        const link = document.createElement('a');
-        link.href = URL.createObjectURL(blob);
-        link.download = `executive_report_${report.reportId}.html`;
-        link.click();
-        URL.revokeObjectURL(link.href);
+        // Fator de precedente
+        if (caseData.precedentValue) multiplier += 0.3;
         
-        if (window.EliteUtils) {
-            window.EliteUtils.showToast(`Relatório executivo gerado: ${report.reportId}`, 'success');
+        // Fator de visibilidade
+        if (caseData.highVisibility) multiplier += 0.4;
+        
+        // Fator de inovação
+        if (caseData.innovative) multiplier += 0.2;
+        
+        return Math.min(multiplier, 2.5);
+    }
+    
+    /**
+     * Obtém recomendação de precificação
+     */
+    getPricingRecommendation(modelId, clientROI, successProbability) {
+        if (modelId === 'contingency' && successProbability > 0.7) {
+            return 'Recomendado para casos com alta probabilidade de êxito';
+        }
+        if (modelId === 'hourly' && clientROI < 50) {
+            return 'Recomendado quando o ROI é inferior a 50%';
+        }
+        if (modelId === 'fixed' && clientROI > 100) {
+            return 'Excelente opção quando o ROI é superior a 100%';
+        }
+        if (modelId === 'hybrid') {
+            return 'Bom equilíbrio entre risco e retorno';
+        }
+        if (modelId === 'valueBased') {
+            return 'Ideal para casos de alto valor estratégico';
+        }
+        return 'Modelo viável dependendo do perfil de risco do cliente';
+    }
+    
+    /**
+     * Gera estratégia de precificação
+     */
+    generatePricingStrategy(optimalModel, caseData, opportunityCost) {
+        const strategy = {
+            recommendedModel: optimalModel.name,
+            rationale: '',
+            negotiationLevers: [],
+            targetFee: optimalModel.fee,
+            targetFeeFormatted: this.formatCurrency(optimalModel.fee),
+            minimumAcceptable: Math.round(optimalModel.fee * 0.8),
+            minimumAcceptableFormatted: this.formatCurrency(optimalModel.fee * 0.8),
+            expectedValue: optimalModel.expectedValue,
+            expectedValueFormatted: this.formatCurrency(optimalModel.expectedValue)
+        };
+        
+        if (optimalModel.id === 'valueBased') {
+            strategy.rationale = 'O caso tem alto valor estratégico, justificando precificação baseada em valor';
+            strategy.negotiationLevers = ['Valor estratégico do caso', 'Precedente jurisprudencial', 'Visibilidade do caso'];
+        } else if (optimalModel.id === 'contingency') {
+            strategy.rationale = `Alta probabilidade de sucesso (${(caseData.successProbability * 100).toFixed(0)}%) justifica modelo de contingência`;
+            strategy.negotiationLevers = ['Percentual de êxito', 'Valor mínimo garantido', 'Bónus por performance superior'];
+        } else if (optimalModel.id === 'hybrid') {
+            strategy.rationale = 'Equilíbrio entre risco do cliente e retorno do escritório';
+            strategy.negotiationLevers = ['Parte fixa', 'Percentual variável', 'Escalonamento por fase'];
+        } else {
+            strategy.rationale = 'Modelo tradicional com previsibilidade para o cliente';
+            strategy.negotiationLevers = ['Desconto por volume', 'Pacote de serviços', 'Condições de pagamento'];
         }
         
-        return report;
-    };
+        if (opportunityCost.totalOpportunityCost > caseData.value * 0.15) {
+            strategy.rationale += '. Custo de oportunidade elevado recomenda acelerar resolução.';
+            strategy.negotiationLevers.push('Priorização do caso');
+        }
+        
+        return strategy;
+    }
     
     /**
-     * Obtém nome amigável da categoria
+     * Analisa precificação competitiva
      */
-    originalOptimizer.getCategoryName = function(category) {
-        const names = {
-            'topBilling': 'Top Faturação',
-            'topResolution': 'Resolução de Casos',
-            'topEfficiency': 'Eficiência',
-            'topAcquisition': 'Angariação'
+    analyzeCompetitivePricing(caseData) {
+        const marketAverage = this.efficiencyMetrics.industryAverages;
+        const caseComplexity = caseData.complexity || 'medium';
+        
+        const complexityMultipliers = {
+            low: 0.8,
+            medium: 1.0,
+            high: 1.4,
+            critical: 2.0
         };
-        return names[category] || category;
-    };
+        
+        const multiplier = complexityMultipliers[caseComplexity] || 1.0;
+        
+        const competitiveAnalysis = {
+            marketAverageHourly: marketAverage.hourlyRate * multiplier,
+            marketAverageHourlyFormatted: this.formatCurrency(marketAverage.hourlyRate * multiplier),
+            topQuartileHourly: (marketAverage.hourlyRate * 1.3) * multiplier,
+            topQuartileHourlyFormatted: this.formatCurrency((marketAverage.hourlyRate * 1.3) * multiplier),
+            marketAverageSuccessRate: (marketAverage.successRate * 100).toFixed(0) + '%',
+            topQuartileSuccessRate: this.efficiencyMetrics.benchmarks.topQuartile.successRate * 100 + '%',
+            positioning: caseData.successProbability > this.efficiencyMetrics.benchmarks.topQuartile.successRate 
+                ? 'Acima do mercado' 
+                : caseData.successProbability > marketAverage.successRate 
+                ? 'Em linha com mercado' 
+                : 'Abaixo do mercado',
+            competitiveAdvantage: caseData.successProbability > this.efficiencyMetrics.benchmarks.topQuartile.successRate
+                ? 'Alta performance justifica prémio de 15-20%'
+                : caseData.successProbability > marketAverage.successRate
+                ? 'Performance sólida permite posicionamento competitivo'
+                : 'Necessário reforçar diferenciais para justificar preço'
+        };
+        
+        return competitiveAnalysis;
+    }
+    
+    /**
+     * Calcula ROI total da carteira
+     */
+    calculatePortfolioROI(cases) {
+        if (!cases || cases.length === 0) return null;
+        
+        let totalValue = 0;
+        let totalFees = 0;
+        let totalOpportunityCost = 0;
+        let totalEfficiencyGain = 0;
+        
+        for (const caseData of cases) {
+            totalValue += caseData.value || 0;
+            
+            const pricing = this.optimizePricing(caseData);
+            totalFees += pricing.optimalModel.fee;
+            
+            const opportunityCost = this.calculateOpportunityCost(caseData);
+            totalOpportunityCost += opportunityCost.totalOpportunityCost;
+            
+            const efficiencyROI = this.calculateEfficiencyROI(caseData);
+            totalEfficiencyGain += efficiencyROI.netBenefit;
+        }
+        
+        const totalROI = totalFees > 0 ? ((totalValue - totalFees) / totalFees) * 100 : 0;
+        const efficiencyImpact = totalEfficiencyGain / totalFees * 100;
+        
+        return {
+            totalCases: cases.length,
+            totalValue: totalValue,
+            totalValueFormatted: this.formatCurrency(totalValue),
+            totalFees: totalFees,
+            totalFeesFormatted: this.formatCurrency(totalFees),
+            totalOpportunityCost: totalOpportunityCost,
+            totalOpportunityCostFormatted: this.formatCurrency(totalOpportunityCost),
+            totalEfficiencyGain: totalEfficiencyGain,
+            totalEfficiencyGainFormatted: this.formatCurrency(totalEfficiencyGain),
+            totalROI: totalROI.toFixed(1),
+            totalROIFormatted: totalROI.toFixed(1) + '%',
+            efficiencyImpact: efficiencyImpact.toFixed(1) + '%',
+            averageFeePerCase: totalFees / cases.length,
+            averageFeePerCaseFormatted: this.formatCurrency(totalFees / cases.length),
+            averageValuePerCase: totalValue / cases.length,
+            averageValuePerCaseFormatted: this.formatCurrency(totalValue / cases.length),
+            portfolioEfficiency: this.classifyPortfolioEfficiency(totalROI, efficiencyImpact)
+        };
+    }
+    
+    /**
+     * Classifica eficiência da carteira
+     */
+    classifyPortfolioEfficiency(roi, efficiencyImpact) {
+        if (roi > 200 && efficiencyImpact > 30) return 'Excelente';
+        if (roi > 100 && efficiencyImpact > 20) return 'Bom';
+        if (roi > 50 && efficiencyImpact > 10) return 'Moderado';
+        return 'Necessita Melhoria';
+    }
     
     /**
      * Formata moeda
      */
-    originalOptimizer.formatCurrency = function(value) {
+    formatCurrency(value) {
         if (value === null || value === undefined) return '€0';
+        if (Math.abs(value) >= 1000000) {
+            return new Intl.NumberFormat('pt-PT', { style: 'currency', currency: 'EUR', minimumFractionDigits: 0, maximumFractionDigits: 0 }).format(value);
+        }
         return new Intl.NumberFormat('pt-PT', { style: 'currency', currency: 'EUR', minimumFractionDigits: 2, maximumFractionDigits: 2 }).format(value);
-    };
+    }
     
     /**
-     * Verifica integridade de um cálculo de bónus
+     * Gera relatório executivo de pricing
      */
-    originalOptimizer.verifyBonusIntegrity = function(bonusRecord) {
-        if (!bonusRecord || !bonusRecord.validationHash) {
-            return { valid: false, error: 'Registo de bónus inválido' };
-        }
+    generateExecutiveReport(cases) {
+        const portfolioROI = this.calculatePortfolioROI(cases);
+        const opportunities = [];
         
-        const validationData = `${bonusRecord.lawyerId}_${bonusRecord.baseBonus}_${bonusRecord.totalMultiplier}_${bonusRecord.finalBonus}_${bonusRecord.generatedAt}`;
-        const expectedHash = CryptoJS.SHA256(validationData).toString();
-        
-        const hashValid = expectedHash === bonusRecord.validationHash;
-        
-        // Verificar no Forensic Vault se disponível
-        let vaultValid = true;
-        if (window.ForensicVault && typeof window.ForensicVault.getAccessLogs === 'function') {
-            const logs = window.ForensicVault.getAccessLogs('SYSTEM', 100);
-            const bonusLog = logs.find(l => l.action === 'BONUS_CALCULATION' && 
-                l.metadata?.lawyerId === bonusRecord.lawyerId);
-            vaultValid = !!bonusLog;
+        for (const caseData of cases) {
+            const pricing = this.optimizePricing(caseData);
+            if (pricing.optimalModel.id === 'valueBased' && caseData.successProbability > 0.75) {
+                opportunities.push({
+                    caseId: caseData.id,
+                    client: caseData.client,
+                    value: caseData.value,
+                    recommendedModel: pricing.optimalModel.name,
+                    expectedFee: pricing.optimalModel.fee,
+                    expectedFeeFormatted: this.formatCurrency(pricing.optimalModel.fee)
+                });
+            }
         }
         
         return {
-            valid: hashValid && vaultValid,
-            hashValid: hashValid,
-            vaultValid: vaultValid,
-            recordId: bonusRecord.lawyerId,
-            generatedAt: bonusRecord.generatedAt,
-            integrityScore: (hashValid ? 50 : 0) + (vaultValid ? 50 : 0)
+            generatedAt: new Date().toISOString(),
+            generatedAtFormatted: new Date().toLocaleString('pt-PT'),
+            portfolioAnalysis: portfolioROI,
+            opportunities: opportunities.slice(0, 5),
+            recommendations: this.generatePricingRecommendations(portfolioROI, opportunities),
+            benchmarks: this.efficiencyMetrics.benchmarks,
+            industryAverages: this.efficiencyMetrics.industryAverages
         };
-    };
+    }
     
     /**
-     * Gera ranking completo com base em múltiplas métricas
+     * Gera recomendações de pricing
      */
-    originalOptimizer.generateComprehensiveRanking = function(lawyers, period = 'quarterly') {
-        const rankings = [];
+    generatePricingRecommendations(portfolioROI, opportunities) {
+        const recommendations = [];
         
-        for (const lawyer of lawyers) {
-            const stats = lawyer.stats;
-            const medals = lawyer.medals || [];
-            
-            const bonus = this.calculatePerformanceBonus(stats, medals, { period: period });
-            if (!bonus.valid) continue;
-            
-            // Calcular score composto
-            const revenueScore = (stats.hoursBilled * 150) / 10000;
-            const efficiencyScore = (stats.efficiency || 0.7) * 100;
-            const successScore = (stats.casesWon / (stats.casesWon + stats.casesLost || 1)) * 100;
-            const reputationScore = (stats.reputation || 70);
-            
-            const compositeScore = (revenueScore * 0.3) + (efficiencyScore * 0.25) + (successScore * 0.3) + (reputationScore * 0.15);
-            
-            rankings.push({
-                lawyerId: stats.id,
-                lawyerName: stats.name,
-                compositeScore: compositeScore.toFixed(1),
-                rank: 0,
-                bonus: bonus.finalBonus,
-                bonusFormatted: this.formatCurrency(bonus.finalBonus),
-                metrics: {
-                    revenue: stats.hoursBilled * 150,
-                    revenueFormatted: this.formatCurrency(stats.hoursBilled * 150),
-                    efficiency: (stats.efficiency || 0.7) * 100,
-                    successRate: (stats.casesWon / (stats.casesWon + stats.casesLost || 1)) * 100,
-                    reputation: stats.reputation || 70,
-                    medals: medals
-                }
+        if (portfolioROI && portfolioROI.totalROI < 100) {
+            recommendations.push({
+                area: 'Estratégia de Precificação',
+                action: 'Revisar modelos de precificação para casos de menor rentabilidade',
+                priority: 'Alta',
+                expectedImpact: 'Aumento de 15-20% na rentabilidade média'
             });
         }
         
-        // Ordenar por score composto
-        rankings.sort((a, b) => b.compositeScore - a.compositeScore);
+        if (opportunities.length > 0) {
+            recommendations.push({
+                area: 'Oportunidades de Valor',
+                action: `Aplicar modelo Value-Based em ${opportunities.length} casos identificados`,
+                priority: 'Média',
+                expectedImpact: `Potencial de aumento de receita em ${this.formatCurrency(opportunities.reduce((sum, o) => sum + o.expectedFee, 0) * 0.2)}`
+            });
+        }
         
-        // Atribuir ranks
-        rankings.forEach((r, idx) => {
-            r.rank = idx + 1;
-            r.medal = idx === 0 ? 'DIAMOND' : idx < 3 ? 'PLATINUM' : idx < 10 ? 'GOLD' : idx < 20 ? 'SILVER' : 'BRONZE';
-        });
+        if (portfolioROI && portfolioROI.efficiencyImpact < 15) {
+            recommendations.push({
+                area: 'Eficiência Operacional',
+                action: 'Implementar automações e ferramentas de IA para ganhos de eficiência',
+                priority: 'Alta',
+                expectedImpact: 'Redução de 20-25% em horas alocadas'
+            });
+        }
         
-        return {
-            period: period,
-            generatedAt: new Date().toISOString(),
-            totalLawyers: rankings.length,
-            rankings: rankings,
-            topQuartile: rankings.filter(r => r.rank <= rankings.length / 4),
-            bottomQuartile: rankings.filter(r => r.rank > rankings.length * 3 / 4),
-            averageScore: rankings.reduce((sum, r) => sum + parseFloat(r.compositeScore), 0) / rankings.length
-        };
-    };
+        return recommendations;
+    }
     
-    console.log('[ELITE] FeeOptimizer estendido com Módulo de Compensação Meritocrática v1.0');
-    
-})();
+    /**
+     * Renderiza dashboard de pricing analytics
+     */
+    renderDashboard(containerId, caseData) {
+        const container = document.getElementById(containerId);
+        if (!container) return;
+        
+        const pricing = this.optimizePricing(caseData);
+        const opportunityCost = this.calculateOpportunityCost(caseData);
+        const efficiencyROI = this.calculateEfficiencyROI(caseData);
+        
+        container.innerHTML = `
+            <div class="value-pricing-dashboard">
+                <div class="dashboard-header">
+                    <h2><i class="fas fa-chart-line"></i> VALUE-BASED PRICING ANALYTICS</h2>
+                    <div class="roi-badge ${efficiencyROI.roi > 100 ? 'excellent' : efficiencyROI.roi > 50 ? 'good' : 'moderate'}">
+                        ROI Eficiência: ${efficiencyROI.roi}%
+                    </div>
+                </div>
+                
+                <div class="pricing-models">
+                    <h3><i class="fas fa-tags"></i> MODELOS DE PRECIFICAÇÃO</h3>
+                    <div class="models-grid">
+                        ${pricing.models.map(model => `
+                            <div class="model-card ${model.id === pricing.optimalModel.id ? 'optimal' : ''}">
+                                <div class="model-header">
+                                    <strong>${model.name}</strong>
+                                    ${model.id === pricing.optimalModel.id ? '<span class="optimal-badge">ÓTIMO</span>' : ''}
+                                </div>
+                                <div class="model-fee">${model.feeFormatted}</div>
+                                <div class="model-value">Valor Esperado: ${model.expectedValueFormatted}</div>
+                                <div class="model-roi">ROI Cliente: ${model.clientROIFormatted}</div>
+                                <div class="model-risk">Perfil: ${model.riskProfile}</div>
+                                <div class="model-recommendation">${model.recommendation}</div>
+                            </div>
+                        `).join('')}
+                    </div>
+                </div>
+                
+                <div class="opportunity-analysis">
+                    <h3><i class="fas fa-clock"></i> CUSTO DE OPORTUNIDADE</h3>
+                    <div class="opportunity-grid">
+                        <div class="opp-card">
+                            <div class="opp-value">${opportunityCost.totalOpportunityCostFormatted}</div>
+                            <div class="opp-label">Custo Total de Oportunidade</div>
+                            <div class="opp-percent">${opportunityCost.percentageOfValue}</div>
+                        </div>
+                        <div class="opp-card">
+                            <div class="opp-value">${opportunityCost.capitalCostFormatted}</div>
+                            <div class="opp-label">Custo de Capital</div>
+                        </div>
+                        <div class="opp-card">
+                            <div class="opp-value">${opportunityCost.alternativeReturnFormatted}</div>
+                            <div class="opp-label">Retorno Alternativo Perdido</div>
+                        </div>
+                        <div class="opp-card">
+                            <div class="opp-value">${opportunityCost.resourceCostFormatted}</div>
+                            <div class="opp-label">Custo de Recursos</div>
+                        </div>
+                    </div>
+                    <div class="opp-recommendation">
+                        <i class="fas fa-lightbulb"></i> ${opportunityCost.recommendation}
+                    </div>
+                </div>
+                
+                <div class="efficiency-roi">
+                    <h3><i class="fas fa-chart-simple"></i> ROI DE EFICIÊNCIA AUTOMÁTICA</h3>
+                    <div class="roi-grid">
+                        <div class="roi-card">
+                            <div class="roi-value">${efficiencyROI.hoursSaved}</div>
+                            <div class="roi-label">Horas Poupanças</div>
+                        </div>
+                        <div class="roi-card">
+                            <div class="roi-value">${efficiencyROI.directSavingsFormatted}</div>
+                            <div class="roi-label">Poupança Direta</div>
+                        </div>
+                        <div class="roi-card">
+                            <div class="roi-value">${efficiencyROI.efficiencyMultiplier}x</div>
+                            <div class="roi-label">Multiplicador de Eficiência</div>
+                        </div>
+                        <div class="roi-card">
+                            <div class="roi-value">${efficiencyROI.netBenefitFormatted}</div>
+                            <div class="roi-label">Benefício Líquido</div>
+                        </div>
+                    </div>
+                    <div class="roi-details">
+                        <div class="detail-item">
+                            <span>Investimento:</span>
+                            <strong>${efficiencyROI.implementationCostFormatted}</strong>
+                        </div>
+                        <div class="detail-item">
+                            <span>Payback:</span>
+                            <strong>${efficiencyROI.paybackMonths} meses</strong>
+                        </div>
+                        <div class="detail-item">
+                            <span>Classificação:</span>
+                            <strong class="roi-${efficiencyROI.roiClassification.toLowerCase()}">${efficiencyROI.roiClassification}</strong>
+                        </div>
+                    </div>
+                    <div class="roi-recommendation">
+                        <i class="fas ${efficiencyROI.roi > 100 ? 'fa-check-circle' : 'fa-info-circle'}"></i>
+                        ${efficiencyROI.recommendation}
+                    </div>
+                </div>
+                
+                <div class="strategy-card">
+                    <h3><i class="fas fa-chess"></i> ESTRATÉGIA RECOMENDADA</h3>
+                    <div class="strategy-header">
+                        <strong>${pricing.recommendation.recommendedModel}</strong>
+                        <div class="target-fee">${pricing.recommendation.targetFeeFormatted}</div>
+                    </div>
+                    <p>${pricing.recommendation.rationale}</p>
+                    <div class="negotiation-levers">
+                        <strong>Alavancas de Negociação:</strong>
+                        <ul>
+                            ${pricing.recommendation.negotiationLevers.map(lever => `<li>${lever}</li>`).join('')}
+                        </ul>
+                    </div>
+                    <div class="fee-range">
+                        <span>Mínimo Aceitável: ${pricing.recommendation.minimumAcceptableFormatted}</span>
+                        <span>Alvo: ${pricing.recommendation.targetFeeFormatted}</span>
+                        <span>Valor Esperado: ${pricing.recommendation.expectedValueFormatted}</span>
+                    </div>
+                </div>
+                
+                <div class="competitive-analysis">
+                    <h3><i class="fas fa-chart-line"></i> ANÁLISE COMPETITIVA</h3>
+                    <div class="comp-grid">
+                        <div class="comp-card">
+                            <div class="comp-label">Mercado Médio</div>
+                            <div class="comp-value">${pricing.competitiveAnalysis.marketAverageHourlyFormatted}/h</div>
+                        </div>
+                        <div class="comp-card">
+                            <div class="comp-label">Top Quartil</div>
+                            <div class="comp-value">${pricing.competitiveAnalysis.topQuartileHourlyFormatted}/h</div>
+                        </div>
+                        <div class="comp-card">
+                            <div class="comp-label">Taxa Sucesso Mercado</div>
+                            <div class="comp-value">${pricing.competitiveAnalysis.marketAverageSuccessRate}</div>
+                        </div>
+                        <div class="comp-card">
+                            <div class="comp-label">Posicionamento</div>
+                            <div class="comp-value">${pricing.competitiveAnalysis.positioning}</div>
+                        </div>
+                    </div>
+                    <div class="comp-advantage">
+                        ${pricing.competitiveAnalysis.competitiveAdvantage}
+                    </div>
+                </div>
+            </div>
+        `;
+        
+        // Estilos adicionais
+        const style = document.createElement('style');
+        style.textContent = `
+            .value-pricing-dashboard { padding: 0; }
+            .roi-badge { padding: 4px 12px; border-radius: 20px; font-size: 0.7rem; font-weight: bold; }
+            .roi-badge.excellent { background: rgba(0, 230, 118, 0.1); color: #00e676; border: 1px solid #00e676; }
+            .roi-badge.good { background: rgba(0, 229, 255, 0.1); color: #00e5ff; border: 1px solid #00e5ff; }
+            .roi-badge.moderate { background: rgba(255, 193, 7, 0.1); color: #ffc107; border: 1px solid #ffc107; }
+            .models-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 16px; margin: 20px 0; }
+            .model-card { background: var(--bg-terminal); border-radius: 12px; padding: 16px; border: 1px solid var(--border-tactic); transition: all 0.2s; }
+            .model-card.optimal { border: 2px solid var(--elite-success); background: linear-gradient(135deg, var(--bg-terminal), rgba(0, 230, 118, 0.05)); }
+            .model-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px; }
+            .optimal-badge { background: var(--elite-success-dim); color: var(--elite-success); padding: 2px 8px; border-radius: 12px; font-size: 0.6rem; }
+            .model-fee { font-size: 1.5rem; font-weight: bold; color: var(--elite-primary); margin: 8px 0; }
+            .model-value, .model-roi, .model-risk { font-size: 0.7rem; color: #94a3b8; margin: 4px 0; }
+            .model-recommendation { font-size: 0.65rem; color: #64748b; margin-top: 8px; padding-top: 8px; border-top: 1px solid var(--border-tactic); }
+            .opportunity-grid, .roi-grid, .comp-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 16px; margin: 16px 0; }
+            .opp-card, .roi-card, .comp-card { background: var(--bg-command); border-radius: 12px; padding: 16px; text-align: center; }
+            .opp-value, .roi-value, .comp-value { font-size: 1.2rem; font-weight: bold; color: var(--elite-primary); }
+            .opp-label, .roi-label, .comp-label { font-size: 0.6rem; color: #94a3b8; margin-top: 4px; }
+            .opp-percent { font-size: 0.7rem; color: var(--elite-success); margin-top: 8px; }
+            .opp-recommendation, .roi-recommendation { background: var(--elite-primary-dim); padding: 12px; border-radius: 8px; margin-top: 12px; font-size: 0.75rem; display: flex; align-items: center; gap: 8px; }
+            .roi-details { display: flex; justify-content: space-between; margin: 16px 0; padding: 12px; background: var(--bg-command); border-radius: 8px; font-size: 0.7rem; }
+            .roi-excelente, .roi-bom { color: #00e676; }
+            .roi-moderado { color: #ffc107; }
+            .roi-baixo { color: #ff1744; }
+            .strategy-card { background: var(--bg-command); border-radius: 16px; padding: 20px; margin: 20px 0; }
+            .strategy-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px; }
+            .target-fee { font-size: 1.5rem; font-weight: bold; color: var(--elite-success); }
+            .negotiation-levers ul { margin: 8px 0 0 20px; font-size: 0.75rem; color: #94a3b8; }
+            .fee-range { display: flex; justify-content: space-between; margin-top: 16px; padding-top: 16px; border-top: 1px solid var(--border-tactic); font-size: 0.7rem; }
+            .comp-advantage { margin-top: 12px; padding: 12px; background: var(--elite-primary-dim); border-radius: 8px; font-size: 0.75rem; }
+            @media (max-width: 768px) {
+                .models-grid { grid-template-columns: 1fr; }
+                .opportunity-grid, .roi-grid, .comp-grid { grid-template-columns: 1fr 1fr; }
+                .fee-range { flex-direction: column; gap: 8px; }
+            }
+        `;
+        container.appendChild(style);
+    }
+}
+
+// Instância global - mantendo compatibilidade com nome antigo
+window.FeeOptimizer = new ValueBasedPricingAnalytics();
+window.ValueBasedPricingAnalytics = window.FeeOptimizer;
+
+console.log('[ELITE] Value-Based Pricing Analytics carregado - Análise de ROI Estratégico');
