@@ -1,1029 +1,684 @@
 /**
  * ============================================================================
- * ELITE PROBATUM — MÓDULO 6: DASHBOARD PARA SÓCIOS
+ * ELITE PROBATUM v2.0.5 — EXTENSÃO DO DASHBOARD PARA SÓCIOS
+ * ARQUITETURA DE VERDADE E RELATÓRIO EXECUTIVO
  * ============================================================================
- * Painel executivo com KPIs em tempo real, mapas de calor,
- * alertas preditivos e comparação de performance entre equipas.
+ * ADITAMENTO AO PracticeDashboard EXISTENTE:
+ * 1. Nova rota "Arquitetura de Verdade" (antigo Relatórios)
+ * 2. Integração com Shadow Dossier Manager
+ * 3. Integração com Black Swan Predictor
+ * 4. Integração com Forensic Decomposition
+ * 5. Relatório de performance executiva com bónus meritocráticos
  * ============================================================================
  */
 
-class PracticeDashboard {
-    constructor() {
-        this.data = {
-            cases: [],
-            lawyers: [],
-            teams: [],
-            financials: {},
-            alerts: [],
-            kpis: {},
-            trends: {},
-            performanceHistory: []
-        };
-        
-        this.refreshInterval = null;
-        this.charts = {};
-        this.listeners = [];
-        this.lastUpdate = null;
-        
-        this.loadData();
+// EXTENSÃO DO PracticeDashboard EXISTENTE
+(function() {
+    'use strict';
+    
+    // Verificar se PracticeDashboard existe
+    if (typeof window.PracticeDashboard === 'undefined') {
+        console.error('[ELITE] PracticeDashboard não encontrado. A extensão não será carregada.');
+        return;
     }
     
-    /**
-     * Inicializa o dashboard
-     */
-    async initialize() {
-        await this.loadData();
-        this.setupCharts();
-        this.startAutoRefresh();
-        this.setupEventListeners();
-        
-        console.log('[ELITE] Practice Dashboard inicializado');
-        return this;
-    }
+    const originalDashboard = window.PracticeDashboard;
     
     /**
-     * Carrega dados
+     * Renderiza a nova view "Arquitetura de Verdade"
+     * Substitui o antigo módulo de Relatórios
      */
-    async loadData() {
-        this.data.cases = await this.fetchCases();
-        this.data.lawyers = await this.fetchLawyers();
-        this.data.teams = await this.fetchTeams();
-        this.data.financials = this.calculateFinancials();
-        this.data.kpis = this.calculateKPIs();
-        this.data.trends = this.calculateTrends();
-        this.data.alerts = this.generateAlerts();
-        this.data.performanceHistory = this.loadPerformanceHistory();
-        this.lastUpdate = new Date();
-        
-        return this.data;
-    }
-    
-    /**
-     * Busca casos (simulado)
-     */
-    async fetchCases() {
-        return [
-            { id: 'C001', value: 28450, status: 'active', lawyer: 'Ana Silva', team: 'Litígio', probability: 0.82, createdAt: '2024-09-15', resolvedAt: null, hoursSpent: 45, complexity: 'medium' },
-            { id: 'C002', value: 15720, status: 'active', lawyer: 'Pedro Santos', team: 'Litígio', probability: 0.75, createdAt: '2024-10-01', resolvedAt: null, hoursSpent: 38, complexity: 'medium' },
-            { id: 'C003', value: 32400, status: 'active', lawyer: 'Maria Costa', team: 'Arbitragem', probability: 0.88, createdAt: '2024-10-20', resolvedAt: null, hoursSpent: 28, complexity: 'high' },
-            { id: 'C004', value: 12500, status: 'closed', lawyer: 'Ana Silva', team: 'Litígio', probability: 0.65, createdAt: '2024-08-10', resolvedAt: '2024-12-15', hoursSpent: 52, complexity: 'low' },
-            { id: 'C005', value: 45200, status: 'active', lawyer: 'João Mendes', team: 'Fiscal', probability: 0.91, createdAt: '2024-09-25', resolvedAt: null, hoursSpent: 62, complexity: 'high' },
-            { id: 'C006', value: 8900, status: 'active', lawyer: 'Sofia Rodrigues', team: 'Laboral', probability: 0.78, createdAt: '2024-11-01', resolvedAt: null, hoursSpent: 22, complexity: 'low' },
-            { id: 'C007', value: 67300, status: 'active', lawyer: 'Carlos Lima', team: 'Fiscal', probability: 0.69, createdAt: '2024-08-15', resolvedAt: null, hoursSpent: 85, complexity: 'high' },
-            { id: 'C008', value: 12400, status: 'closed', lawyer: 'Maria Costa', team: 'Arbitragem', probability: 0.82, createdAt: '2024-07-20', resolvedAt: '2024-11-30', hoursSpent: 35, complexity: 'medium' }
-        ];
-    }
-    
-    /**
-     * Busca advogados
-     */
-    async fetchLawyers() {
-        return [
-            { id: 'L001', name: 'Ana Silva', team: 'Litígio', cases: 12, activeCases: 8, successRate: 0.78, revenue: 125000, efficiency: 0.85, experience: 8 },
-            { id: 'L002', name: 'Pedro Santos', team: 'Litígio', cases: 8, activeCases: 5, successRate: 0.72, revenue: 89000, efficiency: 0.78, experience: 5 },
-            { id: 'L003', name: 'Maria Costa', team: 'Arbitragem', cases: 6, activeCases: 4, successRate: 0.85, revenue: 112000, efficiency: 0.92, experience: 6 },
-            { id: 'L004', name: 'João Mendes', team: 'Fiscal', cases: 10, activeCases: 7, successRate: 0.82, revenue: 156000, efficiency: 0.88, experience: 10 },
-            { id: 'L005', name: 'Sofia Rodrigues', team: 'Laboral', cases: 5, activeCases: 4, successRate: 0.75, revenue: 45000, efficiency: 0.72, experience: 3 },
-            { id: 'L006', name: 'Carlos Lima', team: 'Fiscal', cases: 7, activeCases: 5, successRate: 0.79, revenue: 98000, efficiency: 0.81, experience: 7 }
-        ];
-    }
-    
-    /**
-     * Busca equipas
-     */
-    async fetchTeams() {
-        return [
-            { name: 'Litígio', lawyers: 2, cases: 20, activeCases: 13, successRate: 0.75, revenue: 214000, efficiency: 0.82, avgHoursPerCase: 45 },
-            { name: 'Arbitragem', lawyers: 1, cases: 6, activeCases: 4, successRate: 0.85, revenue: 112000, efficiency: 0.92, avgHoursPerCase: 32 },
-            { name: 'Fiscal', lawyers: 2, cases: 17, activeCases: 12, successRate: 0.82, revenue: 254000, efficiency: 0.85, avgHoursPerCase: 52 },
-            { name: 'Laboral', lawyers: 1, cases: 5, activeCases: 4, successRate: 0.75, revenue: 45000, efficiency: 0.72, avgHoursPerCase: 28 }
-        ];
-    }
-    
-    /**
-     * Calcula métricas financeiras
-     */
-    calculateFinancials() {
-        const cases = this.data.cases;
-        const activeCases = cases.filter(c => c.status === 'active');
-        const closedCases = cases.filter(c => c.status === 'closed');
-        
-        const totalDispute = activeCases.reduce((sum, c) => sum + c.value, 0);
-        const resolvedValue = closedCases.reduce((sum, c) => sum + c.value, 0);
-        const estimatedFees = activeCases.reduce((sum, c) => sum + (c.value * 0.25), 0);
-        const realizedFees = closedCases.reduce((sum, c) => sum + (c.value * 0.25 * c.probability), 0);
-        const estimatedCosts = activeCases.reduce((sum, c) => sum + (c.hoursSpent * 200), 0);
-        const realizedCosts = closedCases.reduce((sum, c) => sum + (c.hoursSpent * 200), 0);
-        
-        return {
-            totalDispute,
-            resolvedValue,
-            estimatedFees,
-            realizedFees,
-            estimatedCosts,
-            realizedCosts,
-            estimatedProfit: estimatedFees - estimatedCosts,
-            realizedProfit: realizedFees - realizedCosts,
-            roi: estimatedCosts > 0 ? ((estimatedFees - estimatedCosts) / estimatedCosts) * 100 : 0,
-            averageCaseValue: totalDispute / (activeCases.length || 1),
-            pipelineValue: totalDispute * 0.65
-        };
-    }
-    
-    /**
-     * Calcula KPIs
-     */
-    calculateKPIs() {
-        const cases = this.data.cases;
-        const activeCases = cases.filter(c => c.status === 'active');
-        const closedCases = cases.filter(c => c.status === 'closed');
-        
-        const successRate = closedCases.length > 0 
-            ? closedCases.filter(c => c.probability > 0.6).length / closedCases.length 
-            : 0;
-        
-        const avgProbability = activeCases.reduce((sum, c) => sum + c.probability, 0) / (activeCases.length || 1);
-        const totalHours = cases.reduce((sum, c) => sum + c.hoursSpent, 0);
-        const avgHoursPerCase = totalHours / cases.length;
-        
-        const highComplexityCases = cases.filter(c => c.complexity === 'high' && c.status === 'active').length;
-        const criticalCases = cases.filter(c => c.probability < 0.5 && c.status === 'active').length;
-        
-        return {
-            activeCases: activeCases.length,
-            totalCases: cases.length,
-            closedCases: closedCases.length,
-            successRate: successRate * 100,
-            avgProbability: avgProbability * 100,
-            monthlyGrowth: 12.5,
-            avgResolutionTime: 142,
-            totalHoursBilled: totalHours,
-            avgHoursPerCase: avgHoursPerCase.toFixed(0),
-            highComplexityCases,
-            criticalCases,
-            utilizationRate: 78
-        };
-    }
-    
-    /**
-     * Calcula tendências
-     */
-    calculateTrends() {
-        const months = ['Abr', 'Mai', 'Jun', 'Jul', 'Ago', 'Set', 'Out', 'Nov', 'Dez'];
-        const casesByMonth = [12, 15, 18, 22, 28, 35, 38, 42, 45];
-        const revenueByMonth = [125000, 142000, 158000, 187000, 215000, 248000, 272000, 298000, 325000];
-        const successByMonth = [68, 71, 73, 75, 78, 82, 81, 83, 84];
-        const newClientsByMonth = [8, 10, 12, 15, 18, 22, 24, 28, 31];
-        
-        return {
-            months,
-            casesByMonth,
-            revenueByMonth,
-            successByMonth,
-            newClientsByMonth,
-            revenueGrowth: ((revenueByMonth[revenueByMonth.length - 1] - revenueByMonth[0]) / revenueByMonth[0] * 100).toFixed(1),
-            caseGrowth: ((casesByMonth[casesByMonth.length - 1] - casesByMonth[0]) / casesByMonth[0] * 100).toFixed(1)
-        };
-    }
-    
-    /**
-     * Carrega histórico de performance
-     */
-    loadPerformanceHistory() {
-        const quarters = ['Q1 2024', 'Q2 2024', 'Q3 2024', 'Q4 2024'];
-        return {
-            quarters,
-            revenue: [245000, 312000, 398000, 452000],
-            casesWon: [18, 24, 31, 38],
-            newClients: [22, 28, 35, 42]
-        };
-    }
-    
-    /**
-     * Gera alertas
-     */
-    generateAlerts() {
-        const alerts = [];
-        const kpis = this.data.kpis;
-        const financials = this.data.financials;
-        
-        // Alerta 1: Casos críticos
-        if (kpis.criticalCases > 0) {
-            alerts.push({
-                id: 'ALERT_001',
-                severity: 'critical',
-                title: 'Casos com baixa probabilidade',
-                description: `${kpis.criticalCases} casos com probabilidade <50% necessitam revisão urgente`,
-                source: 'Litigation Intelligence',
-                date: new Date().toISOString(),
-                action: 'Revisar estratégia',
-                category: 'risk'
-            });
-        }
-        
-        // Alerta 2: Nova jurisprudência
-        alerts.push({
-            id: 'ALERT_002',
-            severity: 'info',
-            title: 'Nova decisão do STA',
-            description: 'Acórdão favorável à tese de inversão do ónus da prova (Proc. 0456/2024)',
-            source: 'Market Intelligence',
-            date: new Date().toISOString(),
-            action: 'Aplicar aos casos ativos',
-            category: 'jurisprudence'
-        });
-        
-        // Alerta 3: Performance acima da média
-        if (kpis.monthlyGrowth > 10) {
-            alerts.push({
-                id: 'ALERT_003',
-                severity: 'success',
-                title: 'Crescimento da carteira',
-                description: `+${kpis.monthlyGrowth}% de novos casos este mês. Tendência positiva.`,
-                source: 'Dashboard',
-                date: new Date().toISOString(),
-                action: 'Analisar oportunidades',
-                category: 'growth'
-            });
-        }
-        
-        // Alerta 4: Capacidade vs Demanda
-        if (kpis.utilizationRate > 85) {
-            alerts.push({
-                id: 'ALERT_004',
-                severity: 'warning',
-                title: 'Capacidade próxima do limite',
-                description: `Utilização de ${kpis.utilizationRate}% - Considerar reforço da equipa`,
-                source: 'Resource Management',
-                date: new Date().toISOString(),
-                action: 'Avaliar contratações',
-                category: 'resource'
-            });
-        }
-        
-        // Alerta 5: Oportunidade de mercado
-        alerts.push({
-            id: 'ALERT_005',
-            severity: 'info',
-            title: 'Oportunidade: Contencioso Laboral',
-            description: 'Aumento de 23% nos casos de despedimento ilícito no último trimestre',
-            source: 'Market Intelligence',
-            date: new Date().toISOString(),
-            action: 'Reforçar equipa especializada',
-            category: 'opportunity'
-        });
-        
-        return alerts;
-    }
-    
-    /**
-     * Configura gráficos
-     */
-    setupCharts() {
-        this.createActiveCasesChart();
-        this.createRevenueChart();
-        this.createSuccessRateChart();
-        this.createLawyerPerformanceChart();
-        this.createHeatmap();
-        this.createCaseDistributionChart();
-        this.createPipelineChart();
-    }
-    
-    /**
-     * Cria gráfico de casos ativos
-     */
-    createActiveCasesChart() {
-        const canvas = document.getElementById('activeCasesChart');
-        if (!canvas) return;
-        
-        if (this.charts.activeCases) this.charts.activeCases.destroy();
-        
-        this.charts.activeCases = new Chart(canvas, {
-            type: 'line',
-            data: {
-                labels: this.data.trends.months,
-                datasets: [{
-                    label: 'Casos Ativos',
-                    data: this.data.trends.casesByMonth,
-                    borderColor: '#00E5FF',
-                    backgroundColor: 'rgba(0, 229, 255, 0.1)',
-                    tension: 0.4,
-                    fill: true,
-                    pointRadius: 4,
-                    pointHoverRadius: 8,
-                    pointBackgroundColor: '#00E5FF'
-                }]
-            },
-            options: this.getChartOptions('Casos Ativos', 'Nº de Casos')
-        });
-    }
-    
-    /**
-     * Cria gráfico de receita
-     */
-    createRevenueChart() {
-        const canvas = document.getElementById('revenueChart');
-        if (!canvas) return;
-        
-        if (this.charts.revenue) this.charts.revenue.destroy();
-        
-        this.charts.revenue = new Chart(canvas, {
-            type: 'bar',
-            data: {
-                labels: this.data.trends.months,
-                datasets: [{
-                    label: 'Receita (€)',
-                    data: this.data.trends.revenueByMonth,
-                    backgroundColor: '#3B82F6',
-                    borderRadius: 8,
-                    barPercentage: 0.7
-                }]
-            },
-            options: this.getChartOptions('Receita Mensal', '€')
-        });
-    }
-    
-    /**
-     * Cria gráfico de taxa de sucesso
-     */
-    createSuccessRateChart() {
-        const canvas = document.getElementById('successRateChart');
-        if (!canvas) return;
-        
-        if (this.charts.successRate) this.charts.successRate.destroy();
-        
-        this.charts.successRate = new Chart(canvas, {
-            type: 'line',
-            data: {
-                labels: this.data.trends.months,
-                datasets: [{
-                    label: 'Taxa de Sucesso (%)',
-                    data: this.data.trends.successByMonth,
-                    borderColor: '#10B981',
-                    backgroundColor: 'rgba(16, 185, 129, 0.1)',
-                    tension: 0.4,
-                    fill: true,
-                    pointRadius: 4,
-                    pointBackgroundColor: '#10B981'
-                }]
-            },
-            options: this.getChartOptions('Taxa de Sucesso', '%')
-        });
-    }
-    
-    /**
-     * Cria gráfico de performance por advogado
-     */
-    createLawyerPerformanceChart() {
-        const canvas = document.getElementById('lawyerPerformanceChart');
-        if (!canvas) return;
-        
-        const lawyers = this.data.lawyers;
-        
-        if (this.charts.lawyerPerformance) this.charts.lawyerPerformance.destroy();
-        
-        this.charts.lawyerPerformance = new Chart(canvas, {
-            type: 'bar',
-            data: {
-                labels: lawyers.map(l => l.name),
-                datasets: [
-                    {
-                        label: 'Casos',
-                        data: lawyers.map(l => l.cases),
-                        backgroundColor: '#00E5FF',
-                        borderRadius: 8,
-                        yAxisID: 'y'
-                    },
-                    {
-                        label: 'Taxa Sucesso (%)',
-                        data: lawyers.map(l => l.successRate * 100),
-                        backgroundColor: '#F59E0B',
-                        borderRadius: 8,
-                        yAxisID: 'y1'
-                    }
-                ]
-            },
-            options: {
-                responsive: true,
-                maintainAspectRatio: false,
-                plugins: {
-                    legend: { labels: { color: '#94A3B8' } },
-                    tooltip: { mode: 'index', intersect: false }
-                },
-                scales: {
-                    y: {
-                        position: 'left',
-                        title: { display: true, text: 'Nº de Casos', color: '#94A3B8' },
-                        ticks: { color: '#94A3B8' },
-                        grid: { color: 'rgba(255,255,255,0.05)' }
-                    },
-                    y1: {
-                        position: 'right',
-                        title: { display: true, text: 'Taxa de Sucesso (%)', color: '#94A3B8' },
-                        ticks: { color: '#94A3B8', min: 0, max: 100 },
-                        grid: { display: false }
-                    },
-                    x: {
-                        ticks: { color: '#94A3B8' },
-                        grid: { display: false }
-                    }
-                }
-            }
-        });
-    }
-    
-    /**
-     * Cria mapa de calor (radar)
-     */
-    createHeatmap() {
-        const canvas = document.getElementById('teamHeatmap');
-        if (!canvas) return;
-        
-        const teams = this.data.teams;
-        
-        if (this.charts.heatmap) this.charts.heatmap.destroy();
-        
-        this.charts.heatmap = new Chart(canvas, {
-            type: 'radar',
-            data: {
-                labels: teams.map(t => t.name),
-                datasets: [
-                    {
-                        label: 'Taxa Sucesso (%)',
-                        data: teams.map(t => t.successRate * 100),
-                        borderColor: '#00E5FF',
-                        backgroundColor: 'rgba(0, 229, 255, 0.2)',
-                        pointBackgroundColor: '#00E5FF'
-                    },
-                    {
-                        label: 'Receita (k€)',
-                        data: teams.map(t => t.revenue / 1000),
-                        borderColor: '#F59E0B',
-                        backgroundColor: 'rgba(245, 158, 11, 0.2)',
-                        pointBackgroundColor: '#F59E0B'
-                    },
-                    {
-                        label: 'Eficiência (%)',
-                        data: teams.map(t => t.efficiency * 100),
-                        borderColor: '#10B981',
-                        backgroundColor: 'rgba(16, 185, 129, 0.2)',
-                        pointBackgroundColor: '#10B981'
-                    }
-                ]
-            },
-            options: {
-                responsive: true,
-                maintainAspectRatio: false,
-                plugins: {
-                    legend: { labels: { color: '#94A3B8' } },
-                    tooltip: { mode: 'index', intersect: false }
-                },
-                scales: {
-                    r: {
-                        ticks: { color: '#94A3B8', backdropColor: 'transparent', stepSize: 20 },
-                        grid: { color: 'rgba(255,255,255,0.1)' },
-                        angleLines: { color: 'rgba(255,255,255,0.1)' },
-                        pointLabels: { color: '#94A3B8', font: { size: 10 } }
-                    }
-                }
-            }
-        });
-    }
-    
-    /**
-     * Cria gráfico de distribuição de casos
-     */
-    createCaseDistributionChart() {
-        const canvas = document.getElementById('caseDistributionChart');
-        if (!canvas) return;
-        
-        const teams = this.data.teams;
-        
-        if (this.charts.caseDistribution) this.charts.caseDistribution.destroy();
-        
-        this.charts.caseDistribution = new Chart(canvas, {
-            type: 'doughnut',
-            data: {
-                labels: teams.map(t => t.name),
-                datasets: [{
-                    data: teams.map(t => t.activeCases),
-                    backgroundColor: ['#00E5FF', '#3B82F6', '#10B981', '#F59E0B'],
-                    borderWidth: 0,
-                    hoverOffset: 10
-                }]
-            },
-            options: {
-                responsive: true,
-                maintainAspectRatio: false,
-                plugins: {
-                    legend: { position: 'right', labels: { color: '#94A3B8', font: { size: 10 } } },
-                    tooltip: { callbacks: { label: (ctx) => `${ctx.label}: ${ctx.raw} casos (${((ctx.raw / ctx.dataset.data.reduce((a,b)=>a+b,0))*100).toFixed(1)}%)` } }
-                },
-                cutout: '60%'
-            }
-        });
-    }
-    
-    /**
-     * Cria gráfico de pipeline
-     */
-    createPipelineChart() {
-        const canvas = document.getElementById('pipelineChart');
-        if (!canvas) return;
-        
-        const stages = ['Análise', 'Notificação', 'Litígio', 'Recurso', 'Concluído'];
-        const values = [12, 18, 24, 8, 32];
-        
-        if (this.charts.pipeline) this.charts.pipeline.destroy();
-        
-        this.charts.pipeline = new Chart(canvas, {
-            type: 'bar',
-            data: {
-                labels: stages,
-                datasets: [{
-                    label: 'Casos por Fase',
-                    data: values,
-                    backgroundColor: '#00E5FF',
-                    borderRadius: 8
-                }]
-            },
-            options: {
-                responsive: true,
-                maintainAspectRatio: false,
-                plugins: {
-                    legend: { display: false },
-                    tooltip: { callbacks: { label: (ctx) => `${ctx.raw} casos` } }
-                },
-                scales: {
-                    y: {
-                        ticks: { color: '#94A3B8' },
-                        grid: { color: 'rgba(255,255,255,0.05)' }
-                    },
-                    x: {
-                        ticks: { color: '#94A3B8' },
-                        grid: { display: false }
-                    }
-                }
-            }
-        });
-    }
-    
-    /**
-     * Obtém opções padrão para gráficos
-     */
-    getChartOptions(title, yLabel) {
-        return {
-            responsive: true,
-            maintainAspectRatio: false,
-            plugins: {
-                legend: { labels: { color: '#94A3B8' } },
-                tooltip: { mode: 'index', intersect: false, backgroundColor: '#0a0c10', titleColor: '#00e5ff', bodyColor: '#e2e8f0', borderColor: '#00e5ff', borderWidth: 1 }
-            },
-            scales: {
-                y: { 
-                    title: { display: true, text: yLabel, color: '#94A3B8' },
-                    ticks: { color: '#94A3B8' },
-                    grid: { color: 'rgba(255,255,255,0.05)' }
-                },
-                x: { 
-                    ticks: { color: '#94A3B8' },
-                    grid: { display: false }
-                }
-            }
-        };
-    }
-    
-    /**
-     * Renderiza o dashboard
-     */
-    render() {
+    originalDashboard.renderTruthArchitecture = function() {
         const container = document.getElementById('viewContainer');
         if (!container) return;
         
-        const financials = this.data.financials;
-        const kpis = this.data.kpis;
+        // Obter estatísticas do Shadow Dossier
+        const shadowStats = window.ShadowDossier ? window.ShadowDossier.getStatistics() : null;
+        
+        // Obter estatísticas do Black Swan
+        const blackSwanStats = window.BlackSwan ? window.BlackSwan.getSimulationHistory(1)[0] : null;
+        
+        // Obter relatório executivo
+        const executiveReport = window.FeeOptimizer ? window.FeeOptimizer.generateExecutiveReport('quarterly') : null;
         
         container.innerHTML = `
-            <div class="practice-dashboard">
+            <div class="truth-architecture-dashboard">
                 <div class="dashboard-header">
-                    <h2><i class="fas fa-chart-line"></i> Dashboard Executivo</h2>
-                    <div class="dashboard-controls">
-                        <select id="dashboardPeriod">
-                            <option value="30d">Últimos 30 dias</option>
-                            <option value="90d" selected>Últimos 90 dias</option>
-                            <option value="1y">Último ano</option>
-                        </select>
-                        <button id="refreshDashboardBtn" class="elite-btn small secondary">
-                            <i class="fas fa-sync-alt"></i> ATUALIZAR
-                        </button>
-                        <button id="exportDashboardBtn" class="elite-btn small primary">
-                            <i class="fas fa-download"></i> EXPORTAR
-                        </button>
+                    <h2><i class="fas fa-chess-queen"></i> ARQUITETURA DE VERDADE</h2>
+                    <div class="header-badges">
+                        <span class="badge badge-primary"><i class="fas fa-link"></i> Shadow Dossier Ativo</span>
+                        <span class="badge badge-success"><i class="fas fa-chart-line"></i> Monte Carlo Online</span>
+                        <span class="badge badge-info"><i class="fas fa-shield-alt"></i> Forensic Vault</span>
                     </div>
                 </div>
                 
-                <div class="kpi-grid">
-                    <div class="kpi-card">
-                        <div class="kpi-icon"><i class="fas fa-folder-open"></i></div>
-                        <div class="kpi-content">
-                            <div class="kpi-label">Casos Ativos</div>
-                            <div class="kpi-value">${kpis.activeCases}</div>
-                            <div class="kpi-trend trend-up">+${kpis.monthlyGrowth}% este mês</div>
+                <div class="truth-summary">
+                    <div class="summary-card">
+                        <div class="summary-icon"><i class="fas fa-fingerprint"></i></div>
+                        <div class="summary-content">
+                            <div class="summary-value">${shadowStats ? shadowStats.totalBindings : 0}</div>
+                            <div class="summary-label">Vínculos CITIUS</div>
+                            <div class="summary-trend">${shadowStats ? `${shadowStats.validBindings} validados` : '0 validados'}</div>
                         </div>
                     </div>
-                    <div class="kpi-card">
-                        <div class="kpi-icon"><i class="fas fa-euro-sign"></i></div>
-                        <div class="kpi-content">
-                            <div class="kpi-label">Valor em Disputa</div>
-                            <div class="kpi-value">${this.formatCurrency(financials.totalDispute)}</div>
-                            <div class="kpi-trend trend-up">+8% vs período anterior</div>
+                    <div class="summary-card">
+                        <div class="summary-icon"><i class="fas fa-chart-simple"></i></div>
+                        <div class="summary-content">
+                            <div class="summary-value">${blackSwanStats ? blackSwanStats.parameters.iterations.toLocaleString() : '0'}</div>
+                            <div class="summary-label">Simulações Monte Carlo</div>
+                            <div class="summary-trend">Análise de ${blackSwanStats ? (blackSwanStats.riskMetrics.lossProbability * 100).toFixed(0) : '0'}% risco</div>
                         </div>
                     </div>
-                    <div class="kpi-card">
-                        <div class="kpi-icon"><i class="fas fa-chart-line"></i></div>
-                        <div class="kpi-content">
-                            <div class="kpi-label">Taxa Sucesso</div>
-                            <div class="kpi-value">${kpis.successRate.toFixed(1)}%</div>
-                            <div class="kpi-trend trend-up">+5% com IA</div>
-                        </div>
-                    </div>
-                    <div class="kpi-card">
-                        <div class="kpi-icon"><i class="fas fa-chart-pie"></i></div>
-                        <div class="kpi-content">
-                            <div class="kpi-label">ROI Estimado</div>
-                            <div class="kpi-value">${financials.roi.toFixed(0)}%</div>
-                            <div class="kpi-trend trend-up">vs. mercado</div>
-                        </div>
-                    </div>
-                    <div class="kpi-card">
-                        <div class="kpi-icon"><i class="fas fa-clock"></i></div>
-                        <div class="kpi-content">
-                            <div class="kpi-label">Horas Faturadas</div>
-                            <div class="kpi-value">${kpis.totalHoursBilled}</div>
-                            <div class="kpi-trend">${kpis.avgHoursPerCase}h/caso</div>
-                        </div>
-                    </div>
-                    <div class="kpi-card">
-                        <div class="kpi-icon"><i class="fas fa-chart-simple"></i></div>
-                        <div class="kpi-content">
-                            <div class="kpi-label">Pipeline</div>
-                            <div class="kpi-value">${this.formatCurrency(financials.pipelineValue)}</div>
-                            <div class="kpi-trend">65% de conversão estimada</div>
+                    <div class="summary-card">
+                        <div class="summary-icon"><i class="fas fa-file-alt"></i></div>
+                        <div class="summary-content">
+                            <div class="summary-value">${executiveReport ? executiveReport.bonusAutomation.length : 0}</div>
+                            <div class="summary-label">Bónus Meritocráticos</div>
+                            <div class="summary-trend">Total: €${executiveReport ? executiveReport.executiveSummary.totalBonusPool.toLocaleString() : '0'}</div>
                         </div>
                     </div>
                 </div>
                 
-                <div class="charts-grid">
-                    <div class="chart-card">
-                        <h3>Evolução da Carteira</h3>
-                        <canvas id="activeCasesChart" height="250"></canvas>
-                    </div>
-                    <div class="chart-card">
-                        <h3>Receita Mensal</h3>
-                        <canvas id="revenueChart" height="250"></canvas>
-                    </div>
-                    <div class="chart-card">
-                        <h3>Taxa de Sucesso</h3>
-                        <canvas id="successRateChart" height="250"></canvas>
-                    </div>
-                    <div class="chart-card">
-                        <h3>Performance por Advogado</h3>
-                        <canvas id="lawyerPerformanceChart" height="250"></canvas>
-                    </div>
-                    <div class="chart-card">
-                        <h3>Distribuição de Casos</h3>
-                        <canvas id="caseDistributionChart" height="250"></canvas>
-                    </div>
-                    <div class="chart-card">
-                        <h3>Pipeline por Fase</h3>
-                        <canvas id="pipelineChart" height="250"></canvas>
-                    </div>
-                    <div class="chart-card full-width">
-                        <h3>Mapa de Calor por Equipa</h3>
-                        <canvas id="teamHeatmap" height="280"></canvas>
-                    </div>
+                <div class="truth-tabs">
+                    <button class="tab-btn active" data-tab="shadow-dossier"><i class="fas fa-link"></i> Shadow Dossier</button>
+                    <button class="tab-btn" data-tab="black-swan"><i class="fas fa-chart-line"></i> Black Swan Predictor</button>
+                    <button class="tab-btn" data-tab="executive-report"><i class="fas fa-crown"></i> Relatório Executivo</button>
+                    <button class="tab-btn" data-tab="forensic-decomposition"><i class="fas fa-microscope"></i> Decomposição Forense</button>
                 </div>
                 
-                <div class="alerts-panel">
-                    <h3><i class="fas fa-bell"></i> Alertas Estratégicos</h3>
-                    <div class="alerts-list">
-                        ${this.renderAlerts()}
-                    </div>
-                </div>
-                
-                <div class="cases-table">
-                    <h3>Casos Prioritários</h3>
-                    ${this.renderPriorityCases()}
-                </div>
-                
-                <div class="performance-history">
-                    <h3>Histórico de Performance</h3>
-                    <div class="history-grid">
-                        <div class="history-card">
-                            <div class="history-value">${this.formatCurrency(this.data.performanceHistory.revenue[this.data.performanceHistory.revenue.length - 1])}</div>
-                            <div class="history-label">Receita YTD</div>
-                            <div class="history-trend trend-up">+${((this.data.performanceHistory.revenue[this.data.performanceHistory.revenue.length - 1] - this.data.performanceHistory.revenue[0]) / this.data.performanceHistory.revenue[0] * 100).toFixed(0)}%</div>
-                        </div>
-                        <div class="history-card">
-                            <div class="history-value">${this.data.performanceHistory.casesWon[this.data.performanceHistory.casesWon.length - 1]}</div>
-                            <div class="history-label">Casos Ganhos</div>
-                            <div class="history-trend trend-up">+${((this.data.performanceHistory.casesWon[this.data.performanceHistory.casesWon.length - 1] - this.data.performanceHistory.casesWon[0]) / this.data.performanceHistory.casesWon[0] * 100).toFixed(0)}%</div>
-                        </div>
-                        <div class="history-card">
-                            <div class="history-value">${this.data.performanceHistory.newClients[this.data.performanceHistory.newClients.length - 1]}</div>
-                            <div class="history-label">Novos Clientes</div>
-                            <div class="history-trend trend-up">+${((this.data.performanceHistory.newClients[this.data.performanceHistory.newClients.length - 1] - this.data.performanceHistory.newClients[0]) / this.data.performanceHistory.newClients[0] * 100).toFixed(0)}%</div>
-                        </div>
-                    </div>
+                <div id="truth-tab-content" class="truth-tab-content">
+                    ${this.renderShadowDossierTab()}
                 </div>
             </div>
         `;
         
-        // Re-inicializar gráficos
-        this.setupCharts();
+        // Estilos adicionais
+        const style = document.createElement('style');
+        style.textContent = `
+            .truth-architecture-dashboard { padding: 0; }
+            .dashboard-header { display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 16px; margin-bottom: 24px; }
+            .header-badges { display: flex; gap: 8px; }
+            .truth-summary { display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px; margin-bottom: 24px; }
+            .summary-card { background: var(--bg-command); border-radius: 16px; padding: 20px; display: flex; align-items: center; gap: 16px; border: 1px solid var(--border-tactic); }
+            .summary-icon { width: 48px; height: 48px; background: var(--elite-primary-dim); border-radius: 12px; display: flex; align-items: center; justify-content: center; }
+            .summary-icon i { font-size: 1.5rem; color: var(--elite-primary); }
+            .summary-value { font-size: 1.8rem; font-weight: 800; font-family: 'JetBrains Mono'; color: var(--elite-primary); }
+            .summary-label { font-size: 0.7rem; color: #94a3b8; text-transform: uppercase; }
+            .summary-trend { font-size: 0.65rem; color: #64748b; margin-top: 4px; }
+            .truth-tabs { display: flex; gap: 8px; border-bottom: 1px solid var(--border-tactic); margin-bottom: 24px; padding-bottom: 0; }
+            .tab-btn { background: transparent; border: none; padding: 12px 24px; color: #94a3b8; cursor: pointer; font-family: 'JetBrains Mono'; font-size: 0.8rem; transition: all 0.2s; border-bottom: 2px solid transparent; }
+            .tab-btn:hover { color: var(--elite-primary); }
+            .tab-btn.active { color: var(--elite-primary); border-bottom-color: var(--elite-primary); }
+            .truth-tab-content { min-height: 500px; }
+            @media (max-width: 768px) {
+                .truth-summary { grid-template-columns: 1fr; }
+                .truth-tabs { flex-wrap: wrap; }
+                .tab-btn { padding: 8px 16px; font-size: 0.7rem; }
+            }
+        `;
+        container.appendChild(style);
         
-        // Eventos
-        document.getElementById('refreshDashboardBtn')?.addEventListener('click', () => this.refresh());
-        document.getElementById('exportDashboardBtn')?.addEventListener('click', () => this.exportDashboard());
-        document.getElementById('dashboardPeriod')?.addEventListener('change', (e) => this.changePeriod(e.target.value));
-    }
+        // Event listeners para tabs
+        document.querySelectorAll('.tab-btn').forEach(btn => {
+            btn.addEventListener('click', () => {
+                document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+                btn.classList.add('active');
+                const tab = btn.dataset.tab;
+                const contentDiv = document.getElementById('truth-tab-content');
+                if (contentDiv) {
+                    switch(tab) {
+                        case 'shadow-dossier':
+                            contentDiv.innerHTML = this.renderShadowDossierTab();
+                            break;
+                        case 'black-swan':
+                            contentDiv.innerHTML = this.renderBlackSwanTab();
+                            break;
+                        case 'executive-report':
+                            contentDiv.innerHTML = this.renderExecutiveReportTab();
+                            break;
+                        case 'forensic-decomposition':
+                            contentDiv.innerHTML = this.renderForensicDecompositionTab();
+                            break;
+                        default:
+                            contentDiv.innerHTML = this.renderShadowDossierTab();
+                    }
+                }
+            });
+        });
+    };
     
     /**
-     * Renderiza alertas
+     * Renderiza tab do Shadow Dossier
      */
-    renderAlerts() {
-        if (this.data.alerts.length === 0) {
-            return '<div class="alert neutral">✅ Nenhum alerta crítico no momento</div>';
-        }
-        
-        return this.data.alerts.map(alert => `
-            <div class="alert-item ${alert.severity}">
-                <i class="fas ${this.getAlertIcon(alert.severity)}"></i>
-                <div>
-                    <strong>${alert.title}</strong>
-                    <p>${alert.description}</p>
-                    <small>${alert.source} · ${new Date(alert.date).toLocaleDateString('pt-PT')}</small>
-                </div>
-                <button class="elite-btn small" onclick="PracticeDashboard.handleAlert('${alert.id}')">
-                    ${alert.action}
-                </button>
-            </div>
-        `).join('');
-    }
-    
-    /**
-     * Renderiza casos prioritários
-     */
-    renderPriorityCases() {
-        const priorityCases = this.data.cases
-            .filter(c => c.status === 'active')
-            .sort((a, b) => b.value - a.value)
-            .slice(0, 5);
-        
-        if (priorityCases.length === 0) {
-            return '<div class="empty-state">Nenhum caso ativo</div>';
-        }
+    originalDashboard.renderShadowDossierTab = function() {
+        const receipts = window.ShadowDossier ? window.ShadowDossier.getVerifiedReceipts() : [];
         
         return `
-            <table class="data-table">
-                <thead>
-                    <tr><th>Processo</th><th>Advogado</th><th>Equipa</th><th>Valor</th><th>Probabilidade</th><th>Horas</th><th>Status</th></tr>
-                </thead>
-                <tbody>
-                    ${priorityCases.map(c => `
-                        <tr>
-                            <td><strong>${c.id}</strong></td>
-                            <td>${c.lawyer}</td>
-                            <td><span class="badge badge-primary">${c.team}</span></td>
-                            <td>${this.formatCurrency(c.value)}</td>
-                            <td>
-                                <div class="progress-bar">
-                                    <div class="progress-fill" style="width: ${c.probability * 100}%"></div>
-                                    <span class="progress-text">${(c.probability * 100).toFixed(0)}%</span>
-                                </div>
-                            </td>
-                            <td>${c.hoursSpent}h</div>
-                            <td><span class="status-badge status-${c.status === 'active' ? 'active' : 'closed'}">${c.status === 'active' ? 'Ativo' : 'Concluído'}</span>
+            <div class="shadow-dossier-panel">
+                <div class="panel-header">
+                    <h3><i class="fas fa-link"></i> Shadow Dossier - Vínculo CITIUS/SINOFE</h3>
+                    <button id="newCitiusBinding" class="elite-btn small primary"><i class="fas fa-plus"></i> NOVO VÍNCULO</button>
+                </div>
+                
+                ${receipts.length === 0 ? `
+                    <div class="empty-state">
+                        <i class="fas fa-inbox"></i>
+                        <p>Nenhum vínculo CITIUS registado</p>
+                        <small>Utilize o botão acima para vincular recibos oficiais do tribunal</small>
+                    </div>
+                ` : `
+                    <table class="data-table">
+                        <thead>
+                            <tr><th>ID</th><th>Processo</th><th>Evidência</th><th>Data</th><th>Status</th><th>Ações</th> </thead>
+                        <tbody>
+                            ${receipts.slice(0, 10).map(r => `
+                                <tr>
+                                    <td><code>${r.bindingId.substring(0, 16)}...</code> </div>
+                                    <td>${r.processId} </div>
+                                    <td>${r.evidenceName} </div>
+                                    <td>${new Date(r.bindingTimestamp).toLocaleDateString('pt-PT')} </div>
+                                    <td><span class="status-badge ${r.hashMatch ? 'status-active' : 'status-critical'}">${r.hashMatch ? 'VERIFICADO' : 'INCONSISTENTE'}</span> </div>
+                                    <td>
+                                        <button class="action-btn view-binding" data-id="${r.bindingId}"><i class="fas fa-eye"></i></button>
+                                        <button class="action-btn export-cert" data-id="${r.bindingId}"><i class="fas fa-file-pdf"></i></button>
+                                     </div>
+                                 </div>
+                            `).join('')}
+                        </tbody>
+                     </div>
+                `}
+                
+                <div class="shadow-stats">
+                    <h4>Estatísticas de Sincronização</h4>
+                    <div class="stats-grid">
+                        <div class="stat">
+                            <span class="stat-label">Total de Vínculos</span>
+                            <span class="stat-value">${receipts.length}</span>
                         </div>
-                    `).join('')}
-                </tbody>
+                        <div class="stat">
+                            <span class="stat-label">Verificados</span>
+                            <span class="stat-value">${receipts.filter(r => r.hashMatch).length}</span>
+                        </div>
+                        <div class="stat">
+                            <span class="stat-label">Última Sincronização</span>
+                            <span class="stat-value">${receipts[0] ? new Date(receipts[0].bindingTimestamp).toLocaleDateString('pt-PT') : 'N/A'}</span>
+                        </div>
+                    </div>
+                </div>
             </div>
         `;
-    }
+    };
     
     /**
-     * Obtém ícone do alerta
+     * Renderiza tab do Black Swan Predictor
      */
-    getAlertIcon(severity) {
-        const icons = {
-            critical: 'fa-exclamation-triangle',
-            warning: 'fa-exclamation-circle',
-            success: 'fa-check-circle',
-            info: 'fa-info-circle'
-        };
-        return icons[severity] || 'fa-bell';
-    }
-    
-    /**
-     * Atualiza dashboard
-     */
-    async refresh() {
-        await this.loadData();
-        this.render();
+    originalDashboard.renderBlackSwanTab = function() {
+        // Usar um caso de exemplo para simulação
+        const sampleCase = { id: 'SAMPLE', value: 12500000, successProbability: 68 };
         
-        if (window.EliteUtils) {
-            window.EliteUtils.showToast('Dashboard atualizado', 'success');
+        return `
+            <div class="black-swan-panel">
+                <div class="panel-header">
+                    <h3><i class="fas fa-chart-line"></i> Black Swan Predictor - Simulação de Monte Carlo</h3>
+                    <button id="runMonteCarlo" class="elite-btn small primary"><i class="fas fa-play"></i> EXECUTAR SIMULAÇÃO</button>
+                </div>
+                <div id="monteCarloResults"></div>
+                <div class="black-swan-info">
+                    <div class="info-card">
+                        <i class="fas fa-info-circle"></i>
+                        <div>
+                            <strong>O que é o Black Swan Predictor?</strong>
+                            <p>Motor de simulação estocástica que executa 10.000 iterações do desfecho processual, calculando o Value at Risk (VaR) Jurídico - o montante máximo que o cliente pode perder num cenário de "Cisne Negro".</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        `;
+    };
+    
+    /**
+     * Renderiza tab do Relatório Executivo
+     */
+    originalDashboard.renderExecutiveReportTab = function() {
+        const report = window.FeeOptimizer ? window.FeeOptimizer.generateExecutiveReport('quarterly') : null;
+        
+        return `
+            <div class="executive-report-panel">
+                <div class="panel-header">
+                    <h3><i class="fas fa-crown"></i> Relatório de Performance e Meritocracia Corporativa</h3>
+                    <div class="report-actions">
+                        <button id="exportExecutiveReport" class="elite-btn small secondary"><i class="fas fa-download"></i> EXPORTAR PDF</button>
+                        <button id="refreshReport" class="elite-btn small primary"><i class="fas fa-sync-alt"></i> ATUALIZAR</button>
+                    </div>
+                </div>
+                
+                <div class="executive-summary">
+                    <div class="summary-header">
+                        <div class="period-badge">Período: ${report?.period || 'QUARTERLY'}</div>
+                        <div class="total-bonus">Total de Bónus: €${report?.executiveSummary.totalBonusPool?.toLocaleString() || '0'}</div>
+                    </div>
+                    
+                    <div class="rankings-grid">
+                        <div class="ranking-card">
+                            <h4><i class="fas fa-trophy"></i> Top Faturação</h4>
+                            ${report?.rankings.topBilling.map((p, i) => `
+                                <div class="ranking-item ${i === 0 ? 'first' : ''}">
+                                    <span class="rank">${i + 1}º</span>
+                                    <span class="name">${p.name}</span>
+                                    <span class="value">€${p.revenue.toLocaleString()}</span>
+                                    <span class="medal">🏅 ${p.medal}</span>
+                                </div>
+                            `).join('') || '<p>Nenhum dado disponível</p>'}
+                        </div>
+                        <div class="ranking-card">
+                            <h4><i class="fas fa-gavel"></i> Resolução de Casos</h4>
+                            ${report?.rankings.topResolution.map((p, i) => `
+                                <div class="ranking-item ${i === 0 ? 'first' : ''}">
+                                    <span class="rank">${i + 1}º</span>
+                                    <span class="name">${p.name}</span>
+                                    <span class="value">${p.casesClosed} casos</span>
+                                    <span class="medal">🏅 ${p.medal}</span>
+                                </div>
+                            `).join('') || '<p>Nenhum dado disponível</p>'}
+                        </div>
+                        <div class="ranking-card">
+                            <h4><i class="fas fa-chart-line"></i> Angariação</h4>
+                            ${report?.rankings.topAcquisition.map((p, i) => `
+                                <div class="ranking-item ${i === 0 ? 'first' : ''}">
+                                    <span class="rank">${i + 1}º</span>
+                                    <span class="name">${p.name}</span>
+                                    <span class="value">€${p.pipelineValue.toLocaleString()}</span>
+                                    <span class="medal">🏅 ${p.medal}</span>
+                                </div>
+                            `).join('') || '<p>Nenhum dado disponível</p>'}
+                        </div>
+                    </div>
+                    
+                    <div class="bonus-table">
+                        <h4>Bónus Automatizados</h4>
+                        <table class="data-table">
+                            <thead>
+                                <tr><th>Advogado</th><th>Categoria</th><th>Medalha</th><th>Métrica</th><th>Bónus Sugerido</th><th>Status</th> </thead>
+                            <tbody>
+                                ${report?.bonusAutomation.map(b => `
+                                    <tr>
+                                        <td><strong>${b.advogado}</strong> </div>
+                                        <td>${b.categoria} </div>
+                                        <td>🏅 ${b.medalha} </div>
+                                        <td>${b.metric} </div>
+                                        <td><strong>€${b.bonus_sugerido.toLocaleString()}</strong> </div>
+                                        <td><span class="status-badge status-pending">${b.status}</span> </div>
+                                     </div>
+                                `).join('') || '<tr><td colspan="6" class="empty-state">Nenhum bónus calculado</td></tr>'}
+                            </tbody>
+                        </table>
+                    </div>
+                    
+                    <div class="report-footer">
+                        <div class="validation-hash">
+                            <small>Hash de Validação: ${report?.auditTrail.masterHash?.substring(0, 32) || 'N/A'}...</small>
+                        </div>
+                        <div class="generated-at">
+                            <small>Gerado em: ${new Date().toLocaleString('pt-PT')}</small>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        `;
+    };
+    
+    /**
+     * Renderiza tab de Decomposição Forense
+     */
+    originalDashboard.renderForensicDecompositionTab = function() {
+        return `
+            <div class="forensic-decomposition-panel">
+                <div class="panel-header">
+                    <h3><i class="fas fa-microscope"></i> Motor de Decomposição Forense</h3>
+                    <div class="upload-area">
+                        <input type="file" id="forensicFileUpload" accept=".pdf,.jpg,.png,.docx" style="display: none;">
+                        <button id="uploadForensicFile" class="elite-btn small primary"><i class="fas fa-upload"></i> ANALISAR FICHEIRO</button>
+                    </div>
+                </div>
+                
+                <div id="forensicAnalysisResults" class="forensic-results">
+                    <div class="info-card">
+                        <i class="fas fa-shield-alt"></i>
+                        <div>
+                            <strong>Análise de Metadados em Tempo Real</strong>
+                            <p>O Motor de Decomposição Forense analisa ficheiros em busca de:</p>
+                            <ul>
+                                <li>Software de edição (Adobe Photoshop, Acrobat Distiller, etc.)</li>
+                                <li>Discrepâncias temporais entre criação e modificação</li>
+                                <li>Camadas de sobreposição não aplanadas</li>
+                                <li>Ausência de metadados GPS/Exif</li>
+                                <li>Indícios de sanitização de metadados</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="recent-analyses">
+                    <h4>Análises Recentes</h4>
+                    <div id="recentAnalysesList" class="analyses-list">
+                        <div class="empty-state">Nenhuma análise realizada. Faça upload de um ficheiro para iniciar.</div>
+                    </div>
+                </div>
+            </div>
+        `;
+    };
+    
+    /**
+     * Executa simulação de Monte Carlo e exibe resultados
+     */
+    originalDashboard.runMonteCarloSimulation = function() {
+        const resultsContainer = document.getElementById('monteCarloResults');
+        if (!resultsContainer) return;
+        
+        const sampleCase = { id: 'SAMPLE', value: 12500000, successProbability: 68 };
+        
+        if (window.BlackSwan && typeof window.BlackSwan.renderBlackSwanPanel === 'function') {
+            window.BlackSwan.renderBlackSwanPanel('monteCarloResults', sampleCase);
+        } else {
+            resultsContainer.innerHTML = '<div class="error">Black Swan Predictor não disponível</div>';
         }
-    }
+    };
     
     /**
-     * Altera período
+     * Analisa ficheiro com Motor de Decomposição Forense
      */
-    changePeriod(period) {
-        console.log('[ELITE] Período alterado para:', period);
-        this.refresh();
-    }
+    originalDashboard.analyzeForensicFile = async function(file) {
+        const resultsContainer = document.getElementById('forensicAnalysisResults');
+        if (!resultsContainer) return;
+        
+        if (window.ForensicVault && typeof window.ForensicVault.decomposeArtefact === 'function') {
+            resultsContainer.innerHTML = '<div class="loading">Analisando ficheiro... <i class="fas fa-spinner fa-spin"></i></div>';
+            
+            try {
+                const analysis = await window.ForensicVault.decomposeArtefact(file);
+                
+                const alertsHtml = analysis.alerts.map(a => `
+                    <div class="alert-item ${a.severity.toLowerCase()}">
+                        <span class="alert-badge">${a.severity}</span>
+                        <div class="alert-content">
+                            <strong>${a.title}</strong>
+                            <p>${a.description}</p>
+                            <small>${a.technical || ''}</small>
+                        </div>
+                    </div>
+                `).join('');
+                
+                const recommendationsHtml = analysis.recommendations.map(r => `
+                    <div class="recommendation-item priority-${r.priority.toLowerCase()}">
+                        <i class="fas ${r.priority === 'IMMEDIATE' ? 'fa-skull' : 'fa-exclamation-triangle'}"></i>
+                        <div>
+                            <strong>${r.action}</strong>
+                            <p>${r.description}</p>
+                            <small>${r.legalStrategy || ''}</small>
+                        </div>
+                    </div>
+                `).join('');
+                
+                resultsContainer.innerHTML = `
+                    <div class="analysis-result">
+                        <div class="analysis-header">
+                            <h4>Análise de ${file.name}</h4>
+                            <div class="integrity-score ${analysis.integrityScore >= 80 ? 'score-high' : analysis.integrityScore >= 50 ? 'score-medium' : 'score-low'}">
+                                Score: ${analysis.integrityScore}%
+                            </div>
+                        </div>
+                        
+                        <div class="analysis-metadata">
+                            <div class="metadata-row">
+                                <span>Tamanho:</span>
+                                <strong>${analysis.metadata.fileSizeFormatted}</strong>
+                            </div>
+                            <div class="metadata-row">
+                                <span>Tipo:</span>
+                                <strong>${analysis.metadata.mimeType}</strong>
+                            </div>
+                            <div class="metadata-row">
+                                <span>Hash SHA-256:</span>
+                                <code>${analysis.hash.substring(0, 32)}...</code>
+                            </div>
+                        </div>
+                        
+                        ${analysis.alerts.length > 0 ? `
+                            <div class="alerts-section">
+                                <h5>⚠️ Anomalias Detectadas (${analysis.alerts.length})</h5>
+                                ${alertsHtml}
+                            </div>
+                        ` : `
+                            <div class="success-message">
+                                <i class="fas fa-check-circle"></i>
+                                <strong>Nenhuma anomalia detectada</strong>
+                                <p>O ficheiro apresenta integridade forense.</p>
+                            </div>
+                        `}
+                        
+                        ${analysis.recommendations.length > 0 ? `
+                            <div class="recommendations-section">
+                                <h5>📋 Recomendações Estratégicas</h5>
+                                ${recommendationsHtml}
+                            </div>
+                        ` : ''}
+                        
+                        <div class="tactical-advantage">
+                            <strong>Vantagem Tática:</strong> ${analysis.tacticalAdvantage}
+                        </div>
+                        
+                        <div class="analysis-actions">
+                            <button id="exportIntegrityReport" class="elite-btn small secondary" data-analysis='${JSON.stringify(analysis)}'>
+                                <i class="fas fa-file-pdf"></i> EXPORTAR RELATÓRIO
+                            </button>
+                        </div>
+                    </div>
+                `;
+                
+                // Adicionar à lista de análises recentes
+                this.addToRecentAnalyses(file.name, analysis);
+                
+                // Event listener para exportar relatório
+                const exportBtn = document.getElementById('exportIntegrityReport');
+                if (exportBtn) {
+                    exportBtn.addEventListener('click', () => {
+                        if (window.ForensicVault && typeof window.ForensicVault.exportIntegrityReport === 'function') {
+                            // Simular evidência ID para exportação
+                            const mockEvidenceId = `EVD_${Date.now()}`;
+                            window.ForensicVault.exportIntegrityReport(mockEvidenceId);
+                        } else {
+                            alert('Funcionalidade de exportação em desenvolvimento');
+                        }
+                    });
+                }
+                
+            } catch (error) {
+                console.error('[ELITE] Erro na análise forense:', error);
+                resultsContainer.innerHTML = `<div class="error">Erro ao analisar ficheiro: ${error.message}</div>`;
+            }
+        } else {
+            resultsContainer.innerHTML = '<div class="error">Motor de Decomposição Forense não disponível</div>';
+        }
+    };
     
     /**
-     * Exporta dashboard
+     * Adiciona análise à lista de análises recentes
      */
-    async exportDashboard() {
+    originalDashboard.addToRecentAnalyses = function(fileName, analysis) {
+        const container = document.getElementById('recentAnalysesList');
+        if (!container) return;
+        
+        const existingEmpty = container.querySelector('.empty-state');
+        if (existingEmpty) existingEmpty.remove();
+        
+        const analysisItem = document.createElement('div');
+        analysisItem.className = `analysis-item ${analysis.valid ? 'valid' : 'invalid'}`;
+        analysisItem.innerHTML = `
+            <div class="analysis-item-header">
+                <i class="fas ${analysis.valid ? 'fa-check-circle' : 'fa-exclamation-triangle'}"></i>
+                <strong>${fileName}</strong>
+                <span class="analysis-date">${new Date().toLocaleTimeString()}</span>
+            </div>
+            <div class="analysis-item-details">
+                <span>Score: ${analysis.integrityScore}%</span>
+                <span>Alertas: ${analysis.alerts.length}</span>
+                <button class="action-btn view-analysis" data-analysis='${JSON.stringify(analysis)}' data-name="${fileName}">
+                    <i class="fas fa-eye"></i> VER
+                </button>
+            </div>
+        `;
+        
+        container.insertBefore(analysisItem, container.firstChild);
+        
+        // Manter apenas últimas 10 análises
+        while (container.children.length > 10) {
+            container.removeChild(container.lastChild);
+        }
+        
+        // Event listener para ver análise
+        const viewBtn = analysisItem.querySelector('.view-analysis');
+        if (viewBtn) {
+            viewBtn.addEventListener('click', () => {
+                const analysisData = JSON.parse(viewBtn.dataset.analysis);
+                const resultsContainer = document.getElementById('forensicAnalysisResults');
+                if (resultsContainer) {
+                    // Re-renderizar análise
+                    const alertsHtml = analysisData.alerts.map(a => `
+                        <div class="alert-item ${a.severity.toLowerCase()}">
+                            <span class="alert-badge">${a.severity}</span>
+                            <div class="alert-content">
+                                <strong>${a.title}</strong>
+                                <p>${a.description}</p>
+                                <small>${a.technical || ''}</small>
+                            </div>
+                        </div>
+                    `).join('');
+                    
+                    resultsContainer.innerHTML = `
+                        <div class="analysis-result">
+                            <div class="analysis-header">
+                                <h4>Análise de ${viewBtn.dataset.name}</h4>
+                                <div class="integrity-score ${analysisData.integrityScore >= 80 ? 'score-high' : analysisData.integrityScore >= 50 ? 'score-medium' : 'score-low'}">
+                                    Score: ${analysisData.integrityScore}%
+                                </div>
+                            </div>
+                            ${analysisData.alerts.length > 0 ? `
+                                <div class="alerts-section">
+                                    <h5>⚠️ Anomalias Detectadas (${analysisData.alerts.length})</h5>
+                                    ${alertsHtml}
+                                </div>
+                            ` : '<div class="success-message"><i class="fas fa-check-circle"></i> Nenhuma anomalia detectada</div>'}
+                        </div>
+                    `;
+                }
+            });
+        }
+    };
+    
+    /**
+     * Sobrescreve o método render original para incluir a nova rota
+     */
+    const originalRender = originalDashboard.render;
+    originalDashboard.render = function() {
         const container = document.getElementById('viewContainer');
         if (!container) return;
         
-        const report = {
-            generatedAt: new Date().toISOString(),
-            kpis: this.data.kpis,
-            financials: this.data.financials,
-            trends: this.data.trends,
-            alerts: this.data.alerts,
-            teams: this.data.teams,
-            performanceHistory: this.data.performanceHistory
-        };
+        const currentView = window.EliteProbatum?.currentView || 'dashboard';
         
-        const blob = new Blob([JSON.stringify(report, null, 2)], { type: 'application/json' });
-        const url = URL.createObjectURL(blob);
-        const link = document.createElement('a');
-        link.href = url;
-        link.download = `dashboard_export_${new Date().toISOString().slice(0, 10)}.json`;
-        link.click();
-        URL.revokeObjectURL(url);
-        
-        if (window.EliteUtils) {
-            window.EliteUtils.showToast('Dashboard exportado com sucesso', 'success');
+        if (currentView === 'truth-architecture') {
+            this.renderTruthArchitecture();
+            return;
         }
-    }
+        
+        // Chamar render original para outras views
+        if (originalRender) {
+            originalRender.call(this);
+        }
+    };
     
     /**
-     * Gera relatório de performance
+     * Configura event listeners para a nova view
      */
-    generatePerformanceReport() {
-        const report = {
-            title: 'Relatório de Performance',
-            generatedAt: new Date().toISOString(),
-            kpis: this.data.kpis,
-            financials: this.data.financials,
-            teamPerformance: this.data.teams,
-            topLawyers: this.data.lawyers.sort((a, b) => b.revenue - a.revenue).slice(0, 3),
-            trends: this.data.trends,
-            recommendations: this.generateRecommendations()
-        };
+    originalDashboard.setupTruthArchitectureEvents = function() {
+        // Upload de ficheiro forense
+        const uploadBtn = document.getElementById('uploadForensicFile');
+        const fileInput = document.getElementById('forensicFileUpload');
         
-        const blob = new Blob([JSON.stringify(report, null, 2)], { type: 'application/json' });
-        const url = URL.createObjectURL(blob);
-        const link = document.createElement('a');
-        link.href = url;
-        link.download = `performance_report_${new Date().toISOString().slice(0, 10)}.json`;
-        link.click();
-        URL.revokeObjectURL(url);
-        
-        if (window.EliteUtils) {
-            window.EliteUtils.showToast('Relatório de performance gerado', 'success');
+        if (uploadBtn && fileInput) {
+            uploadBtn.addEventListener('click', () => fileInput.click());
+            fileInput.addEventListener('change', (e) => {
+                if (e.target.files && e.target.files[0]) {
+                    this.analyzeForensicFile(e.target.files[0]);
+                }
+            });
         }
         
-        return report;
-    }
-    
-    /**
-     * Gera relatório de magistrados
-     */
-    generateJudgeReport() {
-        if (window.JudicialAnalytics) {
-            const stats = window.JudicialAnalytics.getJudicialStatistics();
-            const blob = new Blob([JSON.stringify(stats, null, 2)], { type: 'application/json' });
-            const url = URL.createObjectURL(blob);
-            const link = document.createElement('a');
-            link.href = url;
-            link.download = `judges_analysis_${new Date().toISOString().slice(0, 10)}.json`;
-            link.click();
-            URL.revokeObjectURL(url);
-            
-            if (window.EliteUtils) {
-                window.EliteUtils.showToast('Análise de magistrados gerada', 'success');
-            }
-        } else {
-            if (window.EliteUtils) {
-                window.EliteUtils.showToast('Módulo de análise judicial não disponível', 'error');
-            }
-        }
-    }
-    
-    /**
-     * Gera recomendações estratégicas
-     */
-    generateRecommendations() {
-        const recommendations = [];
-        const kpis = this.data.kpis;
-        const financials = this.data.financials;
-        
-        if (kpis.criticalCases > 0) {
-            recommendations.push(`Revisar urgentemente ${kpis.criticalCases} casos com baixa probabilidade de sucesso`);
+        // Botão de nova simulação Monte Carlo
+        const runBtn = document.getElementById('runMonteCarlo');
+        if (runBtn) {
+            runBtn.addEventListener('click', () => this.runMonteCarloSimulation());
         }
         
-        if (kpis.utilizationRate > 85) {
-            recommendations.push('Considerar contratação de novos advogados para equilibrar carga de trabalho');
+        // Botão de exportar relatório executivo
+        const exportBtn = document.getElementById('exportExecutiveReport');
+        if (exportBtn && window.FeeOptimizer && typeof window.FeeOptimizer.exportExecutiveReport === 'function') {
+            exportBtn.addEventListener('click', () => window.FeeOptimizer.exportExecutiveReport('quarterly'));
         }
         
-        if (financials.roi < 200) {
-            recommendations.push('Revisar modelo de honorários para aumentar rentabilidade');
+        // Botão de refresh de relatório
+        const refreshBtn = document.getElementById('refreshReport');
+        if (refreshBtn) {
+            refreshBtn.addEventListener('click', () => {
+                const tabContent = document.getElementById('truth-tab-content');
+                if (tabContent) {
+                    tabContent.innerHTML = this.renderExecutiveReportTab();
+                    this.setupTruthArchitectureEvents();
+                }
+            });
         }
         
-        if (kpis.successRate < 75) {
-            recommendations.push('Investir em formação e ferramentas de análise preditiva');
+        // Botão de novo vínculo CITIUS
+        const newBindingBtn = document.getElementById('newCitiusBinding');
+        if (newBindingBtn) {
+            newBindingBtn.addEventListener('click', () => {
+                if (window.EliteUtils) {
+                    window.EliteUtils.showToast('Funcionalidade de vínculo CITIUS - Selecione um recibo PDF', 'info');
+                }
+            });
         }
         
-        return recommendations;
-    }
-    
-    /**
-     * Inicia atualização automática
-     */
-    startAutoRefresh() {
-        if (this.refreshInterval) clearInterval(this.refreshInterval);
-        
-        this.refreshInterval = setInterval(async () => {
-            await this.loadData();
-            if (document.getElementById('viewContainer')?.innerHTML) {
-                this.render();
-            }
-        }, 30000);
-    }
-    
-    /**
-     * Para atualização automática
-     */
-    stopAutoRefresh() {
-        if (this.refreshInterval) {
-            clearInterval(this.refreshInterval);
-            this.refreshInterval = null;
-        }
-    }
-    
-    /**
-     * Configura event listeners
-     */
-    setupEventListeners() {
-        document.addEventListener('massLitigationProgress', (e) => {
-            this.updateProgress(e.detail);
+        // View binding e export de certificados
+        document.querySelectorAll('.view-binding').forEach(btn => {
+            btn.addEventListener('click', () => {
+                const bindingId = btn.dataset.id;
+                if (window.ShadowDossier && typeof window.ShadowDossier.generateUnivocalCertificate === 'function') {
+                    const cert = window.ShadowDossier.generateUnivocalCertificate(bindingId);
+                    if (cert && window.EliteUtils) {
+                        window.EliteUtils.showToast(`Certificado gerado: ${cert.certificateId}`, 'success');
+                    }
+                }
+            });
         });
         
-        document.addEventListener('caseUpdated', () => {
-            this.refresh();
+        document.querySelectorAll('.export-cert').forEach(btn => {
+            btn.addEventListener('click', () => {
+                const bindingId = btn.dataset.id;
+                if (window.ShadowDossier && typeof window.ShadowDossier.exportUnivocalCertificate === 'function') {
+                    window.ShadowDossier.exportUnivocalCertificate(bindingId);
+                }
+            });
         });
-        
-        document.addEventListener('leadConverted', () => {
-            this.refresh();
-        });
-    }
+    };
     
-    /**
-     * Atualiza progresso
-     */
-    updateProgress(data) {
-        const progressElement = document.getElementById(`batch-${data.batchId}-progress`);
-        if (progressElement) {
-            progressElement.style.width = `${data.progress}%`;
-            progressElement.textContent = `${data.progress.toFixed(0)}%`;
+    // Inicializar eventos quando a view for renderizada
+    const originalRenderTruth = originalDashboard.renderTruthArchitecture;
+    originalDashboard.renderTruthArchitecture = function() {
+        if (originalRenderTruth) {
+            originalRenderTruth.call(this);
         }
-    }
+        setTimeout(() => this.setupTruthArchitectureEvents(), 100);
+    };
     
-    /**
-     * Manipula alerta
-     */
-    static handleAlert(alertId) {
-        if (window.EliteUtils) {
-            window.EliteUtils.showToast(`A processar alerta ${alertId}...`, 'info');
-        }
-    }
+    console.log('[ELITE] PracticeDashboard estendido com Arquitetura de Verdade v1.0');
     
-    /**
-     * Formata moeda
-     */
-    formatCurrency(value) {
-        if (value === null || value === undefined) return '€0';
-        return new Intl.NumberFormat('pt-PT', { style: 'currency', currency: 'EUR', minimumFractionDigits: 0, maximumFractionDigits: 0 }).format(value);
-    }
-}
-
-// Instância global
-window.PracticeDashboard = new PracticeDashboard();
+})();
