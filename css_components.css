@@ -1,17 +1,18 @@
 /**
  * ============================================================================
- * ELITE PROBATUM v2.0 — COMPONENTES TÁTICOS
- * UNIDADE DE COMANDO FORENSE DIGITAL
+ * ELITE PROBATUM v2.0.5 — COMPONENTES ESTRATÉGICOS
+ * UNIDADE DE COMANDO ESTRATÉGICO
  * ============================================================================
- * CORREÇÕES v2.0.2:
+ * CORREÇÕES v2.0.5:
  * 1. Ajuste de contraste para botões de utilitários (WCAG 2.1)
  * 2. Correção de box-model para componentes multi-linha
- * 3. Melhorias de acessibilidade visual em modo tático
+ * 3. Melhorias de acessibilidade visual em modo estratégico
+ * 4. Rebranding estratégico (Forensics → Strategic)
  * ============================================================================
  */
 
 /* ============================================================================
-   BOTÕES TÁTICOS - CORREÇÃO DE CONTRASTE
+   BOTÕES ESTRATÉGICOS - CORREÇÃO DE CONTRASTE
    ============================================================================ */
 
 .elite-btn {
@@ -124,7 +125,7 @@
 }
 
 /* ============================================================================
-   LAYOUTS TÁTICOS
+   LAYOUTS ESTRATÉGICOS
    ============================================================================ */
 
 .form-group {
@@ -170,7 +171,7 @@
 }
 
 /* ============================================================================
-   CARDS TÁTICOS
+   CARDS ESTRATÉGICOS
    ============================================================================ */
 
 .judges-grid {
@@ -244,7 +245,7 @@
 }
 
 /* ============================================================================
-   PROGRESS BAR TÁTICA
+   PROGRESS BAR ESTRATÉGICA
    ============================================================================ */
 
 .progress-bar {
@@ -281,7 +282,7 @@
 }
 
 /* ============================================================================
-   ALERT ITEMS TÁTICOS - CORREÇÃO MULTI-LINHA
+   ALERT ITEMS ESTRATÉGICOS - CORREÇÃO MULTI-LINHA
    ============================================================================ */
 
 .alert-item {
@@ -353,7 +354,7 @@
 }
 
 /* ============================================================================
-   REPORTS GRID TÁTICO
+   REPORTS GRID ESTRATÉGICO
    ============================================================================ */
 
 .reports-grid {
@@ -1035,7 +1036,7 @@
 }
 
 /* ============================================================================
-   RESPONSIVIDADE TÁTICA - COMPONENTES
+   RESPONSIVIDADE ESTRATÉGICA - COMPONENTES
    ============================================================================ */
 
 @media (max-width: 1024px) {
@@ -1267,7 +1268,7 @@
 }
 
 /* ============================================================================
-   TOOLTIPS TÁTICOS
+   TOOLTIPS ESTRATÉGICOS
    ============================================================================ */
 
 [data-tooltip] {
