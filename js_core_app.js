@@ -1,10 +1,10 @@
 /**
  * ============================================================================
  * ELITE PROBATUM v2.0.5 — APLICAÇÃO PRINCIPAL
- * UNIDADE DE COMANDO FORENSE DIGITAL
+ * UNIDADE DE COMANDO ESTRATÉGICO
  * ARQUITETURA DE VERDADE
  * ============================================================================
- * VERSÃO FINAL: 2.0.5 - CORREÇÃO DE ORDEM DE CARREGAMENTO
+ * VERSÃO FINAL: 2.0.5 - REBRANDING ESTRATÉGICO
  * ============================================================================
  */
 
@@ -127,7 +127,7 @@
     const I18N_DICT = {
         pt: {
             login_title: 'ELITE PROBATUM',
-            login_subtitle: 'Unidade de Comando Forense Digital',
+            login_subtitle: 'Unidade de Comando Estratégico',
             login_user: 'UTILIZADOR',
             login_password: 'PALAVRA-PASSE',
             login_button: 'AUTENTICAR',
@@ -142,7 +142,7 @@
             nav_questionnaire: 'QUESTIONÁRIOS ESTRATÉGICOS',
             nav_evidence: 'CADEIA DE CUSTÓDIA',
             nav_adversary: 'ANÁLISE DE OPOSIÇÃO',
-            nav_simulator: 'SIMULADOR DE CONTRA-PERÍCIA',
+            nav_simulator: 'SIMULADOR DE RISCO',
             nav_deadlines: 'PRAZOS JUDICIAIS',
             nav_activitylog: 'REGISTOS RGPD',
             nav_truth_architecture: 'ARQUITETURA DE VERDADE',
@@ -185,7 +185,7 @@
         },
         en: {
             login_title: 'ELITE PROBATUM',
-            login_subtitle: 'Digital Forensic Command Unit',
+            login_subtitle: 'Strategic Command Unit',
             login_user: 'USERNAME',
             login_password: 'PASSWORD',
             login_button: 'AUTHENTICATE',
@@ -200,7 +200,7 @@
             nav_questionnaire: 'STRATEGIC QUESTIONNAIRES',
             nav_evidence: 'CHAIN OF CUSTODY',
             nav_adversary: 'OPPOSITION ANALYSIS',
-            nav_simulator: 'COUNTER-EXPERTISE SIMULATOR',
+            nav_simulator: 'RISK SIMULATOR',
             nav_deadlines: 'COURT DEADLINES',
             nav_activitylog: 'GDPR LOGS',
             nav_truth_architecture: 'TRUTH ARCHITECTURE',
@@ -489,7 +489,7 @@
             <div style="padding: 20px; font-family: 'JetBrains Mono', monospace; background: #0a0c10; color: #fff;">
                 <div style="border-bottom: 2px solid #00e5ff; padding-bottom: 16px; margin-bottom: 20px;">
                     <h1 style="color: #00e5ff; margin: 0;">ELITE PROBATUM</h1>
-                    <p style="color: #94a3b8; margin: 4px 0 0;">Relatório Forense • ${new Date().toLocaleString()}</p>
+                    <p style="color: #94a3b8; margin: 4px 0 0;">Relatório Estratégico • ${new Date().toLocaleString()}</p>
                 </div>
                 <div style="background: #000; padding: 20px; border-radius: 12px; margin-bottom: 20px;">
                     <h3 style="color: #00e5ff; margin-top: 0;">${title}</h3>
@@ -656,7 +656,7 @@
             
             <!-- BLACK SWAN PANEL - Simulação de Monte Carlo -->
             <div id="blackSwanPanel" class="chart-container" style="margin-top: 20px;">
-                <h3><i class="fas fa-chart-line"></i> ANÁLISE DE CISNE NEGRO (VAR JURÍDICO)</h3>
+                <h3><i class="fas fa-chart-line"></i> ANÁLISE DE RISCO (VAR JURÍDICO)</h3>
                 <div id="monteCarloResults" style="min-height: 300px;"></div>
             </div>
         `;
@@ -1046,16 +1046,16 @@
                     <thead> <th>ID</th><th>CLIENTE</th><th>VALOR</th><th>PROBABILIDADE</th><th>JUIZ</th><th>AÇÕES</th> </thead>
                     <tbody>
                         ${laborCases.map(c => `
-                             <td><strong>${c.id}</strong></td>
-                             <td>${c.client}</td>
-                             <td>${EliteUtils.formatCurrency(c.value)}</td>
-                             <td><div class="progress-bar"><div class="progress-fill" style="width: ${c.successProbability * 100}%"></div><span class="progress-text">${EliteUtils.formatPercentage(c.successProbability * 100)}</span></div></td>
-                             <td>${c.judge || 'N/A'}</td>
-                             <td><button class="action-btn delete-case" data-id="${c.id}"><i class="fas fa-trash"></i></button></td>
+                             <tr><strong>${c.id}</strong> </div>
+                             <td>${c.client} </div>
+                             <td>${EliteUtils.formatCurrency(c.value)} </div>
+                             <td><div class="progress-bar"><div class="progress-fill" style="width: ${c.successProbability * 100}%"></div><span class="progress-text">${EliteUtils.formatPercentage(c.successProbability * 100)}</span></div> </div>
+                             <td>${c.judge || 'N/A'} </div>
+                             <td><button class="action-btn delete-case" data-id="${c.id}"><i class="fas fa-trash"></i></button> </div>
                         `).join('')}
-                        ${laborCases.length === 0 ? '<tr><td colspan="6" class="empty-state">Nenhum processo laboral</td></tr>' : ''}
+                        ${laborCases.length === 0 ? '专业<td colspan="6" class="empty-state">Nenhum processo laboral</td>' : ''}
                     </tbody>
-                </table>
+                 </div>
             `;
             attachDeleteEvents();
             document.getElementById('newLaborBtn')?.addEventListener('click', showNewCaseModal);
@@ -1095,12 +1095,12 @@
         if (container) {
             container.innerHTML = `
                 <h2><i class="fas fa-link"></i> ${t('nav_evidence')}</h2>
-                <div id="forensicVaultDashboard"></div>
+                <div id="strategicVaultDashboard"></div>
             `;
             if (window.ForensicVault && typeof window.ForensicVault.renderDashboard === 'function') {
-                window.ForensicVault.renderDashboard('forensicVaultDashboard');
+                window.ForensicVault.renderDashboard('strategicVaultDashboard');
             } else {
-                document.getElementById('forensicVaultDashboard').innerHTML = '<div class="loading-shimmer" style="height: 300px;"></div>';
+                document.getElementById('strategicVaultDashboard').innerHTML = '<div class="loading-shimmer" style="height: 300px;"></div>';
             }
         }
     }
@@ -1110,22 +1110,22 @@
         if (container) {
             container.innerHTML = `
                 <h2><i class="fas fa-users"></i> ${t('nav_adversary')}</h2>
-                <div id="wargamingDashboard"></div>
+                <div id="riskMitigationDashboard"></div>
             `;
             if (window.WargamingEngine && typeof window.WargamingEngine.renderDashboard === 'function') {
                 const sampleCase = MOCK_CASES[0];
                 const sampleEvidence = [{ id: 'EVD001', name: 'Petição Inicial', type: 'documentary', fileType: 'pdf', hash: 'a1b2c3d4' }];
-                window.WargamingEngine.renderDashboard('wargamingDashboard', sampleCase, sampleEvidence);
+                window.WargamingEngine.renderDashboard('riskMitigationDashboard', sampleCase, sampleEvidence);
             } else {
-                document.getElementById('wargamingDashboard').innerHTML = '<div class="loading-shimmer" style="height: 300px;"></div>';
+                document.getElementById('riskMitigationDashboard').innerHTML = '<div class="loading-shimmer" style="height: 300px;"></div>';
             }
         }
     }
     
     function renderSimulator() { 
         const container = document.getElementById('viewContainer'); 
-        if (container) container.innerHTML = `<h2><i class="fas fa-flask"></i> ${t('nav_simulator')}</h2><div class="alert-item info"><i class="fas fa-flask"></i><div><strong>Simulador de Contra-Perícia</strong><p>Utilize o módulo Wargaming Engine para simular ataques da oposição.</p><button id="runWargamingSim" class="elite-btn primary" style="margin-top: 16px;">INICIAR SIMULAÇÃO</button></div></div>`;
-        document.getElementById('runWargamingSim')?.addEventListener('click', () => {
+        if (container) container.innerHTML = `<h2><i class="fas fa-flask"></i> ${t('nav_simulator')}</h2><div class="alert-item info"><i class="fas fa-flask"></i><div><strong>Simulador de Risco</strong><p>Utilize o módulo de análise de risco para simular cenários de incerteza.</p><button id="runRiskSimulation" class="elite-btn primary" style="margin-top: 16px;">INICIAR SIMULAÇÃO</button></div></div>`;
+        document.getElementById('runRiskSimulation')?.addEventListener('click', () => {
             if (window.WargamingEngine && typeof window.WargamingEngine.renderDashboard === 'function') {
                 window.WargamingEngine.renderDashboard('viewContainer', MOCK_CASES[0], []);
             }
@@ -1156,11 +1156,11 @@
                         <thead> <th>Data/Hora</th><th>Utilizador</th><th>Ação</th><th>Entidade</th><th>Hash</th> </thead>
                         <tbody>
                             ${logs.slice(0, 50).map(log => `
-                                <tr><td>${log.timestamp}</td><td>${log.user || 'Sistema'}</td><td>${log.action}</td><td>${log.entity}</td><td class="log-hash">${log.hash ? log.hash.substring(0, 16) + '...' : 'N/A'}</td></tr>
+                                <tr><td class="log-hash">${log.hash ? log.hash.substring(0, 16) + '...' : 'N/A'}</td>
                             `).join('')}
-                            ${logs.length === 0 ? '<tr><td colspan="5" class="empty-state">Nenhum registo de atividade</td></tr>' : ''}
+                            ${logs.length === 0 ? '专业<td colspan="5" class="empty-state">Nenhum registo de atividade</td>' : ''}
                         </tbody>
-                    </table>
+                     </div>
                 </div>
             `;
             document.getElementById('exportLogsBtn')?.addEventListener('click', () => {
@@ -1180,7 +1180,7 @@
     
     function renderAdmin() { 
         const container = document.getElementById('viewContainer'); 
-        if (container) container.innerHTML = `<h2><i class="fas fa-skull"></i> ${t('nav_admin')}</h2><div class="alert-item critical"><i class="fas fa-shield-hooded"></i><div><strong>Área Restrita</strong><p>Acesso reservado a Super Utilizadores e Master Hash Controller.</p></div></div>`; 
+        if (container) container.innerHTML = `<h2><i class="fas fa-skull"></i> ${t('nav_admin')}</h2><div class="alert-item critical"><i class="fas fa-shield-alt"></i><div><strong>Área Restrita</strong><p>Acesso reservado a Super Utilizadores e Master Hash Controller.</p></div></div>`; 
     }
     
     function attachDeleteEvents() {
@@ -1214,7 +1214,7 @@
                         <div class="header-badges">
                             <span class="badge badge-primary"><i class="fas fa-link"></i> Shadow Dossier Ativo</span>
                             <span class="badge badge-success"><i class="fas fa-chart-line"></i> Monte Carlo Online</span>
-                            <span class="badge badge-info"><i class="fas fa-shield-alt"></i> Forensic Vault</span>
+                            <span class="badge badge-info"><i class="fas fa-shield-alt"></i> Strategic Vault</span>
                         </div>
                     </div>
                     
@@ -1228,7 +1228,7 @@
                         <button class="tab-btn active" data-tab="shadow-dossier"><i class="fas fa-link"></i> Shadow Dossier</button>
                         <button class="tab-btn" data-tab="black-swan"><i class="fas fa-chart-line"></i> Black Swan Predictor</button>
                         <button class="tab-btn" data-tab="executive-report"><i class="fas fa-crown"></i> Relatório Executivo</button>
-                        <button class="tab-btn" data-tab="forensic-decomposition"><i class="fas fa-microscope"></i> Decomposição Forense</button>
+                        <button class="tab-btn" data-tab="forensic-decomposition"><i class="fas fa-microscope"></i> Decomposição Estratégica</button>
                     </div>
                     
                     <div id="truth-tab-content" class="truth-tab-content">
@@ -1279,8 +1279,7 @@
                                 <div class="executive-report-panel">
                                     <div class="panel-header"><h3>Relatório de Performance e Meritocracia</h3><button id="exportExecutiveReport" class="elite-btn small secondary">EXPORTAR PDF</button></div>
                                     <div class="executive-summary"><div class="total-bonus">Total de Bónus: €${report?.executiveSummary.totalBonusPool?.toLocaleString() || '0'}</div></div>
-                                    <table class="data-table"><thead><tr><th>Advogado</th><th>Categoria</th><th>Medalha</th><th>Bónus Sugerido</th><th>Status</th></tr></thead><tbody>${report?.bonusAutomation.map(b => `<tr><td><strong>${b.advogado}</strong></td><td>${b.categoria}</td><td>🏅 ${b.medalha}</td><td>€${b.bonus_sugerido.toLocaleString()}</td><td>${b.status}</td></tr>`).join('') || '<tr><td colspan="5" class="empty-state">Nenhum bónus calculado</td></tr>'}</tbody></table>
-                                </div>
+                                    <table class="data-table"><thead> <th>Advogado</th><th>Categoria</th><th>Medalha</th><th>Bónus Sugerido</th><th>Status</th> </thead><tbody>${report?.bonusAutomation.map(b => ` <td>🏅 ${b.medalha}</td><td><strong>€${b.bonus_sugerido.toLocaleString()}</strong></td><td>${b.status}</td> `).join('') || ' <td colspan="5" class="empty-state">Nenhum bónus calculado</td> '}</tbody> </div>
                             `;
                         } else {
                             contentDiv.innerHTML = `<div class="empty-state"><i class="fas fa-cog fa-spin"></i><p>Módulo em desenvolvimento</p></div>`;
@@ -1393,7 +1392,7 @@
         initDashboard: function() {
             EliteUtils.log('========================================');
             EliteUtils.log(`ELITE PROBATUM v${APP_VERSION}`);
-            EliteUtils.log('UNIDADE DE COMANDO FORENSE DIGITAL');
+            EliteUtils.log('UNIDADE DE COMANDO ESTRATÉGICO');
             EliteUtils.log('ARQUITETURA DE VERDADE ATIVADA');
             EliteUtils.log('========================================');
             
@@ -1404,7 +1403,7 @@
             // Inicializar todos os módulos
             if (window.ForensicVault && typeof window.ForensicVault.initialize === 'function') {
                 window.ForensicVault.initialize(sessionHash);
-                EliteUtils.log('✅ Forensic Vault inicializado');
+                EliteUtils.log('✅ Strategic Vault inicializado');
             }
             
             if (window.BlackSwan && typeof window.BlackSwan.initialize === 'function') {
@@ -1414,12 +1413,12 @@
             
             if (window.WargamingEngine && typeof window.WargamingEngine.initialize === 'function') {
                 window.WargamingEngine.initialize();
-                EliteUtils.log('✅ Wargaming Engine inicializado');
+                EliteUtils.log('✅ Risk Mitigation Engine inicializado');
             }
             
             if (window.JudgeBiometrics && typeof window.JudgeBiometrics.initialize === 'function') {
                 window.JudgeBiometrics.initialize();
-                EliteUtils.log('✅ Judge Biometrics inicializado');
+                EliteUtils.log('✅ Judicial Behavioral Analytics inicializado');
             }
             
             if (window.BlockchainCustody && typeof window.BlockchainCustody.initialize === 'function') {
@@ -1486,8 +1485,8 @@
             EliteUtils.log(`✅ ${MOCK_CASES.length} processos estratégicos carregados`);
             EliteUtils.log(`📊 Valor total em disputa: ${EliteUtils.formatCurrency(MOCK_CASES.reduce((s,c)=>s+c.value,0))}`);
             EliteUtils.log(`🔐 Storage seguro inicializado com PBKDF2`);
-            EliteUtils.log(`🚀 Módulos de inovação disruptiva ativos`);
-            EliteUtils.log(`🎯 ARQUITETURA DE VERDADE: Shadow Dossier | Black Swan | Decomposição Forense`);
+            EliteUtils.log(`🚀 Módulos de inovação estratégica ativos`);
+            EliteUtils.log(`🎯 ARQUITETURA DE VERDADE: Shadow Dossier | Black Swan | Decomposição Estratégica`);
             EliteUtils.log(`📌 Extensões carregadas dinamicamente após autenticação`);
         },
         
@@ -1506,11 +1505,11 @@
     
     EliteUtils.log(`========================================`);
     EliteUtils.log(`ELITE PROBATUM v${APP_VERSION}`);
-    EliteUtils.log(`UNIDADE DE COMANDO FORENSE DIGITAL`);
+    EliteUtils.log(`UNIDADE DE COMANDO ESTRATÉGICO`);
     EliteUtils.log(`Master Hash: ${MASTER_HASH.substring(0, 16)}...`);
     EliteUtils.log(`${MOCK_CASES.length} processos estratégicos carregados`);
     EliteUtils.log(`Valor total em disputa: ${EliteUtils.formatCurrency(MOCK_CASES.reduce((s,c)=>s+c.value,0))}`);
-    EliteUtils.log(`🎯 Arquitetura de Verdade: Shadow Dossier | Black Swan | Decomposição Forense`);
+    EliteUtils.log(`🎯 Arquitetura de Verdade: Shadow Dossier | Black Swan | Decomposição Estratégica`);
     EliteUtils.log(`📌 Extensões carregadas dinamicamente após autenticação`);
     EliteUtils.log(`========================================`);
     
